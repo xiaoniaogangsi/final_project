@@ -1,11 +1,5 @@
-<<<<<<< HEAD
 */*db/
 */.qsys_edit/
 *.bak
 *~
-=======
-*/*db/
-*/.qsys_edit/
-*.bak
-*~
->>>>>>> 84dd204137c7249d3dd7bd2580e6b27b5be25168
+
