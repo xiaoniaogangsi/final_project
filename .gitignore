@@ -1,5 +1,4 @@
-*/*db/
-*/.qsys_edit/
+*db/
+.qsys_edit/
 *.bak
 *~
-
