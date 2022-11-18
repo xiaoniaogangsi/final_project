@@ -33,8 +33,8 @@ module  color_mapper ( input 					 pixel_Clk, frame_Clk,
 	  we have to first cast them from logic to int (signed by default) before they are multiplied). */
 	  
     int DistX, DistY, Size;
-	 assign DistX = DrawX - BallX;
-    assign DistY = DrawY - BallY;
+//	   assign DistX = DrawX - BallX;
+//    assign DistY = DrawY - BallY;
     assign Size = Ball_size;
 	 
 	 logic [17:0] draw_type;	//starting Address for the picture we want to draw
@@ -72,16 +72,33 @@ module  color_mapper ( input 					 pixel_Clk, frame_Clk,
 	 parameter [17:0] cloud_X = 18'd92;
 	 parameter [17:0] cloud_Y = 18'd27;
 	 
+	 logic draw_dino;
+	 
 	 int SizeX, SizeY;
-	 assign SizeX = runner_X;
-	 assign SizeY = runner_Y;
+	 always_comb
+	 begin
+		 if (cloud_on)
+		 begin
+			SizeX = cloud_X;
+			SizeY = cloud_Y;
+			DistX = DrawX - cloud_locX;
+			DistY = DrawY - cloud_locY;
+		 end
+		 else 
+		 begin
+			SizeX = runner_X;
+			SizeY = runner_Y;
+			DistX = DrawX - BallX;
+			DistY = DrawY - BallY;
+		 end
+	 end
 	 
 	 always_ff @ (posedge frame_Clk)
 	 begin
-		if (frame_count == 5)
+		if (frame_count == 10)
 		begin
 			if (cloud_locX == 0)
-				cloud_locX = 10'd640;
+				cloud_locX <= 10'd640;
 			else
 				cloud_locX <= cloud_locX - 1;
 			draw_run3 <= ~(draw_run3);
@@ -91,27 +108,41 @@ module  color_mapper ( input 					 pixel_Clk, frame_Clk,
 			frame_count <= frame_count + 1;
 	 end
 	 
-	 always_ff @ (posedge pixel_Clk)
-	 begin
-		if (ball_on)
+//	 always_comb
+//	 begin
+//		if (ball_on)
+//		begin
+//			offset = DistY*SizeX + DistX;
+//			if (draw_run3)
+//				draw_type = runner3;
+//			else
+//				draw_type = runner4;
+//		end
+//		else if (cloud_on)
+//		begin
+//			offset = (DrawY - cloud_locY) * cloud_X + (DrawX - cloud_locX);
+//			draw_type = cloud;
+//		end
+//		else
+//		begin
+//			offset = 18'b0;
+//			draw_type = 18'b0;
+//		end
+//	 end
+
+	assign offset = DistY*SizeX + DistX;
+	always_comb
+	begin
+		if (cloud_on)
+			draw_type = cloud;
+		else 
 		begin
-			offset <= DistY*SizeX + DistX;
 			if (draw_run3)
-				draw_type <= runner3;
+				draw_type = runner3;
 			else
-				draw_type <= runner4;
+				draw_type = runner4;
 		end
-		else if (cloud_on)
-		begin
-			offset <= (DrawY - cloud_locY) * cloud_X + (DrawX - cloud_locX);
-			draw_type <= cloud;
-		end
-		else
-		begin
-			offset <= 18'b0;
-			draw_type <= 18'b0;
-		end
-	 end
+	end
 	 
 	 spriteROM sprite(.read_address(draw_type + offset),
 							.Clk(pixel_Clk),
@@ -130,7 +161,8 @@ module  color_mapper ( input 					 pixel_Clk, frame_Clk,
        (DrawY >= cloud_locY) &&
        (DrawY <= cloud_locY + cloud_Y)
 		 && (istransparent == 1'b0)
-		 && (ball_on == 1'b0))
+//		 && (ball_on == 1'b0)
+		 )
             cloud_on = 1'b1;
         else 
             cloud_on = 1'b0;
@@ -141,9 +173,9 @@ module  color_mapper ( input 					 pixel_Clk, frame_Clk,
     begin:Ball_on_proc
 //        if ( ( DistX*DistX + DistY*DistY) <= (Size * Size) ) 
 	 if ((DrawX >= BallX) &&
-       (DrawX <= BallX + SizeX) &&
+       (DrawX <= BallX + runner_X) &&
        (DrawY >= BallY) &&
-       (DrawY <= BallY + SizeY)
+       (DrawY <= BallY + runner_Y)
 		 && (istransparent == 1'b0))
             ball_on = 1'b1;
         else 
@@ -163,9 +195,9 @@ module  color_mapper ( input 					 pixel_Clk, frame_Clk,
             Red <= 8'h00; 
             Green <= 8'h00;
             Blue <= 8'h7f - DrawX[9:3];
-//            Red <= 8'hff - DrawY[9:3]; 
-//            Green <= 8'hff - DrawY[9:3];
-//            Blue <= 8'hff - DrawY[9:3];
+//            Red <= 8'hff; 
+//            Green <= 8'hff;
+//            Blue <= 8'hff;
         end      
     end 
     
