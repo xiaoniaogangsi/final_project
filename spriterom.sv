@@ -51,7 +51,7 @@ begin
 	 $readmemh("sprite/num_7_18x21.txt", mem, 170861, 171238);
 	 $readmemh("sprite/num_8_18x21.txt", mem, 171239, 171616);
 	 $readmemh("sprite/num_9_18x21.txt", mem, 171617, 171994);
-	 $readmemh("sprite/pterosaur_wingdown_92x80.txt", mem, 171995, 179344);
+	 $readmemh("sprite/pterosaur_wingdown_92x80.txt", mem, 171995, 179354);
 	 $readmemh("sprite/pterosaur_wingup_92x80.txt", mem, 179355, 186714);
 	 $readmemh("sprite/restart_72x64.txt", mem, 186715, 191322);
 	 $readmemh("sprite/run1_88x94.txt", mem, 191323, 199594);
