@@ -10,37 +10,80 @@ module control (input Reset, frame_clk,
 		parameter [9:0] Dragon_X_Size = 10; //To be determinied
 		parameter [9:0] Dragon_Y_Size = 20; //To be determinied
 		parameter [9:0] Cactus_X_Size = 10; //To be determinied
-		parameter [9:0] gravity = 2;
-//typedef struct{
-//					logic [9:0] Dragon_X_Pos, Dragon_Y_Pos, Dragon_Y_Motion,
-//					logic [9:0] Dragon_X_Size, // used for collision judgement.
-//					logic [9:0] Dragon_Y_Size,
-//					logic [1:0] Life,
-//					logic [2:0] State, //rest, run, jump, get brithday cake, dead, 
-//					} Dragon;
-//typedef struct{
-//					logic [9:0] Cactus_X_Pos, Cactus_Y_Pos, Cactus_X_Motion, //Horizontal Motion speed
-//					logic [9:0] Cactus_X_Size, Cactus_Y_Size,
-//					} Cactus;
-//typedef struct{
-//					logic [9:0] Ptero_X_Pos, Ptero_Y_Pos, Ptero_X_Motion, //Horizontal Motion speed
-//					logic [9:0] Ptero_X_Size, Ptero_Y_Size,
-//					} Ptero;
-//typedef struct{
-//					logic [9:0] Cloud_X_Pos, Cloud_Y_Pos, Cloud_X_Motion, //Horizontal Motion speed
-//					} Cloud;
-//typedef struct{
-//					logic [9:0] Star_X_Pos, Star_Y_Pos, Star_X_Motion, //Horizontal Motion speed
-//					} Star;
-//typedef struct{
-//					logic [9:0] Moon_X_Pos, Moon_Y_Pos, Moon_X_Motion, //Horizontal Motion speed
-//					} Moon; 
+		parameter [9:0] Gravity = 2;
+
+		enum logic [3:0] {  		
+							Start,
+							Game,
+							Over}   State, Next_state;   // Internal state logic
+		
+		enum logic [2:0] {
+							Rest,
+							Run,
+							Jump,
+							Lean,
+							Cake,
+							Dead}		Action;
+
 		Dragon mydragon;
 		mydragon = '{Dragon_x, Ground_Level, 0, Dragon_X_Size, Dragon_Y_Size, 1, 0};
-		case (keycode):
-			8'h20 : begin
-						mydragon.Dragon_Y_Motion = -10;
-						if ((mydragon.Dragon_X_Pos-Dragon_X_Size/2)<=Ground_Level)
-							begin
-								mydragon.Dragon_Y_Motion
-							end	
+		
+		
+		//state machine that controls the user interface.
+		always_ff @ (posedge frame_clk)
+		begin
+			if (keycode = 8'h0c)
+				State <= Start;
+			else
+				State <= Next_State;
+		end
+		always_comb @ (posedge frame_clk)
+		begin
+			//default state is staying at the current state;
+			Next_State <= state;
+			unique case (State)
+				Start:
+					if (keycode == 8'h20)
+						Next_State = Game;
+				Game :
+					if (mydragon.Life == 0)
+						Next_State = Over;
+				Over: 
+					if (keycode == 8'h0d)
+						Next_State = Start;
+		end
+		
+		
+		//control code of the little dragon
+		always_ff @ (posedge frame_clk)
+		begin:
+			//keycode processing
+			case (keycode):
+				8'h20 : begin
+								if (mydragon.Dragon_Y_Pos <= Ground_level)
+									mydragon.Dragon_Y_Motion <= -10;
+						  end
+				8'h26 : begin
+								Action <= Lean;
+								mydragon.State <= Action;
+						  end
+				default:
+			endcase
+			//simulation of gravity
+			if (mydragon.Dragon_Y_Pos <= Ground_level)
+				mydragon.Dragon_Y_Motion <= (mydragon.Dragon_Y_Motion + Gravity);
+			mydragon.Dragon_Y_Pos <= (mydragon.Dragon_Y_Pos + mydragon.Dragon_Y_Motion);
+		end	
+
+
+
+
+
+
+
+
+
+
+
+		
+							
