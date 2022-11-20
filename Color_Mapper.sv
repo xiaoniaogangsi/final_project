@@ -81,7 +81,7 @@ module  color_mapper ( input 					 pixel_Clk, frame_Clk,
 		if (frame_count == 5)
 		begin
 			if (cloud_locX == 0)
-				cloud_locX = 10'd640;
+			cloud_locX <= 10'd640;
 			else
 				cloud_locX <= cloud_locX - 1;
 			draw_run3 <= ~(draw_run3);
