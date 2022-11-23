@@ -1,4 +1,5 @@
 module palette(input logic [3:0] color,
+					input clk,
 					output logic istransparent,
 					output logic [7:0]  Red, Green, Blue);
 //The palette module is used to map the color index into RGB values
@@ -14,6 +15,7 @@ module palette(input logic [3:0] color,
 //8:	'0x535353', 
 //9:	'0xB9B9B9', 
 //a:	'0xDADADA'				
+//	always_ff @ (posedge clk)
 	always_comb
 	begin
 		case (color)
