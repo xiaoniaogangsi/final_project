@@ -13,7 +13,7 @@
 //-------------------------------------------------------------------------
 
 
-module  color_mapper ( input 					 pixel_Clk, frame_Clk, blank,
+module  color_mapper ( input 					 Clk50, pixel_Clk, frame_Clk, Reset, blank,
 							  input        [9:0]  BallX, BallY, DrawX, DrawY, Ball_size,
                        output logic [7:0]  Red, Green, Blue );
     
@@ -46,6 +46,7 @@ module  color_mapper ( input 					 pixel_Clk, frame_Clk, blank,
 	 logic [17:0] address_runner, address_cloud, address_score;
 	 logic [17:0] draw_address;	//current Address for the picture we want to draw (start+offset)
 	 logic [3:0] color_index;		//color index we get from the ROM
+	 logic [3:0] color_index_buffer; //color index from frame_buffer
 	 logic [7:0]  Red_p, Green_p, Blue_p;
 	 logic istransparent;
 	 
@@ -80,12 +81,54 @@ module  color_mapper ( input 					 pixel_Clk, frame_Clk, blank,
 			end
 		end
 	end
-
+	
+	// 800 horizontal pixels indexed 0 to 799
+   // 525 vertical pixels indexed 0 to 524
+   parameter [9:0] hpixels = 10'b1100011111;
+   parameter [9:0] vlines = 10'b1000001100;
+	logic [9:0] hc, vc;
+	int loop_counter;
+	always_ff @ (posedge Clk50 or posedge Reset )
+	begin: counter_proc
+		  if ( Reset ) 
+			begin 
+				 hc <= 10'b0000000000;
+				 vc <= 10'b0000000000;
+				 loop_counter <= 0;
+			end
+				
+		  else 
+			 if ( hc == hpixels )  //If hc has reached the end of pixel count
+			  begin 
+					hc <= 10'b0000000000;
+					loop_counter <= loop_counter + 1;
+					if ( vc == vlines )   //if vc has reached end of line count
+						 vc <= 10'b0000000000;
+					else 
+					begin
+						if (loop_counter == 1)
+						begin
+							vc <= (vc + 1);
+							loop_counter <= 0;
+						end
+					end
+			  end
+			 else 
+				  hc <= (hc + 1);  //no statement about vc, implied vc <= vc;
+	 end 
 	 
 	spriteROM sprite(.read_address(draw_address),
 							.Clk(pixel_Clk),
 							.data_Out(color_index));
-	palette palette0(.*, .color(color_index),
+							
+	frame_buffer frame_buffer0(.Clk(Clk50), .Reset(Reset), .write_en(1'b1),
+										.write_data(color_index),
+										.write_row(vc), .read_row(DrawY),
+										.read_col(DrawX), .write_col(hc),
+										.select(pixel_Clk),
+										.read_data(color_index_buffer));
+	
+	palette palette0(.*, .color(color_index_buffer),
 				.Red(Red_p),
 				.Green(Green_p),
 				.Blue(Blue_p),
@@ -111,7 +154,7 @@ module  color_mapper ( input 					 pixel_Clk, frame_Clk, blank,
 				flag<=1;
         end       
 //        else
-		if (~flag) 
+		  if (~flag) 
         begin 
 //            Red <= 8'h00; 
 //            Green <= 8'h00;

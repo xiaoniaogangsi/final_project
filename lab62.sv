@@ -177,8 +177,10 @@ ball ball0(.Reset(Reset_h),
            .BallX(ballxsig), 
 			  .BallY(ballysig), 
 			  .BallS(ballsizesig) );
-color_mapper color0(.pixel_Clk(VGA_Clk),	//modified here
+color_mapper color0(.Clk50(MAX10_CLK1_50),
+						  .pixel_Clk(VGA_Clk),	//modified here
 						  .frame_Clk(VGA_VS),	//modified here
+						  .Reset(Reset_h),
 						  .blank(blank),
 						  .BallX(ballxsig), 
 						  .BallY(ballysig), 
