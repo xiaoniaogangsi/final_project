@@ -1,3 +1,5 @@
+Warning (10273): Verilog HDL warning at mux_16.sv(29): extended using "x" or "z" File: D:/Quartus/lizhuang.20/Documents/ece385/final_project/mux_16.sv Line: 29
+Warning (10273): Verilog HDL warning at mux_16.sv(48): extended using "x" or "z" File: D:/Quartus/lizhuang.20/Documents/ece385/final_project/mux_16.sv Line: 48
 Info (10281): Verilog HDL Declaration information at final.sv(7): object "Dead" differs only in case from object "DEAD" in the same scope File: D:/Quartus/lizhuang.20/Documents/ece385/final_project/final.sv Line: 7
 Info (10281): Verilog HDL Declaration information at altera_merlin_burst_adapter_new.sv(139): object "BYTE_TO_WORD_SHIFT" differs only in case from object "byte_to_word_shift" in the same scope File: D:/Quartus/lizhuang.20/Documents/ece385/final_project/lab62_soc/synthesis/submodules/altera_merlin_burst_adapter_new.sv Line: 139
 Info (10281): Verilog HDL Declaration information at altera_wrap_burst_converter.sv(279): object "addr_incr" differs only in case from object "ADDR_INCR" in the same scope File: D:/Quartus/lizhuang.20/Documents/ece385/final_project/lab62_soc/synthesis/submodules/altera_wrap_burst_converter.sv Line: 279

@@ -1,5 +1,5 @@
 Analysis & Synthesis report for final
-Wed Nov 23 02:00:48 2022
+Wed Nov 23 14:58:39 2022
 Quartus Prime Version 18.1.0 Build 625 09/12/2018 SJ Lite Edition
 
 
@@ -390,7 +390,7 @@ refer to the applicable agreement for further details.
 +----------------------------------------------------------------------------------+
 ; Analysis & Synthesis Summary                                                     ;
 +------------------------------------+---------------------------------------------+
-; Analysis & Synthesis Status        ; Successful - Wed Nov 23 02:00:47 2022       ;
+; Analysis & Synthesis Status        ; Successful - Wed Nov 23 14:58:39 2022       ;
 ; Quartus Prime Version              ; 18.1.0 Build 625 09/12/2018 SJ Lite Edition ;
 ; Revision Name                      ; final                                       ;
 ; Top-level Entity Name              ; lab62                                       ;
@@ -515,7 +515,8 @@ refer to the applicable agreement for further details.
 ;     Processor 6            ;   0.0%      ;
 ;     Processor 7            ;   0.0%      ;
 ;     Processor 8            ;   0.0%      ;
-;     Processors 9-16        ;   0.0%      ;
+;     Processor 9            ;   0.0%      ;
+;     Processors 10-16       ;   0.0%      ;
 +----------------------------+-------------+
 
 
@@ -524,6 +525,10 @@ refer to the applicable agreement for further details.
 +-----------------------------------------------------------------------------------------------------+-----------------+-------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------------------------------------+-------------+
 ; File Name with User-Entered Path                                                                    ; Used in Netlist ; File Type                                             ; File Name with Absolute Path                                                                                                                              ; Library     ;
 +-----------------------------------------------------------------------------------------------------+-----------------+-------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------------------------------------+-------------+
+; draw_score.sv                                                                                       ; yes             ; User SystemVerilog HDL File                           ; D:/Quartus/lizhuang.20/Documents/ece385/final_project/draw_score.sv                                                                                       ;             ;
+; draw_runner.sv                                                                                      ; yes             ; User SystemVerilog HDL File                           ; D:/Quartus/lizhuang.20/Documents/ece385/final_project/draw_runner.sv                                                                                      ;             ;
+; draw_cloud.sv                                                                                       ; yes             ; User SystemVerilog HDL File                           ; D:/Quartus/lizhuang.20/Documents/ece385/final_project/draw_cloud.sv                                                                                       ;             ;
+; frame_buffer.sv                                                                                     ; yes             ; User SystemVerilog HDL File                           ; D:/Quartus/lizhuang.20/Documents/ece385/final_project/frame_buffer.sv                                                                                     ;             ;
 ; spriterom.sv                                                                                        ; yes             ; User SystemVerilog HDL File                           ; D:/Quartus/lizhuang.20/Documents/ece385/final_project/spriterom.sv                                                                                        ;             ;
 ; lab62_soc/synthesis/lab62_soc.v                                                                     ; yes             ; User Verilog HDL File                                 ; D:/Quartus/lizhuang.20/Documents/ece385/final_project/lab62_soc/synthesis/lab62_soc.v                                                                     ; lab62_soc   ;
 ; lab62_soc/synthesis/submodules/altera_reset_controller.v                                            ; yes             ; User Verilog HDL File                                 ; D:/Quartus/lizhuang.20/Documents/ece385/final_project/lab62_soc/synthesis/submodules/altera_reset_controller.v                                            ; lab62_soc   ;
@@ -581,10 +586,6 @@ refer to the applicable agreement for further details.
 ; ball.sv                                                                                             ; yes             ; User SystemVerilog HDL File                           ; D:/Quartus/lizhuang.20/Documents/ece385/final_project/ball.sv                                                                                             ;             ;
 ; palette.sv                                                                                          ; yes             ; User SystemVerilog HDL File                           ; D:/Quartus/lizhuang.20/Documents/ece385/final_project/palette.sv                                                                                          ;             ;
 ; buffer.v                                                                                            ; yes             ; User Wizard-Generated File                            ; D:/Quartus/lizhuang.20/Documents/ece385/final_project/buffer.v                                                                                            ;             ;
-; frame_buffer.sv                                                                                     ; yes             ; User SystemVerilog HDL File                           ; D:/Quartus/lizhuang.20/Documents/ece385/final_project/frame_buffer.sv                                                                                     ;             ;
-; draw_runner.sv                                                                                      ; yes             ; User SystemVerilog HDL File                           ; D:/Quartus/lizhuang.20/Documents/ece385/final_project/draw_runner.sv                                                                                      ;             ;
-; draw_cloud.sv                                                                                       ; yes             ; User SystemVerilog HDL File                           ; D:/Quartus/lizhuang.20/Documents/ece385/final_project/draw_cloud.sv                                                                                       ;             ;
-; draw_score.sv                                                                                       ; yes             ; User SystemVerilog HDL File                           ; D:/Quartus/lizhuang.20/Documents/ece385/final_project/draw_score.sv                                                                                       ;             ;
 ; sprite/moon_left1_40x80.txt                                                                         ; yes             ; Auto-Found File                                       ; D:/Quartus/lizhuang.20/Documents/ece385/final_project/sprite/moon_left1_40x80.txt                                                                         ;             ;
 ; sprite/run4_88x94.txt                                                                               ; yes             ; Auto-Found File                                       ; D:/Quartus/lizhuang.20/Documents/ece385/final_project/sprite/run4_88x94.txt                                                                               ;             ;
 ; sprite/cloud_92x27.txt                                                                              ; yes             ; Auto-Found File                                       ; D:/Quartus/lizhuang.20/Documents/ece385/final_project/sprite/cloud_92x27.txt                                                                              ;             ;
@@ -9996,10 +9997,22 @@ Note: In order to hide this table in the UI and the text report file, please set
 Info: *******************************************************************
 Info: Running Quartus Prime Analysis & Synthesis
     Info: Version 18.1.0 Build 625 09/12/2018 SJ Lite Edition
-    Info: Processing started: Wed Nov 23 01:56:20 2022
+    Info: Processing started: Wed Nov 23 14:55:07 2022
 Info: Command: quartus_map --read_settings_files=on --write_settings_files=off final -c final
 Warning (18236): Number of processors has not been specified which may cause overloading on shared machines.  Set the global assignment NUM_PARALLEL_PROCESSORS in your QSF to an appropriate value for best performance.
 Info (20030): Parallel compilation is enabled and will use 16 of the 16 processors detected
+Info (12021): Found 1 design units, including 1 entities, in source file draw_score.sv
+    Info (12023): Found entity 1: draw_score File: D:/Quartus/lizhuang.20/Documents/ece385/final_project/draw_score.sv Line: 1
+Info (12021): Found 1 design units, including 1 entities, in source file draw_runner.sv
+    Info (12023): Found entity 1: draw_runner File: D:/Quartus/lizhuang.20/Documents/ece385/final_project/draw_runner.sv Line: 1
+Info (12021): Found 1 design units, including 1 entities, in source file draw_cloud.sv
+    Info (12023): Found entity 1: draw_cloud File: D:/Quartus/lizhuang.20/Documents/ece385/final_project/draw_cloud.sv Line: 1
+Info (12021): Found 1 design units, including 1 entities, in source file frame_buffer.sv
+    Info (12023): Found entity 1: frame_buffer File: D:/Quartus/lizhuang.20/Documents/ece385/final_project/frame_buffer.sv Line: 1
+Info (12021): Found 3 design units, including 3 entities, in source file mux_16.sv
+    Info (12023): Found entity 1: mux2to1 File: D:/Quartus/lizhuang.20/Documents/ece385/final_project/mux_16.sv Line: 1
+    Info (12023): Found entity 2: mux3to1 File: D:/Quartus/lizhuang.20/Documents/ece385/final_project/mux_16.sv Line: 17
+    Info (12023): Found entity 3: mux4to1 File: D:/Quartus/lizhuang.20/Documents/ece385/final_project/mux_16.sv Line: 35
 Info (12021): Found 0 design units, including 0 entities, in source file struct_declaration.sv
 Info (12021): Found 1 design units, including 1 entities, in source file final.sv
     Info (12023): Found entity 1: control File: D:/Quartus/lizhuang.20/Documents/ece385/final_project/final.sv Line: 5
@@ -10169,14 +10182,6 @@ Info (12021): Found 1 design units, including 1 entities, in source file buffer.
     Info (12023): Found entity 1: buffer File: D:/Quartus/lizhuang.20/Documents/ece385/final_project/buffer.v Line: 39
 Info (12021): Found 1 design units, including 1 entities, in source file buffer_fifo.v
     Info (12023): Found entity 1: buffer_fifo File: D:/Quartus/lizhuang.20/Documents/ece385/final_project/buffer_fifo.v Line: 39
-Info (12021): Found 1 design units, including 1 entities, in source file frame_buffer.sv
-    Info (12023): Found entity 1: frame_buffer File: D:/Quartus/lizhuang.20/Documents/ece385/final_project/frame_buffer.sv Line: 1
-Info (12021): Found 1 design units, including 1 entities, in source file draw_runner.sv
-    Info (12023): Found entity 1: draw_runner File: D:/Quartus/lizhuang.20/Documents/ece385/final_project/draw_runner.sv Line: 1
-Info (12021): Found 1 design units, including 1 entities, in source file draw_cloud.sv
-    Info (12023): Found entity 1: draw_cloud File: D:/Quartus/lizhuang.20/Documents/ece385/final_project/draw_cloud.sv Line: 1
-Info (12021): Found 1 design units, including 1 entities, in source file draw_score.sv
-    Info (12023): Found entity 1: draw_score File: D:/Quartus/lizhuang.20/Documents/ece385/final_project/draw_score.sv Line: 1
 Warning (10037): Verilog HDL or VHDL warning at lab62_soc_sdram.v(318): conditional expression evaluates to a constant File: D:/Quartus/lizhuang.20/Documents/ece385/final_project/lab62_soc/synthesis/submodules/lab62_soc_sdram.v Line: 318
 Warning (10037): Verilog HDL or VHDL warning at lab62_soc_sdram.v(328): conditional expression evaluates to a constant File: D:/Quartus/lizhuang.20/Documents/ece385/final_project/lab62_soc/synthesis/submodules/lab62_soc_sdram.v Line: 328
 Warning (10037): Verilog HDL or VHDL warning at lab62_soc_sdram.v(338): conditional expression evaluates to a constant File: D:/Quartus/lizhuang.20/Documents/ece385/final_project/lab62_soc/synthesis/submodules/lab62_soc_sdram.v Line: 338
@@ -10450,7 +10455,7 @@ Info (12021): Found 1 design units, including 1 entities, in source file db/alts
 Info (12128): Elaborating entity "altsyncram_56g1" for hierarchy "color_mapper:color0|frame_buffer:frame_buffer0|buffer:row_buffer1|altsyncram:altsyncram_component|altsyncram_56g1:auto_generated" File: d:/quartus/intelfpga_lite/18.1/quartus/libraries/megafunctions/altsyncram.tdf Line: 791
 Info (12128): Elaborating entity "palette" for hierarchy "color_mapper:color0|palette:palette0" File: D:/Quartus/lizhuang.20/Documents/ece385/final_project/Color_Mapper.sv Line: 135
 Info (11170): Starting IP generation for the debug fabric: alt_sld_fab.
-Info (11172): 2022.11.23.02:00:15 Progress: Loading sld72322c81/alt_sld_fab_wrapper_hw.tcl
+Info (11172): 2022.11.23.14:58:08 Progress: Loading sld72322c81/alt_sld_fab_wrapper_hw.tcl
 Info (11172): Alt_sld_fab.alt_sld_fab: SLD fabric agents which did not specify prefer_host were connected to JTAG
 Info (11172): Alt_sld_fab: Generating alt_sld_fab "alt_sld_fab" for QUARTUS_SYNTH
 Info (11172): Alt_sld_fab: "alt_sld_fab" instantiated alt_sld_fab "alt_sld_fab"
@@ -10739,10 +10744,10 @@ Info (21057): Implemented 10545 device resources after synthesis - the final res
     Info (21064): Implemented 268 RAM segments
     Info (21065): Implemented 1 PLLs
 Info: Quartus Prime Analysis & Synthesis was successful. 0 errors, 108 warnings
-    Info: Peak virtual memory: 5113 megabytes
-    Info: Processing ended: Wed Nov 23 02:00:48 2022
-    Info: Elapsed time: 00:04:28
-    Info: Total CPU time (on all processors): 00:03:48
+    Info: Peak virtual memory: 5107 megabytes
+    Info: Processing ended: Wed Nov 23 14:58:39 2022
+    Info: Elapsed time: 00:03:32
+    Info: Total CPU time (on all processors): 00:02:59
 
 
 +------------------------------------------+
