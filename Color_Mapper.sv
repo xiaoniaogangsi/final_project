@@ -66,18 +66,52 @@ module  color_mapper ( input 					 Clk50, pixel_Clk, frame_Clk, Reset, blank, ro
 	logic [9:0] WriteX, WriteY;
 	logic loop_counter;
 	logic buffer_select;
+	logic reset_Write_X;
+	
 	initial
 	begin
 		buffer_select = 1'b0;
 		WriteX = 10'b0000000000;
 		WriteY = 10'b0000000000;
 		loop_counter = 1'b0;
+		reset_Write_X = 0;
 	end
 	
 	always_ff @ (posedge row_Clk)
 	begin
 		buffer_select <= ~(buffer_select);
 	end
+	
+	assign reset_Write_X = row_Clk;
+
+//	always_ff @ (posedge Clk50 or posedge Reset )
+//	begin: counter_proc
+//		  if ( Reset ) 
+//			begin 
+//				 WriteX <= 10'b0000000000;
+//				 WriteY <= 10'b0000000000;
+//				 loop_counter <= 1'b0;
+//			end
+//				
+//		  else 
+//			 if ( WriteX == hpixels )  //If WriteX has reached the end of pixel count
+//			  begin 
+//					WriteX <= 10'b0000000000;
+//					//loop_counter <= loop_counter + 1;
+//					loop_counter <= ~(loop_counter);
+//					if (loop_counter == 1'b1)
+//					begin
+//						if ( WriteY == vlines )   //if WriteY has reached end of line count
+//							 WriteY <= 10'b0000000000;
+//						else 
+//						begin
+//							WriteY <= (WriteY + 1);
+//						end
+//					end
+//			  end
+//			 else 
+//				  WriteX <= (WriteX + 1);  //no statement about WriteY, implied WriteY <= WriteY;
+//	 end 
 	
 	always_ff @ (posedge Clk50 or posedge Reset )
 	begin: counter_proc
@@ -89,23 +123,18 @@ module  color_mapper ( input 					 Clk50, pixel_Clk, frame_Clk, Reset, blank, ro
 			end
 				
 		  else 
-			 if ( WriteX == hpixels )  //If WriteX has reached the end of pixel count
-			  begin 
-					WriteX <= 10'b0000000000;
-					//loop_counter <= loop_counter + 1;
-					loop_counter <= ~(loop_counter);
-					if (loop_counter == 1'b1)
-					begin
-						if ( WriteY == vlines )   //if WriteY has reached end of line count
-							 WriteY <= 10'b0000000000;
-						else 
-						begin
-							WriteY <= (WriteY + 1);
-						end
-					end
-			  end
-			 else 
-				  WriteX <= (WriteX + 1);  //no statement about WriteY, implied WriteY <= WriteY;
+		  if (reset_Write_X = 0)
+		  begin
+				WriteX <= 10'b0000000000;
+				if ( WriteY == vlines )   //if vc has reached end of line count
+						 vc <= 10'b0000000000;
+				else 
+					 WriteY <= (WriteY + 1);
+        end
+		  else if (WriteX<hpixels)
+				WriteX <= (WriteX + 1);
+        else
+				WriteX <= WriteX;
 	 end 
 	 
 	draw_runner runner0(.*, 

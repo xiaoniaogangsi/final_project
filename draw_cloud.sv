@@ -51,19 +51,19 @@ module draw_cloud (	input pixel_Clk, frame_Clk,
 		address = start + offset;
 	end
 	
-	 always_comb
-    begin:Cloud_on_proc
-		 if ((DrawX >= PosX) &&
-			 (DrawX < PosX + cloud_X) &&
-			 (DrawY >= PosY) &&
-			 (DrawY < PosY + cloud_Y)
-	//		 && (istransparent == 1'b0)
-	//		 && (ball_on == 1'b0)
-			 )
-			cloud_on = 1'b1;
-		 else 
-			cloud_on = 1'b0;
-    end 
+//	 always_comb
+//    begin:Cloud_on_proc
+//		 if ((DrawX >= PosX) &&
+//			 (DrawX < PosX + cloud_X) &&
+//			 (DrawY >= PosY) &&
+//			 (DrawY < PosY + cloud_Y)
+//	//		 && (istransparent == 1'b0)
+//	//		 && (ball_on == 1'b0)
+//			 )
+//			cloud_on = 1'b1;
+//		 else 
+//			cloud_on = 1'b0;
+//    end 
 	
 							
 endmodule
