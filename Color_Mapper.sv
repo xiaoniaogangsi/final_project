@@ -17,7 +17,7 @@ module  color_mapper ( input 					 Clk50, pixel_Clk, frame_Clk, Reset, blank, ro
 							  input        [9:0]  BallX, BallY, DrawX, DrawY, Ball_size,
                        output logic [7:0]  Red, Green, Blue );
     
-    logic ball_on;
+    logic ball_on_dr,ball_on_wr;
 	 
 	 /* test begin */
 	 logic flag;
@@ -50,14 +50,14 @@ module  color_mapper ( input 					 Clk50, pixel_Clk, frame_Clk, Reset, blank, ro
 	 logic [7:0]  Red_p, Green_p, Blue_p;
 	 logic istransparent;
 	 
-	 logic cloud_on;
+	 logic cloud_on_dr,cloud_on_wr;
 	 logic [9:0] cloud_locX, cloud_locY;
 	 
 //	 parameter [17:0] Trex = 18'd225383;
 //	 parameter [17:0] Trex_X = 18'd88;
 //	 parameter [17:0] Trex_Y = 18'd90;	
 	
-	 logic [2:0] score_on;	//000 means off, 001~101 means on1~on5.
+	 logic [2:0] score_on_dr,score_on_wr;	//000 means off, 001~101 means on1~on5.
 	 
 	// 800 horizontal pixels indexed 0 to 799
    // 525 vertical pixels indexed 0 to 524
@@ -110,7 +110,8 @@ module  color_mapper ( input 					 Clk50, pixel_Clk, frame_Clk, Reset, blank, ro
 	 
 	draw_runner runner0(.*, 
 							.PosX(BallX), .PosY(BallY),
-							.runner_on(ball_on),
+							.runner_on_wr(ball_on_wr),
+							.runner_on_dr(ball_on_dr),
 							.address(address_runner));
 	draw_cloud cloud0(.*, .address(address_cloud));
 	draw_score score0(.*, .address(address_score));
@@ -119,11 +120,11 @@ module  color_mapper ( input 					 Clk50, pixel_Clk, frame_Clk, Reset, blank, ro
 	
 	always_comb
 	begin
-		if (cloud_on)
+		if (cloud_on_wr)
 			draw_address = address_cloud;
 		else 
 		begin
-			if (score_on != 3'b000)
+			if (score_on_wr != 3'b000)
 			begin
 				draw_address = address_score;
 			end
@@ -166,7 +167,7 @@ module  color_mapper ( input 					 Clk50, pixel_Clk, frame_Clk, Reset, blank, ro
 		end
 		else
 		begin
-        if (((ball_on == 1'b1) || (cloud_on == 1'b1) || (score_on != 3'b000)) && (istransparent == 1'b0)) 
+        if (((ball_on_dr == 1'b1) || (cloud_on_dr == 1'b1) || (score_on_dr != 3'b000)) && (istransparent == 1'b0)) 
         begin 
 //				Red <= Red_p;
 //				Green <= Green_p;
