@@ -59,7 +59,6 @@ module  color_mapper ( input 					 Clk50, pixel_Clk, frame_Clk, Reset, blank, ro
 	
 	 logic [2:0] score_on;	//000 means off, 001~101 means on1~on5.
 	 
-							.runner_on(ball_on),
 	// 800 horizontal pixels indexed 0 to 799
    // 525 vertical pixels indexed 0 to 524
    parameter [9:0] hpixels = 10'b1100011111;
