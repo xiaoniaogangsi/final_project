@@ -1,7 +1,8 @@
 module draw_score (	input pixel_Clk, frame_Clk,
 							input [9:0] WriteX, WriteY,
 							input [9:0] DrawX, DrawY,
-							output logic [2:0] score_on,
+							output logic [2:0] score_on_dr,
+							output logic [2:0] score_on_wr,
 							output logic [17:0] address);
 	//For score_on, 000 means off, 001~101 means on1~on5.
 	
@@ -61,7 +62,7 @@ module draw_score (	input pixel_Clk, frame_Clk,
 	begin
 		SizeX = num_X;
 		SizeY = num_Y;
-		case (score_on)
+		case (score_on_wr)
 			3'b001: DistX = WriteX - score1_locX;
 			3'b010: DistX = WriteX - score2_locX;
 			3'b011: DistX = WriteX - score3_locX;
@@ -69,7 +70,7 @@ module draw_score (	input pixel_Clk, frame_Clk,
 			3'b101: DistX = WriteX - score5_locX;
 			default: DistX = 0;
 		endcase
-		DistY = WriteY - score_locY;
+		DistY = DrawY - score_locY;
 	end
 	
 	always_ff @ (posedge frame_Clk)
@@ -97,7 +98,7 @@ module draw_score (	input pixel_Clk, frame_Clk,
 //	always_ff @ (posedge pixel_Clk)
 	always_comb
 	begin
-		case (score_on)
+		case (score_on_wr)
 			3'b001: start = num[score1];
 			3'b010: start = num[score2];
 			3'b011: start = num[score3];
@@ -110,25 +111,45 @@ module draw_score (	input pixel_Clk, frame_Clk,
 	end
 	
 	always_comb
-	begin:Score_on_proc
-	if ((DrawY >= score_locY) &&
-	 (DrawY < score_locY + num_Y))
+	begin:Score_on_wr_proc
+	if ((DrawY >= score_locY) && (DrawY < score_locY + num_Y))
 	begin
-		if ((DrawX >= score1_locX) && (DrawX < score1_locX + num_X))
-			score_on = 3'b001;
-		else if ((DrawX >= score2_locX) && (DrawX < score2_locX + num_X))
-			score_on = 3'b010;
-		else if ((DrawX >= score3_locX) && (DrawX < score3_locX + num_X))
-			score_on = 3'b011;
-		else if ((DrawX >= score4_locX) && (DrawX < score4_locX + num_X))
-			score_on = 3'b100;
-		else if ((DrawX >= score5_locX) && (DrawX < score5_locX + num_X))
-			score_on = 3'b101;
+		if ((WriteX >= score1_locX) && (WriteX < score1_locX + num_X))
+			score_on_wr = 3'b001;
+		else if ((WriteX >= score2_locX) && (WriteX < score2_locX + num_X))
+			score_on_wr = 3'b010;
+		else if ((WriteX >= score3_locX) && (WriteX < score3_locX + num_X))
+			score_on_wr = 3'b011;
+		else if ((WriteX >= score4_locX) && (WriteX < score4_locX + num_X))
+			score_on_wr = 3'b100;
+		else if ((WriteX >= score5_locX) && (WriteX < score5_locX + num_X))
+			score_on_wr = 3'b101;
 		else 
-			score_on = 3'b000;
+			score_on_wr = 3'b000;
 	end
 	else
-		score_on = 3'b000;
+		score_on_wr = 3'b000;
+	end 
+	
+	always_comb
+	begin:Score_on_proc
+	if ((DrawY >= score_locY) && (DrawY < score_locY + num_Y))
+	begin
+		if ((DrawX >= score1_locX) && (DrawX < score1_locX + num_X))
+			score_on_dr = 3'b001;
+		else if ((DrawX >= score2_locX) && (DrawX < score2_locX + num_X))
+			score_on_dr = 3'b010;
+		else if ((DrawX >= score3_locX) && (DrawX < score3_locX + num_X))
+			score_on_dr = 3'b011;
+		else if ((DrawX >= score4_locX) && (DrawX < score4_locX + num_X))
+			score_on_dr = 3'b100;
+		else if ((DrawX >= score5_locX) && (DrawX < score5_locX + num_X))
+			score_on_dr = 3'b101;
+		else 
+			score_on_dr = 3'b000;
+	end
+	else
+		score_on_dr = 3'b000;
 	end 
 
 endmodule

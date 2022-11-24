@@ -1,7 +1,8 @@
 module draw_cloud (	input pixel_Clk, frame_Clk,
 							input [9:0] WriteX, WriteY,
 							input [9:0] DrawX, DrawY,
-							output logic cloud_on,
+							output logic cloud_on_wr,
+							output logic cloud_on_dr,
 							output logic [17:0] address);
 
 	//$readmemh("sprite/cloud_92x27.txt", mem, 44420, 46903);
@@ -26,7 +27,7 @@ module draw_cloud (	input pixel_Clk, frame_Clk,
 		SizeX = cloud_X;
 		SizeY = cloud_Y;
 		DistX = WriteX - PosX;
-		DistY = WriteY - PosY;
+		DistY = DrawY - PosY;
 	end
 	
 	always_ff @ (posedge frame_Clk)
@@ -51,19 +52,33 @@ module draw_cloud (	input pixel_Clk, frame_Clk,
 		address = start + offset;
 	end
 	
-//	 always_comb
-//    begin:Cloud_on_proc
-//		 if ((DrawX >= PosX) &&
-//			 (DrawX < PosX + cloud_X) &&
-//			 (DrawY >= PosY) &&
-//			 (DrawY < PosY + cloud_Y)
-//	//		 && (istransparent == 1'b0)
-//	//		 && (ball_on == 1'b0)
-//			 )
-//			cloud_on = 1'b1;
-//		 else 
-//			cloud_on = 1'b0;
-//    end 
+	 always_comb
+    begin:Cloud_on_proc
+		 if ((DrawX >= PosX) &&
+			 (DrawX < PosX + cloud_X) &&
+			 (DrawY >= PosY) &&
+			 (DrawY < PosY + cloud_Y)
+	//		 && (istransparent == 1'b0)
+	//		 && (ball_on == 1'b0)
+			 )
+			cloud_on_dr = 1'b1;
+		 else 
+			cloud_on_dr = 1'b0;
+    end 	 
+	 
+	 always_comb
+    begin:Cloud_on_wr_proc
+		 if ((WriteX >= PosX) &&
+			 (WriteX < PosX + cloud_X) &&
+			 (DrawY >= PosY) &&
+			 (DrawY < PosY + cloud_Y)
+	//		 && (istransparent == 1'b0)
+	//		 && (ball_on == 1'b0)
+			 )
+			cloud_on_wr = 1'b1;
+		 else 
+			cloud_on_wr = 1'b0;
+    end 
 	
 							
 endmodule
