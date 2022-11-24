@@ -1,4 +1,5 @@
 module draw_cloud (	input pixel_Clk, frame_Clk,
+							input [9:0] WriteX, WriteY,
 							input [9:0] DrawX, DrawY,
 							output logic cloud_on,
 							output logic [17:0] address);
@@ -24,8 +25,8 @@ module draw_cloud (	input pixel_Clk, frame_Clk,
 	begin
 		SizeX = cloud_X;
 		SizeY = cloud_Y;
-		DistX = DrawX - PosX;
-		DistY = DrawY - PosY;
+		DistX = WriteX - PosX;
+		DistY = WriteY - PosY;
 	end
 	
 	always_ff @ (posedge frame_Clk)

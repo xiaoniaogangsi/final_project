@@ -1,4 +1,5 @@
 module draw_score (	input pixel_Clk, frame_Clk,
+							input [9:0] WriteX, WriteY,
 							input [9:0] DrawX, DrawY,
 							output logic [2:0] score_on,
 							output logic [17:0] address);
@@ -61,14 +62,14 @@ module draw_score (	input pixel_Clk, frame_Clk,
 		SizeX = num_X;
 		SizeY = num_Y;
 		case (score_on)
-			3'b001: DistX = DrawX - score1_locX;
-			3'b010: DistX = DrawX - score2_locX;
-			3'b011: DistX = DrawX - score3_locX;
-			3'b100: DistX = DrawX - score4_locX;
-			3'b101: DistX = DrawX - score5_locX;
+			3'b001: DistX = WriteX - score1_locX;
+			3'b010: DistX = WriteX - score2_locX;
+			3'b011: DistX = WriteX - score3_locX;
+			3'b100: DistX = WriteX - score4_locX;
+			3'b101: DistX = WriteX - score5_locX;
 			default: DistX = 0;
 		endcase
-		DistY = DrawY - score_locY;
+		DistY = WriteY - score_locY;
 	end
 	
 	always_ff @ (posedge frame_Clk)

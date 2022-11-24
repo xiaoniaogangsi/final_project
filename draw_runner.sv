@@ -1,4 +1,5 @@
 module draw_runner(  input pixel_Clk, frame_Clk,
+							input [9:0] WriteX, WriteY,
 							input [9:0] DrawX, DrawY,
 							input [9:0] PosX, PosY,
 							output logic runner_on,
@@ -26,8 +27,8 @@ module draw_runner(  input pixel_Clk, frame_Clk,
 	begin
 		SizeX = runner_X;
 		SizeY = runner_Y;
-		DistX = DrawX - PosX;
-		DistY = DrawY - PosY;
+		DistX = WriteX - PosX;
+		DistY = WriteY - PosY;
 	end
 	
 	always_ff @ (posedge frame_Clk)
