@@ -119,7 +119,6 @@ module  color_mapper ( input 					 Clk50, pixel_Clk, frame_Clk, Reset, blank, ro
 			begin 
 				 WriteX <= 10'b0000000000;
 				 WriteY <= 10'b0000000000;
-				 loop_counter <= 1'b0;
 			end
 				
 		  else 
