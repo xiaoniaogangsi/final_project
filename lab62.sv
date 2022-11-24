@@ -177,11 +177,12 @@ ball ball0(.Reset(Reset_h),
            .BallX(ballxsig), 
 			  .BallY(ballysig), 
 			  .BallS(ballsizesig) );
-color_mapper color0(.Clk50(MAX10_CLK1_50),
+color_mapper color0(.Clk50(MAX10_CLK1_50),//modified here
 						  .pixel_Clk(VGA_Clk),	//modified here
 						  .frame_Clk(VGA_VS),	//modified here
-						  .Reset(Reset_h),
-						  .blank(blank),
+						  .Reset(Reset_h),		//modified here
+						  .blank(blank),			//modified here
+						  .row_Clk(VGA_HS),		//modified here
 						  .BallX(ballxsig), 
 						  .BallY(ballysig), 
 						  .DrawX(drawxsig), 

@@ -13,7 +13,7 @@
 //-------------------------------------------------------------------------
 
 
-module  color_mapper ( input 					 Clk50, pixel_Clk, frame_Clk, Reset, blank,
+module  color_mapper ( input 					 Clk50, pixel_Clk, frame_Clk, Reset, blank, row_Clk,
 							  input        [9:0]  BallX, BallY, DrawX, DrawY, Ball_size,
                        output logic [7:0]  Red, Green, Blue );
     
@@ -59,11 +59,61 @@ module  color_mapper ( input 					 Clk50, pixel_Clk, frame_Clk, Reset, blank,
 	
 	 logic [2:0] score_on;	//000 means off, 001~101 means on1~on5.
 	 
-	draw_runner runner0(.*, .PosX(BallX), .PosY(BallY),
+							.runner_on(ball_on),
+	// 800 horizontal pixels indexed 0 to 799
+   // 525 vertical pixels indexed 0 to 524
+   parameter [9:0] hpixels = 10'b1100011111;
+   parameter [9:0] vlines = 10'b1000001100;
+	logic [9:0] hc, vc;
+	logic loop_counter;
+	logic buffer_select;
+	initial
+	begin
+		buffer_select = 1'b0;
+	end
+	
+	always_ff @ (posedge row_Clk)
+	begin
+		buffer_select <= ~(buffer_select);
+	end
+	
+	always_ff @ (posedge Clk50 or posedge Reset )
+	begin: counter_proc
+		  if ( Reset ) 
+			begin 
+				 hc <= 10'b0000000000;
+				 vc <= 10'b0000000000;
+				 loop_counter <= 1'b0;
+			end
+				
+		  else 
+			 if ( hc == hpixels )  //If hc has reached the end of pixel count
+			  begin 
+					hc <= 10'b0000000000;
+					//loop_counter <= loop_counter + 1;
+					loop_counter <= ~(loop_counter);
+					if (loop_counter == 1'b1)
+					begin
+						if ( vc == vlines )   //if vc has reached end of line count
+							 vc <= 10'b0000000000;
+						else 
+						begin
+							vc <= (vc + 1);
+						end
+					end
+			  end
+			 else 
+				  hc <= (hc + 1);  //no statement about vc, implied vc <= vc;
+	 end 
+	 
+	draw_runner runner0(.*, .DrawX(hc), .DrawY(vc),
+							.PosX(BallX), .PosY(BallY),
 							.runner_on(ball_on),
 							.address(address_runner));
-	draw_cloud cloud0(.*, .address(address_cloud));
-	draw_score score0(.*, .address(address_score));
+	draw_cloud cloud0(.*, .DrawX(hc), .DrawY(vc), .address(address_cloud));
+	draw_score score0(.*, .DrawX(hc), .DrawY(vc), .address(address_score));
+	
+	enum logic [4:0]{runner, cloud, score} State, Next_State;
 	
 	always_comb
 	begin
@@ -82,50 +132,17 @@ module  color_mapper ( input 					 Clk50, pixel_Clk, frame_Clk, Reset, blank,
 		end
 	end
 	
-	// 800 horizontal pixels indexed 0 to 799
-   // 525 vertical pixels indexed 0 to 524
-   parameter [9:0] hpixels = 10'b1100011111;
-   parameter [9:0] vlines = 10'b1000001100;
-	logic [9:0] hc, vc;
-	int loop_counter;
-	always_ff @ (posedge Clk50 or posedge Reset )
-	begin: counter_proc
-		  if ( Reset ) 
-			begin 
-				 hc <= 10'b0000000000;
-				 vc <= 10'b0000000000;
-				 loop_counter <= 0;
-			end
-				
-		  else 
-			 if ( hc == hpixels )  //If hc has reached the end of pixel count
-			  begin 
-					hc <= 10'b0000000000;
-					loop_counter <= loop_counter + 1;
-					if ( vc == vlines )   //if vc has reached end of line count
-						 vc <= 10'b0000000000;
-					else 
-					begin
-						if (loop_counter == 1)
-						begin
-							vc <= (vc + 1);
-							loop_counter <= 0;
-						end
-					end
-			  end
-			 else 
-				  hc <= (hc + 1);  //no statement about vc, implied vc <= vc;
-	 end 
+
 	 
 	spriteROM sprite(.read_address(draw_address),
-							.Clk(pixel_Clk),
+							.Clk(Clk50),
 							.data_Out(color_index));
 							
-	frame_buffer frame_buffer0(.Clk(Clk50), .Reset(Reset), .write_en(1'b1),
+	frame_buffer frame_buffer0(.Clk50(Clk50), .pixel_Clk(pixel_Clk), .Reset(Reset), .write_en(1'b1),
 										.write_data(color_index),
 										.write_row(vc), .read_row(DrawY),
 										.read_col(DrawX), .write_col(hc),
-										.select(pixel_Clk),
+										.select(buffer_select),
 										.read_data(color_index_buffer));
 	
 	palette palette0(.*, .color(color_index_buffer),
