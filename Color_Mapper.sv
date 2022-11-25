@@ -45,7 +45,7 @@ module  color_mapper ( input 					 Clk50, pixel_Clk, frame_Clk, Reset, blank, ro
 	 
 	 logic [17:0] address_runner, address_cloud, address_score, address_horizon;
 	 logic [17:0] draw_address;	//current Address for the picture we want to draw (start+offset)
-	 logic [3:0] color_index;		//color index we get from the ROM
+//	 logic [3:0] color_index;		//color index we get from the ROM
 	 logic [3:0] color_index_buffer; //color index from frame_buffer
 	 logic [7:0]  Red_p, Green_p, Blue_p;
 	 logic istransparent;
@@ -165,13 +165,56 @@ module  color_mapper ( input 					 Clk50, pixel_Clk, frame_Clk, Reset, blank, ro
 	
 
 	 
-	spriteROM sprite(.read_address(draw_address),
-							.Clk(Clk50),
-							.data_Out(color_index));
+//	spriteROM sprite(.read_address(draw_address),
+//							.Clk(Clk50),
+//							.data_Out(color_index));
 
+	logic [3:0] data_in;
+	assign data_in = 4'b0000;
+	logic [15:0] empty_addr;
+	assign empty_addr = 0;
+	logic [3:0] color_index[4:0];
+	spriterom1 sprite1(.address_a(draw_address[15:0]),
+							.address_b(empty_addr),
+							.clock(Clk50),
+							.data_a(data_in),
+							.data_b(data_in),
+							.wren_a(1'b0),
+							.wren_b(1'b0),
+							.q_a(color_index[0]),
+							.q_b(4'bZ));
+	spriterom2 sprite2(.address_a(draw_address[15:0]),
+							.address_b(empty_addr),
+							.clock(Clk50),
+							.data_a(data_in),
+							.data_b(data_in),
+							.wren_a(1'b0),
+							.wren_b(1'b0),
+							.q_a(color_index[1]),
+							.q_b(4'bZ));
+	spriterom3 sprite3(.address_a(draw_address[15:0]),
+							.address_b(empty_addr),
+							.clock(Clk50),
+							.data_a(data_in),
+							.data_b(data_in),
+							.wren_a(1'b0),
+							.wren_b(1'b0),
+							.q_a(color_index[2]),
+							.q_b(4'bZ));
+	spriterom4 sprite4(.address_a(draw_address[15:0]),
+							.address_b(empty_addr),
+							.clock(Clk50),
+							.data_a(data_in),
+							.data_b(data_in),
+							.wren_a(1'b0),
+							.wren_b(1'b0),
+							.q_a(color_index[3]),
+							.q_b(4'bZ));
+
+assign color_index[4]=color_index[draw_address[17:16]];
 	
 	frame_buffer frame_buffer0(.Clk50(Clk50), .pixel_Clk(pixel_Clk), .Reset(Reset), .write_en(1'b1),
-										.write_data(color_index),
+										.write_data(color_index[4]),
 										.write_X(WriteX), .read_X(DrawX),
 										.write_Y(WriteY), .read_Y(DrawY),
 										.select(buffer_select),
@@ -208,9 +251,9 @@ module  color_mapper ( input 					 Clk50, pixel_Clk, frame_Clk, Reset, blank, ro
 //            Red <= 8'h00; 
 //            Green <= 8'h00;
 //            Blue <= 8'h7f - DrawX[9:3];
-            Red <= 8'hF7; 
-            Green <= 8'hF7;
-            Blue <= 8'hF7;
+            Red <= 8'hD7; 
+            Green <= 8'hD7;
+            Blue <= 8'hD7;
 			end
 		  else
 			begin
