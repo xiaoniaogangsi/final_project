@@ -71,7 +71,7 @@ module control (input Reset, frame_clk,
 						Jump_counter <= Jump_counter+1;
 				else if (Jump_counter<30)
 							begin
-								if (Bottem <= Ground_Level)
+								if (Bottem == Ground_Level)
 								begin
 									mydragon.Dragon_Y_Motion <= -10;
 								end
@@ -86,7 +86,7 @@ module control (input Reset, frame_clk,
 						//longer storage force
 						else
 							begin
-								if (Bottem <= Ground_Level)
+								if (Bottem == Ground_Level)
 								begin
 									mydragon.Dragon_Y_Motion <= -20;
 								end
@@ -108,11 +108,21 @@ module control (input Reset, frame_clk,
 			endcase
 			
 			//simulation of gravity
-			if (Bottem <= Ground_Level)
+			if (Bottem + mydragon.Dragon_Y_Motion >= Ground_Level)
+				//when the dragon reach the ground in the next state, the motion will change to zero instantaneously.
+				mydragon.Dragon_Y_Motion <= 0; 
+				mydragon.Dragon_Y_Pos <= Ground_Level;
+			else 
+			begin
 				mydragon.Dragon_Y_Motion <= (mydragon.Dragon_Y_Motion + Gravity);
-			mydragon.Dragon_Y_Pos <= (mydragon.Dragon_Y_Pos + mydragon.Dragon_Y_Motion);
+				mydragon.Dragon_Y_Pos <= (mydragon.Dragon_Y_Pos + mydragon.Dragon_Y_Motion);
+			end
 		end
 		
+		always_ff @ (posedge frame_clk)
+		begin 
+			
+		end 
 		always_comb: Produce Enter
 		if (keycode == 8'h0c)
 			Enter = 1;
