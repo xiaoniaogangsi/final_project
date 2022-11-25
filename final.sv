@@ -4,7 +4,7 @@
 //					render engine.
 module control (input Reset, frame_clk,
 					 input [7:0] keycode,
-					 output Dead);
+					 output Dead,Enter);
 		parameter [9:0] Dragon_X = 80;
 		parameter [9:0] Ground_Level = 60;
 		parameter [9:0] Dragon_X_Size = 10; //To be determinied
@@ -26,13 +26,15 @@ module control (input Reset, frame_clk,
 							DEAD}		Action;
 		Dragon mydragon;					
 		initial begin
+		
+		//X_POS, Y_POS, Y_MOTION, X_SIZE, Y_SIZE, LIFE, STATE
 			mydragon = '{80, 60, 0, 10, 20, 1, 0};
 		end
 		
 		//state machine that controls the user interface.
 		always_ff @ (posedge frame_clk)
 		begin
-			if (keycode == 8'h0c)
+			if (keycode == 8'h0d)
 				State <= Start;
 			else
 				State <= Next_State;
@@ -54,30 +56,78 @@ module control (input Reset, frame_clk,
 			endcase
 		end
 		
+		int Jump_counter;
+		int Bottem = mydragon.Dragon_Y_Pos + mydragon.Dragon_Y_Size/2; //take caution!
+		int Right_Edge = mydragon.Dragon_X_Pos + mydragon.Dragon_X_Size/2;
+		int Left_Edge =  mydragon.Dragon_X_Pos - mydragon.Dragon_X_Size/2;
 		
 		//control code of the little dragon
 		always_ff @ (posedge frame_clk)
 		begin 
 			//keycode processing
 			case (keycode)
-				8'h20 : 
-				begin
-					if (mydragon.Dragon_Y_Pos <= Ground_Level)
-						mydragon.Dragon_Y_Motion <= -10;
-				end
-				8'h26 : 
+				8'h20 : //SPACE
+				if (keycode == 8'h20 && Jump_counter < 60)
+						Jump_counter <= Jump_counter+1;
+				else if (Jump_counter<30)
+							begin
+								if (Bottem == Ground_Level)
+								begin
+									mydragon.Dragon_Y_Motion <= -10;
+								end
+								//press space on space, neglect.
+								else
+								begin
+									mydragon.Dragon_Y_Motion <= mydragon.Dragon_Y_Motion;
+								end
+								//no matter how, clear the counter.
+								Jump_counter <= 0;
+							end
+						//longer storage force
+						else
+							begin
+								if (Bottem == Ground_Level)
+								begin
+									mydragon.Dragon_Y_Motion <= -20;
+								end
+								//press jump on space, neglect.
+								else
+								begin
+									mydragon.Dragon_Y_Motion <= mydragon.Dragon_Y_Motion;
+								end
+								//no matter how, clear the counter.
+								Jump_counter <= 0;
+							end
+							
+				8'h26 : //DOWN
 				begin
 					Action <= DUCK;
 					mydragon.State <= Action;
 				end
 				default: ;
 			endcase
+			
 			//simulation of gravity
-			if (mydragon.Dragon_Y_Pos <= Ground_Level)
+			if (Bottem + mydragon.Dragon_Y_Motion >= Ground_Level)
+				//when the dragon reach the ground in the next state, the motion will change to zero instantaneously.
+				mydragon.Dragon_Y_Motion <= 0; 
+				mydragon.Dragon_Y_Pos <= Ground_Level;
+			else 
+			begin
 				mydragon.Dragon_Y_Motion <= (mydragon.Dragon_Y_Motion + Gravity);
-			mydragon.Dragon_Y_Pos <= (mydragon.Dragon_Y_Pos + mydragon.Dragon_Y_Motion);
-		end	
-
+				mydragon.Dragon_Y_Pos <= (mydragon.Dragon_Y_Pos + mydragon.Dragon_Y_Motion);
+			end
+		end
+		
+		always_ff @ (posedge frame_clk)
+		begin 
+			
+		end 
+		always_comb: Produce Enter
+		if (keycode == 8'h0c)
+			Enter = 1;
+		else
+			Enter = 0;
 endmodule
 
 
