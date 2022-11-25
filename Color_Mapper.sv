@@ -208,9 +208,9 @@ module  color_mapper ( input 					 Clk50, pixel_Clk, frame_Clk, Reset, blank, ro
 //            Red <= 8'h00; 
 //            Green <= 8'h00;
 //            Blue <= 8'h7f - DrawX[9:3];
-            Red <= 8'hFF; 
-            Green <= 8'hFF;
-            Blue <= 8'hFF;
+            Red <= 8'hF7; 
+            Green <= 8'hF7;
+            Blue <= 8'hF7;
 			end
 		  else
 			begin

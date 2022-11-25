@@ -31,13 +31,13 @@ begin
 	 $readmemh("sprite/cactus_small3_102x70.txt", mem, 37280, 44419);
 	//Cloud: Need 621 16bit-address, 2^10=1024
 	 $readmemh("sprite/cloud_92x27.txt", mem, 44420, 46903);
-	//
+	//Die: Need 2788 16bit-address, 2^11=2048
 	 $readmemh("sprite/die1_88x94.txt", mem, 46904, 55175);
 	 $readmemh("sprite/die2_80x86.txt", mem, 55176, 62055);
-	 
+	//Duck: Need 3540 16-bit address, 2^12=4096
 	 $readmemh("sprite/duck1_118x60.txt", mem, 62056, 69135);
 	 $readmemh("sprite/duck2_118x60.txt", mem, 69136, 76215);
-	 
+	//Game Over: Need 
 	 $readmemh("sprite/gameover_381x21.txt", mem, 76216, 84216);
 	 
 	 $readmemh("sprite/HI_38x21.txt", mem, 84217, 85014);
@@ -69,7 +69,7 @@ begin
 	 $readmemh("sprite/restart_72x64.txt", mem, 186715, 191322);
 	 
 	 $readmemh("sprite/run1_88x94.txt", mem, 191323, 199594);
-	 $readmemh("sprite/run2_88x94.txt", mem, 199595, 207866);.
+	 $readmemh("sprite/run2_88x94.txt", mem, 199595, 207866);
 	 $readmemh("sprite/run3_88x94.txt", mem, 207867, 216138);
 	 $readmemh("sprite/run4_88x94.txt", mem, 216139, 224410);
 	 
