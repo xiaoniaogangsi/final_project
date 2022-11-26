@@ -1,5 +1,5 @@
 Analysis & Synthesis report for final
-Sat Nov 26 00:30:34 2022
+Sat Nov 26 17:27:56 2022
 Quartus Prime Version 18.1.0 Build 625 09/12/2018 SJ Lite Edition
 
 
@@ -400,7 +400,7 @@ refer to the applicable agreement for further details.
 +----------------------------------------------------------------------------------+
 ; Analysis & Synthesis Summary                                                     ;
 +------------------------------------+---------------------------------------------+
-; Analysis & Synthesis Status        ; Successful - Sat Nov 26 00:30:34 2022       ;
+; Analysis & Synthesis Status        ; Successful - Sat Nov 26 17:27:56 2022       ;
 ; Quartus Prime Version              ; 18.1.0 Build 625 09/12/2018 SJ Lite Edition ;
 ; Revision Name                      ; final                                       ;
 ; Top-level Entity Name              ; lab62                                       ;
@@ -10380,7 +10380,7 @@ Note: In order to hide this table in the UI and the text report file, please set
 +----------------+--------------+
 ; Partition Name ; Elapsed Time ;
 +----------------+--------------+
-; Top            ; 00:00:37     ;
+; Top            ; 00:00:40     ;
 +----------------+--------------+
 
 
@@ -10390,7 +10390,7 @@ Note: In order to hide this table in the UI and the text report file, please set
 Info: *******************************************************************
 Info: Running Quartus Prime Analysis & Synthesis
     Info: Version 18.1.0 Build 625 09/12/2018 SJ Lite Edition
-    Info: Processing started: Sat Nov 26 00:28:09 2022
+    Info: Processing started: Sat Nov 26 17:25:16 2022
 Info: Command: quartus_map --read_settings_files=on --write_settings_files=off final -c final
 Warning (18236): Number of processors has not been specified which may cause overloading on shared machines.  Set the global assignment NUM_PARALLEL_PROCESSORS in your QSF to an appropriate value for best performance.
 Info (20030): Parallel compilation is enabled and will use 4 of the 4 processors detected
@@ -11005,7 +11005,7 @@ Info (12021): Found 1 design units, including 1 entities, in source file db/alts
 Info (12128): Elaborating entity "altsyncram_56g1" for hierarchy "color_mapper:color0|frame_buffer:frame_buffer0|buffer:row_buffer1|altsyncram:altsyncram_component|altsyncram_56g1:auto_generated" File: d:/uiuc_junior/2022_fall/quartz/quartus/libraries/megafunctions/altsyncram.tdf Line: 791
 Info (12128): Elaborating entity "palette" for hierarchy "color_mapper:color0|palette:palette0" File: D:/UIUC_Junior/2022_fall/ECE385/Final_Project/Final_385/final_project/Color_Mapper.sv Line: 207
 Info (11170): Starting IP generation for the debug fabric: alt_sld_fab.
-Info (11172): 2022.11.26.00:29:16 Progress: Loading sld72322c81/alt_sld_fab_wrapper_hw.tcl
+Info (11172): 2022.11.26.17:26:33 Progress: Loading sld72322c81/alt_sld_fab_wrapper_hw.tcl
 Info (11172): Alt_sld_fab.alt_sld_fab: SLD fabric agents which did not specify prefer_host were connected to JTAG
 Info (11172): Alt_sld_fab: Generating alt_sld_fab "alt_sld_fab" for QUARTUS_SYNTH
 Info (11172): Alt_sld_fab: "alt_sld_fab" instantiated alt_sld_fab "alt_sld_fab"
@@ -11289,9 +11289,9 @@ Info (21057): Implemented 10692 device resources after synthesis - the final res
     Info (21064): Implemented 280 RAM segments
     Info (21065): Implemented 1 PLLs
 Info: Quartus Prime Analysis & Synthesis was successful. 0 errors, 113 warnings
-    Info: Peak virtual memory: 5040 megabytes
-    Info: Processing ended: Sat Nov 26 00:30:34 2022
-    Info: Elapsed time: 00:02:25
+    Info: Peak virtual memory: 5054 megabytes
+    Info: Processing ended: Sat Nov 26 17:27:56 2022
+    Info: Elapsed time: 00:02:40
     Info: Total CPU time (on all processors): 00:02:15
 
 
