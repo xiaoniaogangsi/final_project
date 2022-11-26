@@ -24,7 +24,8 @@ module control (input Reset, frame_clk,
 							DUCK,
 							CAKE,
 							DEAD}		Action;
-		Dragon mydragon;					
+		Dragon mydragon;	
+
 		initial begin
 		
 		//X_POS, Y_POS, Y_MOTION, X_SIZE, Y_SIZE, LIFE, STATE
@@ -109,9 +110,11 @@ module control (input Reset, frame_clk,
 			
 			//simulation of gravity
 			if (Bottem + mydragon.Dragon_Y_Motion >= Ground_Level)
+			begin
 				//when the dragon reach the ground in the next state, the motion will change to zero instantaneously.
 				mydragon.Dragon_Y_Motion <= 0; 
 				mydragon.Dragon_Y_Pos <= Ground_Level;
+			end
 			else 
 			begin
 				mydragon.Dragon_Y_Motion <= (mydragon.Dragon_Y_Motion + Gravity);
@@ -119,15 +122,21 @@ module control (input Reset, frame_clk,
 			end
 		end
 		
-		always_ff @ (posedge frame_clk)
-		begin 
-			
-		end 
-		always_comb: Produce Enter
+		//control code of the cactus.
+//		always_ff @ (posedge frame_clk)
+//		begin 
+//			
+//		end 
+		
+		//
+		
+		always_comb  //Produce Enter
+		begin
 		if (keycode == 8'h0c)
 			Enter = 1;
 		else
 			Enter = 0;
+		end
 endmodule
 
 
