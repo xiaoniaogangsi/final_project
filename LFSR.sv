@@ -1,3 +1,4 @@
+//From https://blog.csdn.net/hengzo/article/details/49689725, with some modification.
 module LFSR #(parameter length = 24)
 				(input Clk, Enable,
 				 input Load_Seed,
@@ -31,7 +32,7 @@ begin
 	5: Shift_in = LFSR_regs[5-1] ^ LFSR_regs[3-1];
 	6: Shift_in = LFSR_regs[6-1] ^ LFSR_regs[5-1];
 	7: Shift_in = LFSR_regs[7-1] ^ LFSR_regs[6-1];
-	8: Shift_in = LFSR_regs[8-1] ^ LFSR_regs[6-1] ^ LFSR_regs[5] ^ LFSR_regs[3];
+	8: Shift_in = LFSR_regs[8-1] ^ LFSR_regs[6-1] ^ LFSR_regs[5-1] ^ LFSR_regs[3-1];
 	9: Shift_in = LFSR_regs[9-1] ^ LFSR_regs[5-1];
 	10: Shift_in = LFSR_regs[10-1] ^ LFSR_regs[7-1];
 	11: Shift_in = LFSR_regs[11-1] ^ LFSR_regs[9-1];
