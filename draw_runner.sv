@@ -1,4 +1,4 @@
-module draw_runner(  input pixel_Clk, frame_Clk,
+module draw_runner(  input Clk50, pixel_Clk, frame_Clk,
 							input [9:0] WriteX, WriteY,
 							input [9:0] DrawX, DrawY,
 							input [9:0] PosX, PosY,
@@ -29,7 +29,7 @@ module draw_runner(  input pixel_Clk, frame_Clk,
 		SizeX = runner_X;
 		SizeY = runner_Y;
 		DistX = WriteX - PosX;
-		DistY = DrawY - PosY;
+		DistY = WriteY - PosY;
 	end
 	
 	always_ff @ (posedge frame_Clk)
@@ -43,23 +43,23 @@ module draw_runner(  input pixel_Clk, frame_Clk,
 			frame_count <= frame_count + 1;
 	end
 	
-//	always_ff @ (posedge pixel_Clk)
-	always_comb
+	always_ff @ (posedge Clk50)
+//	always_comb
 	begin
 		if (draw_run3)
-			start = runner3;
+			start <= runner3;
 		else
-			start = runner4;
-		offset = DistY*SizeX + DistX;
-		address = start + offset;
+			start <= runner4;
+		offset <= DistY*SizeX + DistX;
 	end
+	assign address = start + offset;
 	
 	always_comb
    begin:Runner_on_wr_proc
 	 if ((WriteX >= PosX) &&
        (WriteX < PosX + runner_X) &&
-       (DrawY >= PosY) &&
-       (DrawY < PosY + runner_Y)
+       (WriteY >= PosY) &&
+       (WriteY < PosY + runner_Y)
 //		 && (istransparent == 1'b0)
 		 )
       runner_on_wr = 1'b1;

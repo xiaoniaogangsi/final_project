@@ -175,24 +175,25 @@ module  color_mapper ( input 					 Clk50, pixel_Clk, frame_Clk, Reset, blank, ro
 							.q_a(color_index[3]),
 							.q_b(4'bZ));
 
-assign color_index[4]=color_index[draw_address[17:16]];
+	assign color_index[4]=color_index[draw_address[17:16]];
 
-logic[9:0] WriteX,WriteY;
-assign WriteY=DrawY+1;
-assign WriteX[9:1]=DrawX[8:0];
-assign WriteX[0]=last_digit;
+	logic[9:0] WriteX,WriteY;
+	assign WriteY=DrawY+1;
+	assign WriteX[9:1]=DrawX[8:0];
+	assign WriteX[0]=last_digit;
 
-logic last_digit;
+	logic last_digit;
 
-always_ff @ (posedge Clk50)
-begin
-if (DrawX==799)
-last_digit<=0;
-else
-begin
-last_digit<=~last_digit;
-end
-end
+	always_ff @ (posedge Clk50)
+	begin
+		if (DrawX==799)
+			last_digit<=0;
+		else
+		begin
+			last_digit<=~last_digit;
+		end
+	end
+	
 	frame_buffer frame_buffer0(.Clk50(Clk50), .pixel_Clk(pixel_Clk), .Reset(Reset), .write_en(1'b1),
 										.write_data(color_index[4]),
 										.write_X(WriteX), .read_X(DrawX),
@@ -231,9 +232,9 @@ end
 //            Red <= 8'h00; 
 //            Green <= 8'h00;
 //            Blue <= 8'h7f - DrawX[9:3];
-            Red <= 8'hD7; 
-            Green <= 8'hD7;
-            Blue <= 8'hD7;
+            Red <= 8'hA0; 
+            Green <= 8'hA0;
+            Blue <= 8'hA0;
 			end
 		  else
 			begin
