@@ -1,4 +1,4 @@
-module draw_horizon (input pixel_Clk, frame_Clk,
+module draw_horizon (input Clk50, pixel_Clk, frame_Clk,
 								input [9:0] WriteX, WriteY,
 								input [9:0] DrawX, DrawY,
 								output logic horizon_on_wr,
@@ -29,7 +29,7 @@ module draw_horizon (input pixel_Clk, frame_Clk,
 		SizeX = horizon_X;
 		SizeY = horizon_Y;
 		DistX = WriteX - PosX;
-		DistY = DrawY - PosY;
+		DistY = WriteY - PosY;
 	end
 	
 	always_ff @ (posedge frame_Clk)
@@ -45,19 +45,19 @@ module draw_horizon (input pixel_Clk, frame_Clk,
 			frame_count <= frame_count + 1;
 	end
 	
-//	always_ff @ (posedge pixel_Clk)
-	always_comb
+	always_ff @ (posedge Clk50)
+//	always_comb
 	begin
-		offset = DistY*SizeX + DistX;
-		address = start + offset;
+		offset <= DistY*SizeX + DistX;
 	end
+	assign address = start + offset;
 	
 	always_comb
    begin:Horizon_on_wr_proc
 	 if ((WriteX >= PosX) &&
        (WriteX < PosX + window_X) &&
-       (DrawY >= PosY) &&
-       (DrawY < PosY + horizon_Y)
+       (WriteY >= PosY) &&
+       (WriteY < PosY + horizon_Y)
 //		 && (istransparent == 1'b0)
 		 )
       horizon_on_wr = 1'b1;

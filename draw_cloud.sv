@@ -1,4 +1,4 @@
-module draw_cloud (	input pixel_Clk, frame_Clk,
+module draw_cloud (	input Clk50, pixel_Clk, frame_Clk,
 							input [9:0] WriteX, WriteY,
 							input [9:0] DrawX, DrawY,
 							output logic cloud_on_wr,
@@ -7,13 +7,15 @@ module draw_cloud (	input pixel_Clk, frame_Clk,
 
 	//$readmemh("sprite/cloud_92x27.txt", mem, 44420, 46903);
 	parameter [17:0] cloud = 18'd44420;
-	parameter [17:0] cloud_X = 18'd92;
-	parameter [17:0] cloud_Y = 18'd27;
+	parameter [9:0] cloud_X = 10'd92;
+	parameter [9:0] cloud_Y = 10'd27;
 	
 	int frame_count;	
 	logic [17:0] start, offset;
 	logic [9:0] PosX, PosY;
 	int SizeX, SizeY, DistX, DistY;
+	
+	logic [9:0] DrawX_new, WriteX_new;
 	
 	initial
 	begin
@@ -21,20 +23,26 @@ module draw_cloud (	input pixel_Clk, frame_Clk,
 		PosY = 10'd100;
 		frame_count = 1;
 	end
+	
+	always_comb
+	begin
+		DrawX_new = DrawX + cloud_X;
+		WriteX_new = WriteX + cloud_X;
+	end
 
 	always_comb
 	begin
 		SizeX = cloud_X;
 		SizeY = cloud_Y;
-		DistX = WriteX - PosX;
-		DistY = DrawY - PosY;
+		DistX = WriteX_new - PosX;
+		DistY = WriteY - PosY;
 	end
 	
 	always_ff @ (posedge frame_Clk)
 	begin
-		if (frame_count == 10)
+		if (frame_count == 1)
 		begin
-			if (PosX == 10'b0)
+			if ((~PosX)+1  == cloud_X)
 				PosX <= 10'd640;
 			else
 				PosX <= PosX - 1;
@@ -44,18 +52,18 @@ module draw_cloud (	input pixel_Clk, frame_Clk,
 			frame_count <= frame_count + 1;
 	end
 	
-//	always_ff @ (posedge pixel_Clk)
-	always_comb
+	always_ff @ (posedge Clk50)
+//	always_comb
 	begin
-		start = cloud;
-		offset = DistY*SizeX + DistX;
-		address = start + offset;
+		start <= cloud;
+		offset <= DistY*SizeX + DistX;
 	end
-	
+	assign address = start + offset;
+
 	 always_comb
     begin:Cloud_on_proc
-		 if ((DrawX >= PosX) &&
-			 (DrawX < PosX + cloud_X) &&
+		 if ((DrawX_new >= PosX) &&
+			 (DrawX_new < PosX + cloud_X) &&
 			 (DrawY >= PosY) &&
 			 (DrawY < PosY + cloud_Y)
 	//		 && (istransparent == 1'b0)
@@ -68,10 +76,10 @@ module draw_cloud (	input pixel_Clk, frame_Clk,
 	 
 	 always_comb
     begin:Cloud_on_wr_proc
-		 if ((WriteX >= PosX) &&
-			 (WriteX < PosX + cloud_X) &&
-			 (DrawY >= PosY) &&
-			 (DrawY < PosY + cloud_Y)
+		 if ((WriteX_new >= PosX) &&
+			 (WriteX_new < PosX + cloud_X) &&
+			 (WriteY >= PosY) &&
+			 (WriteY < PosY + cloud_Y)
 	//		 && (istransparent == 1'b0)
 	//		 && (ball_on == 1'b0)
 			 )
@@ -79,6 +87,5 @@ module draw_cloud (	input pixel_Clk, frame_Clk,
 		 else 
 			cloud_on_wr = 1'b0;
     end 
-	
-							
+	 			
 endmodule
