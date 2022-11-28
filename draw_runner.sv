@@ -10,8 +10,8 @@ module draw_runner(  input Clk50, pixel_Clk, frame_Clk,
 	//$readmemh("sprite/run4_88x94.txt", mem, 216139, 224410);
 	parameter [17:0] runner3 = 18'd207867;
 	parameter [17:0] runner4 = 18'd216139;
-	parameter [17:0] runner_X = 18'd88;
-	parameter [17:0] runner_Y = 18'd94;
+	int runner_X = 88;
+	int runner_Y = 94;
 	
 	int frame_count;
 	logic draw_run3;

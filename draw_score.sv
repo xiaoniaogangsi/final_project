@@ -30,16 +30,16 @@ module draw_score (	input Clk50, pixel_Clk, frame_Clk, Reset,
 		num[8] = 18'd171239; 
 		num[9] = 18'd171617; 
 	end
-	parameter [17:0] num_X = 18'd18;
-	parameter [17:0] num_Y = 18'd21;
+	int num_X = 18;
+	int num_Y = 21;
 
-	parameter [9:0] score1_locX = 10'd520;
-	parameter [9:0] score2_locX = 10'd540;
-	parameter [9:0] score3_locX = 10'd560; 
-	parameter [9:0] score4_locX = 10'd580;
-	parameter [9:0] score5_locX = 10'd600; 
+	int score1_locX = 520;
+	int score2_locX = 540;
+	int score3_locX = 560; 
+	int score4_locX = 580;
+	int score5_locX = 600; 
 
-	parameter [9:0] score_locY = 10'd20;
+	int score_locY = 20;
 
 	logic [17:0] score1;
 	logic [17:0] score2;
