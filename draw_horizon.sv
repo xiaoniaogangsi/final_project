@@ -7,19 +7,19 @@ module draw_horizon (input Clk50, pixel_Clk, frame_Clk,
 
 	//$readmemh("sprite/horizon_2400x24.txt", mem, 85015, 142614);
 	parameter [17:0] horizon = 18'd85015;
-	parameter [17:0] horizon_X = 18'd2400;
-	parameter [17:0] horizon_Y = 18'd24;
-	parameter [17:0] window_X = 18'd640;
+	int horizon_X = 2400;
+	int horizon_Y = 24;
+	int window_X = 640;
 	
 	int frame_count;
 	logic [17:0] start, offset;
-	logic [9:0] PosX, PosY;
+	int PosX, PosY;
 	int SizeX, SizeY, DistX, DistY;
 	
 	initial
 	begin
-		PosX = 10'd0;
-		PosY = 10'd400;
+		PosX = 0;
+		PosY = 400;
 		frame_count = 1;
 		start = horizon;
 	end
@@ -34,9 +34,9 @@ module draw_horizon (input Clk50, pixel_Clk, frame_Clk,
 	
 	always_ff @ (posedge frame_Clk)
 	begin
-		if (frame_count == 5)
+		if (frame_count == 1)
 		begin
-			start <= start + 1;
+			start <= start + 2;
 			if (start == horizon + 2400)
 				start <= horizon;
 			frame_count <= 1;

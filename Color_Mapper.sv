@@ -43,7 +43,7 @@ module  color_mapper ( input 					 Clk50, pixel_Clk, frame_Clk, Reset, blank, ro
 //    assign DistY = DrawY - BallY;
     assign Size = Ball_size;
 	 
-	 logic [17:0] address_runner, address_cloud, address_score, address_horizon;
+	 logic [17:0] address_runner, address_cloud, address_score, address_horizon, address_cactus;
 	 logic [17:0] draw_address;	//current Address for the picture we want to draw (start+offset)
 //	 logic [3:0] color_index;		//color index we get from the ROM
 	 logic [3:0] color_index_buffer; //color index from frame_buffer
@@ -59,6 +59,7 @@ module  color_mapper ( input 					 Clk50, pixel_Clk, frame_Clk, Reset, blank, ro
 	
 	 logic [2:0] score_on_dr,score_on_wr;	//000 means off, 001~101 means on1~on5.
 	 logic horizon_on_dr, horizon_on_wr;
+	 logic cactus_on_dr, cactus_on_wr;
 	 
 	// 800 horizontal pixels indexed 0 to 799
    // 525 vertical pixels indexed 0 to 524
@@ -68,7 +69,6 @@ module  color_mapper ( input 					 Clk50, pixel_Clk, frame_Clk, Reset, blank, ro
 		buffer_select <= ~(buffer_select);
 	end
 	
-
 
 //	always_ff @ (posedge Clk50 or posedge Reset )
 //	begin: counter_proc
@@ -109,7 +109,7 @@ module  color_mapper ( input 					 Clk50, pixel_Clk, frame_Clk, Reset, blank, ro
 	draw_cloud cloud0(.*, .address(address_cloud));
 	draw_score score0(.*, .address(address_score));
 	draw_horizon horizon0(.*, .address(address_horizon));
-	
+	draw_cactus cactus0(.*, .address(address_cactus));
 	
 	enum logic [4:0]{runner, cloud, score} State, Next_State;
 	
@@ -121,6 +121,8 @@ module  color_mapper ( input 					 Clk50, pixel_Clk, frame_Clk, Reset, blank, ro
 			draw_address = address_score;
 		else if (cloud_on_wr)
 			draw_address = address_cloud;
+		else if (cactus_on_wr)
+			draw_address = address_cactus;
 		else if (horizon_on_wr)
 			draw_address = address_horizon;
 		else
@@ -137,7 +139,7 @@ module  color_mapper ( input 					 Clk50, pixel_Clk, frame_Clk, Reset, blank, ro
 	assign data_in = 4'b0000;
 	logic [15:0] empty_addr;
 	assign empty_addr = 0;
-	logic [3:0] color_index[4:0];
+	logic [3:0] color_index[4:0];		//color index we get from the ROM
 	spriterom1 sprite1(.address_a(draw_address[15:0]),
 							.address_b(empty_addr),
 							.clock(Clk50),
@@ -219,7 +221,12 @@ module  color_mapper ( input 					 Clk50, pixel_Clk, frame_Clk, Reset, blank, ro
 		end
 		else
 		begin
-        if (((ball_on_dr == 1'b1) || (cloud_on_dr == 1'b1) || (score_on_dr != 3'b000) || (horizon_on_dr == 1'b1)) && (istransparent == 1'b0)) 
+        if (((ball_on_dr == 1'b1) || 
+		  (cloud_on_dr == 1'b1) || 
+		  (score_on_dr != 3'b000) || 
+		  (horizon_on_dr == 1'b1) ||
+		  (cactus_on_dr == 1'b1)) 
+		  && (istransparent == 1'b0)) 
         begin 
 //				Red <= Red_p;
 //				Green <= Green_p;

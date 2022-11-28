@@ -1,5 +1,5 @@
 Timing Analyzer report for final
-Sun Nov 27 00:45:46 2022
+Sun Nov 27 20:30:31 2022
 Quartus Prime Version 18.1.0 Build 625 09/12/2018 SJ Lite Edition
 
 
@@ -90,15 +90,15 @@ refer to the applicable agreement for further details.
 ; Number detected on machine ; 16          ;
 ; Maximum allowed            ; 16          ;
 ;                            ;             ;
-; Average used               ; 4.58        ;
+; Average used               ; 4.54        ;
 ; Maximum used               ; 16          ;
 ;                            ;             ;
 ; Usage by Processor         ; % Time Used ;
 ;     Processor 1            ; 100.0%      ;
 ;     Processor 2            ;  27.2%      ;
-;     Processor 3            ;  24.6%      ;
-;     Processor 4            ;  23.9%      ;
-;     Processors 5-16        ;  23.6%      ;
+;     Processor 3            ;  24.4%      ;
+;     Processor 4            ;  23.6%      ;
+;     Processors 5-16        ;  23.3%      ;
 +----------------------------+-------------+
 
 
@@ -107,72 +107,75 @@ refer to the applicable agreement for further details.
 +-----------------------------------------------------------------------------+--------+--------------------------+
 ; SDC File Path                                                               ; Status ; Read at                  ;
 +-----------------------------------------------------------------------------+--------+--------------------------+
-; lab62_soc/synthesis/submodules/altera_reset_controller.sdc                  ; OK     ; Sun Nov 27 00:45:41 2022 ;
-; lab62_soc/synthesis/submodules/altera_avalon_st_handshake_clock_crosser.sdc ; OK     ; Sun Nov 27 00:45:41 2022 ;
-; lab62_soc/synthesis/submodules/lab62_soc_nios2_gen2_0_cpu.sdc               ; OK     ; Sun Nov 27 00:45:41 2022 ;
-; lab62.sdc                                                                   ; OK     ; Sun Nov 27 00:45:41 2022 ;
+; lab62_soc/synthesis/submodules/altera_reset_controller.sdc                  ; OK     ; Sun Nov 27 20:30:26 2022 ;
+; lab62_soc/synthesis/submodules/altera_avalon_st_handshake_clock_crosser.sdc ; OK     ; Sun Nov 27 20:30:26 2022 ;
+; lab62_soc/synthesis/submodules/lab62_soc_nios2_gen2_0_cpu.sdc               ; OK     ; Sun Nov 27 20:30:26 2022 ;
+; lab62.sdc                                                                   ; OK     ; Sun Nov 27 20:30:26 2022 ;
 +-----------------------------------------------------------------------------+--------+--------------------------+
 
 
-+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-; Clocks                                                                                                                                                                                                                                                                         ;
-+------------------------------+-----------+--------+-----------+--------+--------+------------+-----------+-------------+-------+--------+-----------+------------+----------+------------------------------+--------------------------------+----------------------------------+
-; Clock Name                   ; Type      ; Period ; Frequency ; Rise   ; Fall   ; Duty Cycle ; Divide by ; Multiply by ; Phase ; Offset ; Edge List ; Edge Shift ; Inverted ; Master                       ; Source                         ; Targets                          ;
-+------------------------------+-----------+--------+-----------+--------+--------+------------+-----------+-------------+-------+--------+-----------+------------+----------+------------------------------+--------------------------------+----------------------------------+
-; altera_reserved_tck          ; Base      ; 30.303 ; 33.0 MHz  ; 0.000  ; 15.151 ;            ;           ;             ;       ;        ;           ;            ;          ;                              ;                                ; { altera_reserved_tck }          ;
-; clk_dram_ext                 ; Generated ; 20.000 ; 50.0 MHz  ; 19.000 ; 29.000 ;            ; 1         ; 1           ;       ;        ;           ;            ; false    ; u0|sdram_pll|sd1|pll7|clk[1] ; u0|sdram_pll|sd1|pll7|clk[1]   ; { DRAM_CLK }                     ;
-; MAX10_CLK1_50                ; Base      ; 20.000 ; 50.0 MHz  ; 0.000  ; 10.000 ;            ;           ;             ;       ;        ;           ;            ;          ;                              ;                                ; { MAX10_CLK1_50 }                ;
-; u0|sdram_pll|sd1|pll7|clk[0] ; Generated ; 20.000 ; 50.0 MHz  ; 0.000  ; 10.000 ; 50.00      ; 1         ; 1           ;       ;        ;           ;            ; false    ; MAX10_CLK1_50                ; u0|sdram_pll|sd1|pll7|inclk[0] ; { u0|sdram_pll|sd1|pll7|clk[0] } ;
-; u0|sdram_pll|sd1|pll7|clk[1] ; Generated ; 20.000 ; 50.0 MHz  ; 19.000 ; 29.000 ; 50.00      ; 1         ; 1           ; -18.0 ;        ;           ;            ; false    ; MAX10_CLK1_50                ; u0|sdram_pll|sd1|pll7|inclk[0] ; { u0|sdram_pll|sd1|pll7|clk[1] } ;
-; vga_controller:vga0|clkdiv   ; Base      ; 40.000 ; 25.0 MHz  ; 0.000  ; 20.000 ;            ;           ;             ;       ;        ;           ;            ;          ;                              ;                                ; { vga_controller:vga0|clkdiv }   ;
-; vga_controller:vga0|hs       ; Base      ; 40.000 ; 25.0 MHz  ; 0.000  ; 20.000 ;            ;           ;             ;       ;        ;           ;            ;          ;                              ;                                ; { vga_controller:vga0|hs }       ;
-; vga_controller:vga0|vs       ; Base      ; 40.000 ; 25.0 MHz  ; 0.000  ; 20.000 ;            ;           ;             ;       ;        ;           ;            ;          ;                              ;                                ; { vga_controller:vga0|vs }       ;
-+------------------------------+-----------+--------+-----------+--------+--------+------------+-----------+-------------+-------+--------+-----------+------------+----------+------------------------------+--------------------------------+----------------------------------+
++------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+; Clocks                                                                                                                                                                                                                                                                                                                       ;
++-----------------------------------------------------+-----------+--------+-----------+--------+--------+------------+-----------+-------------+-------+--------+-----------+------------+----------+------------------------------+--------------------------------+---------------------------------------------------------+
+; Clock Name                                          ; Type      ; Period ; Frequency ; Rise   ; Fall   ; Duty Cycle ; Divide by ; Multiply by ; Phase ; Offset ; Edge List ; Edge Shift ; Inverted ; Master                       ; Source                         ; Targets                                                 ;
++-----------------------------------------------------+-----------+--------+-----------+--------+--------+------------+-----------+-------------+-------+--------+-----------+------------+----------+------------------------------+--------------------------------+---------------------------------------------------------+
+; altera_reserved_tck                                 ; Base      ; 30.303 ; 33.0 MHz  ; 0.000  ; 15.151 ;            ;           ;             ;       ;        ;           ;            ;          ;                              ;                                ; { altera_reserved_tck }                                 ;
+; clk_dram_ext                                        ; Generated ; 20.000 ; 50.0 MHz  ; 19.000 ; 29.000 ;            ; 1         ; 1           ;       ;        ;           ;            ; false    ; u0|sdram_pll|sd1|pll7|clk[1] ; u0|sdram_pll|sd1|pll7|clk[1]   ; { DRAM_CLK }                                            ;
+; color_mapper:color0|draw_cactus:cactus0|change_type ; Base      ; 40.000 ; 25.0 MHz  ; 0.000  ; 20.000 ;            ;           ;             ;       ;        ;           ;            ;          ;                              ;                                ; { color_mapper:color0|draw_cactus:cactus0|change_type } ;
+; MAX10_CLK1_50                                       ; Base      ; 20.000 ; 50.0 MHz  ; 0.000  ; 10.000 ;            ;           ;             ;       ;        ;           ;            ;          ;                              ;                                ; { MAX10_CLK1_50 }                                       ;
+; u0|sdram_pll|sd1|pll7|clk[0]                        ; Generated ; 20.000 ; 50.0 MHz  ; 0.000  ; 10.000 ; 50.00      ; 1         ; 1           ;       ;        ;           ;            ; false    ; MAX10_CLK1_50                ; u0|sdram_pll|sd1|pll7|inclk[0] ; { u0|sdram_pll|sd1|pll7|clk[0] }                        ;
+; u0|sdram_pll|sd1|pll7|clk[1]                        ; Generated ; 20.000 ; 50.0 MHz  ; 19.000 ; 29.000 ; 50.00      ; 1         ; 1           ; -18.0 ;        ;           ;            ; false    ; MAX10_CLK1_50                ; u0|sdram_pll|sd1|pll7|inclk[0] ; { u0|sdram_pll|sd1|pll7|clk[1] }                        ;
+; vga_controller:vga0|clkdiv                          ; Base      ; 40.000 ; 25.0 MHz  ; 0.000  ; 20.000 ;            ;           ;             ;       ;        ;           ;            ;          ;                              ;                                ; { vga_controller:vga0|clkdiv }                          ;
+; vga_controller:vga0|hs                              ; Base      ; 40.000 ; 25.0 MHz  ; 0.000  ; 20.000 ;            ;           ;             ;       ;        ;           ;            ;          ;                              ;                                ; { vga_controller:vga0|hs }                              ;
+; vga_controller:vga0|vs                              ; Base      ; 40.000 ; 25.0 MHz  ; 0.000  ; 20.000 ;            ;           ;             ;       ;        ;           ;            ;          ;                              ;                                ; { vga_controller:vga0|vs }                              ;
++-----------------------------------------------------+-----------+--------+-----------+--------+--------+------------+-----------+-------------+-------+--------+-----------+------------+----------+------------------------------+--------------------------------+---------------------------------------------------------+
 
 
-+--------------------------------------------------------------------------------------------------------------+
-; Slow 1200mV 85C Model Fmax Summary                                                                           ;
-+------------+-----------------+------------------------------+------------------------------------------------+
-; Fmax       ; Restricted Fmax ; Clock Name                   ; Note                                           ;
-+------------+-----------------+------------------------------+------------------------------------------------+
-; 11.45 MHz  ; 11.45 MHz       ; vga_controller:vga0|vs       ;                                                ;
-; 63.14 MHz  ; 63.14 MHz       ; MAX10_CLK1_50                ;                                                ;
-; 76.48 MHz  ; 76.48 MHz       ; vga_controller:vga0|clkdiv   ;                                                ;
-; 89.65 MHz  ; 89.65 MHz       ; u0|sdram_pll|sd1|pll7|clk[0] ;                                                ;
-; 124.77 MHz ; 124.77 MHz      ; altera_reserved_tck          ;                                                ;
-; 1424.5 MHz ; 416.15 MHz      ; vga_controller:vga0|hs       ; limit due to minimum period restriction (tmin) ;
-+------------+-----------------+------------------------------+------------------------------------------------+
++--------------------------------------------------------------------+
+; Slow 1200mV 85C Model Fmax Summary                                 ;
++------------+-----------------+------------------------------+------+
+; Fmax       ; Restricted Fmax ; Clock Name                   ; Note ;
++------------+-----------------+------------------------------+------+
+; 11.23 MHz  ; 11.23 MHz       ; vga_controller:vga0|vs       ;      ;
+; 62.45 MHz  ; 62.45 MHz       ; MAX10_CLK1_50                ;      ;
+; 69.1 MHz   ; 69.1 MHz        ; vga_controller:vga0|clkdiv   ;      ;
+; 88.61 MHz  ; 88.61 MHz       ; u0|sdram_pll|sd1|pll7|clk[0] ;      ;
+; 120.85 MHz ; 120.85 MHz      ; altera_reserved_tck          ;      ;
+; 157.98 MHz ; 157.98 MHz      ; vga_controller:vga0|hs       ;      ;
++------------+-----------------+------------------------------+------+
 This panel reports FMAX for every clock in the design, regardless of the user-specified clock periods.  FMAX is only computed for paths where the source and destination registers or ports are driven by the same clock.  Paths of different clocks, including generated clocks, are ignored.  For paths between a clock and its inversion, FMAX is computed as if the rising and falling edges are scaled along with FMAX, such that the duty cycle (in terms of a percentage) is maintained. Altera recommends that you always use clock constraints and other slack reports for sign-off analysis.
 
 
-+---------------------------------------------------------+
-; Slow 1200mV 85C Model Setup Summary                     ;
-+------------------------------+----------+---------------+
-; Clock                        ; Slack    ; End Point TNS ;
-+------------------------------+----------+---------------+
-; MAX10_CLK1_50                ; -149.298 ; -23951.973    ;
-; vga_controller:vga0|clkdiv   ; -57.988  ; -168.171      ;
-; vga_controller:vga0|vs       ; -47.337  ; -47.337       ;
-; u0|sdram_pll|sd1|pll7|clk[0] ; 8.256    ; 0.000         ;
-; altera_reserved_tck          ; 11.144   ; 0.000         ;
-; clk_dram_ext                 ; 15.442   ; 0.000         ;
-; vga_controller:vga0|hs       ; 39.298   ; 0.000         ;
-+------------------------------+----------+---------------+
++--------------------------------------------------------------------------------+
+; Slow 1200mV 85C Model Setup Summary                                            ;
++-----------------------------------------------------+----------+---------------+
+; Clock                                               ; Slack    ; End Point TNS ;
++-----------------------------------------------------+----------+---------------+
+; MAX10_CLK1_50                                       ; -153.698 ; -22823.086    ;
+; vga_controller:vga0|clkdiv                          ; -54.752  ; -156.548      ;
+; vga_controller:vga0|vs                              ; -49.024  ; -49.024       ;
+; u0|sdram_pll|sd1|pll7|clk[0]                        ; 8.256    ; 0.000         ;
+; altera_reserved_tck                                 ; 11.014   ; 0.000         ;
+; clk_dram_ext                                        ; 15.442   ; 0.000         ;
+; vga_controller:vga0|hs                              ; 33.670   ; 0.000         ;
+; color_mapper:color0|draw_cactus:cactus0|change_type ; 37.680   ; 0.000         ;
++-----------------------------------------------------+----------+---------------+
 
 
-+------------------------------------------------------+
-; Slow 1200mV 85C Model Hold Summary                   ;
-+------------------------------+-------+---------------+
-; Clock                        ; Slack ; End Point TNS ;
-+------------------------------+-------+---------------+
-; MAX10_CLK1_50                ; 0.323 ; 0.000         ;
-; vga_controller:vga0|vs       ; 0.324 ; 0.000         ;
-; u0|sdram_pll|sd1|pll7|clk[0] ; 0.327 ; 0.000         ;
-; altera_reserved_tck          ; 0.340 ; 0.000         ;
-; vga_controller:vga0|hs       ; 0.393 ; 0.000         ;
-; vga_controller:vga0|clkdiv   ; 0.574 ; 0.000         ;
-; clk_dram_ext                 ; 0.673 ; 0.000         ;
-+------------------------------+-------+---------------+
++-----------------------------------------------------------------------------+
+; Slow 1200mV 85C Model Hold Summary                                          ;
++-----------------------------------------------------+-------+---------------+
+; Clock                                               ; Slack ; End Point TNS ;
++-----------------------------------------------------+-------+---------------+
+; vga_controller:vga0|vs                              ; 0.325 ; 0.000         ;
+; MAX10_CLK1_50                                       ; 0.340 ; 0.000         ;
+; altera_reserved_tck                                 ; 0.340 ; 0.000         ;
+; u0|sdram_pll|sd1|pll7|clk[0]                        ; 0.341 ; 0.000         ;
+; vga_controller:vga0|clkdiv                          ; 0.435 ; 0.000         ;
+; clk_dram_ext                                        ; 0.673 ; 0.000         ;
+; color_mapper:color0|draw_cactus:cactus0|change_type ; 1.290 ; 0.000         ;
+; vga_controller:vga0|hs                              ; 5.554 ; 0.000         ;
++-----------------------------------------------------+-------+---------------+
 
 
 +-------------------------------------------------------+
@@ -180,9 +183,9 @@ This panel reports FMAX for every clock in the design, regardless of the user-sp
 +------------------------------+--------+---------------+
 ; Clock                        ; Slack  ; End Point TNS ;
 +------------------------------+--------+---------------+
-; u0|sdram_pll|sd1|pll7|clk[0] ; 12.298 ; 0.000         ;
-; altera_reserved_tck          ; 12.845 ; 0.000         ;
-; MAX10_CLK1_50                ; 14.659 ; 0.000         ;
+; altera_reserved_tck          ; 13.192 ; 0.000         ;
+; MAX10_CLK1_50                ; 14.367 ; 0.000         ;
+; u0|sdram_pll|sd1|pll7|clk[0] ; 14.391 ; 0.000         ;
 +------------------------------+--------+---------------+
 
 
@@ -191,26 +194,27 @@ This panel reports FMAX for every clock in the design, regardless of the user-sp
 +------------------------------+-------+---------------+
 ; Clock                        ; Slack ; End Point TNS ;
 +------------------------------+-------+---------------+
-; altera_reserved_tck          ; 1.305 ; 0.000         ;
-; MAX10_CLK1_50                ; 3.893 ; 0.000         ;
-; u0|sdram_pll|sd1|pll7|clk[0] ; 5.456 ; 0.000         ;
+; altera_reserved_tck          ; 1.086 ; 0.000         ;
+; u0|sdram_pll|sd1|pll7|clk[0] ; 3.443 ; 0.000         ;
+; MAX10_CLK1_50                ; 4.045 ; 0.000         ;
 +------------------------------+-------+---------------+
 
 
-+-------------------------------------------------------+
-; Slow 1200mV 85C Model Minimum Pulse Width Summary     ;
-+------------------------------+--------+---------------+
-; Clock                        ; Slack  ; End Point TNS ;
-+------------------------------+--------+---------------+
-; MAX10_CLK1_50                ; 9.539  ; 0.000         ;
-; u0|sdram_pll|sd1|pll7|clk[0] ; 9.708  ; 0.000         ;
-; u0|sdram_pll|sd1|pll7|clk[1] ; 9.849  ; 0.000         ;
-; altera_reserved_tck          ; 14.781 ; 0.000         ;
-; clk_dram_ext                 ; 15.790 ; 0.000         ;
-; vga_controller:vga0|clkdiv   ; 19.557 ; 0.000         ;
-; vga_controller:vga0|vs       ; 19.722 ; 0.000         ;
-; vga_controller:vga0|hs       ; 19.754 ; 0.000         ;
-+------------------------------+--------+---------------+
++------------------------------------------------------------------------------+
+; Slow 1200mV 85C Model Minimum Pulse Width Summary                            ;
++-----------------------------------------------------+--------+---------------+
+; Clock                                               ; Slack  ; End Point TNS ;
++-----------------------------------------------------+--------+---------------+
+; MAX10_CLK1_50                                       ; 9.517  ; 0.000         ;
+; u0|sdram_pll|sd1|pll7|clk[0]                        ; 9.708  ; 0.000         ;
+; u0|sdram_pll|sd1|pll7|clk[1]                        ; 9.849  ; 0.000         ;
+; altera_reserved_tck                                 ; 14.766 ; 0.000         ;
+; clk_dram_ext                                        ; 15.790 ; 0.000         ;
+; vga_controller:vga0|clkdiv                          ; 19.505 ; 0.000         ;
+; vga_controller:vga0|hs                              ; 19.740 ; 0.000         ;
+; vga_controller:vga0|vs                              ; 19.752 ; 0.000         ;
+; color_mapper:color0|draw_cactus:cactus0|change_type ; 19.766 ; 0.000         ;
++-----------------------------------------------------+--------+---------------+
 
 
 -----------------------------------------------
@@ -222,7 +226,7 @@ Typical MTBF of Design is 1e+09 years or 3.15e+16 seconds.
 Number of Synchronizer Chains Found: 19
 Shortest Synchronizer Chain: 2 Registers
 Fraction of Chains for which MTBFs Could Not be Calculated: 0.316
-Worst Case Available Settling Time: 31.807 ns
+Worst Case Available Settling Time: 32.329 ns
 
 Worst-Case MTBF values are calculated based on the worst-case silicon characteristics, with worst-case operating conditions.
   - Under worst-case conditions, an increase of 100ps in available settling time will increase MTBF values by a factor of 1.8
@@ -231,49 +235,51 @@ Typical MTBF values are calculated based on the nominal silicon characteristics,
 
 
 
-+--------------------------------------------------------------------------------------------------------------+
-; Slow 1200mV 0C Model Fmax Summary                                                                            ;
-+------------+-----------------+------------------------------+------------------------------------------------+
-; Fmax       ; Restricted Fmax ; Clock Name                   ; Note                                           ;
-+------------+-----------------+------------------------------+------------------------------------------------+
-; 12.58 MHz  ; 12.58 MHz       ; vga_controller:vga0|vs       ;                                                ;
-; 68.01 MHz  ; 68.01 MHz       ; MAX10_CLK1_50                ;                                                ;
-; 83.15 MHz  ; 83.15 MHz       ; vga_controller:vga0|clkdiv   ;                                                ;
-; 96.38 MHz  ; 96.38 MHz       ; u0|sdram_pll|sd1|pll7|clk[0] ;                                                ;
-; 133.28 MHz ; 133.28 MHz      ; altera_reserved_tck          ;                                                ;
-; 1567.4 MHz ; 416.15 MHz      ; vga_controller:vga0|hs       ; limit due to minimum period restriction (tmin) ;
-+------------+-----------------+------------------------------+------------------------------------------------+
++--------------------------------------------------------------------+
+; Slow 1200mV 0C Model Fmax Summary                                  ;
++------------+-----------------+------------------------------+------+
+; Fmax       ; Restricted Fmax ; Clock Name                   ; Note ;
++------------+-----------------+------------------------------+------+
+; 12.32 MHz  ; 12.32 MHz       ; vga_controller:vga0|vs       ;      ;
+; 67.34 MHz  ; 67.34 MHz       ; MAX10_CLK1_50                ;      ;
+; 75.52 MHz  ; 75.52 MHz       ; vga_controller:vga0|clkdiv   ;      ;
+; 96.0 MHz   ; 96.0 MHz        ; u0|sdram_pll|sd1|pll7|clk[0] ;      ;
+; 130.53 MHz ; 130.53 MHz      ; altera_reserved_tck          ;      ;
+; 173.52 MHz ; 173.52 MHz      ; vga_controller:vga0|hs       ;      ;
++------------+-----------------+------------------------------+------+
 This panel reports FMAX for every clock in the design, regardless of the user-specified clock periods.  FMAX is only computed for paths where the source and destination registers or ports are driven by the same clock.  Paths of different clocks, including generated clocks, are ignored.  For paths between a clock and its inversion, FMAX is computed as if the rising and falling edges are scaled along with FMAX, such that the duty cycle (in terms of a percentage) is maintained. Altera recommends that you always use clock constraints and other slack reports for sign-off analysis.
 
 
-+---------------------------------------------------------+
-; Slow 1200mV 0C Model Setup Summary                      ;
-+------------------------------+----------+---------------+
-; Clock                        ; Slack    ; End Point TNS ;
-+------------------------------+----------+---------------+
-; MAX10_CLK1_50                ; -134.563 ; -21314.750    ;
-; vga_controller:vga0|clkdiv   ; -49.292  ; -142.531      ;
-; vga_controller:vga0|vs       ; -39.476  ; -39.476       ;
-; u0|sdram_pll|sd1|pll7|clk[0] ; 8.888    ; 0.000         ;
-; altera_reserved_tck          ; 11.400   ; 0.000         ;
-; clk_dram_ext                 ; 15.604   ; 0.000         ;
-; vga_controller:vga0|hs       ; 39.362   ; 0.000         ;
-+------------------------------+----------+---------------+
++--------------------------------------------------------------------------------+
+; Slow 1200mV 0C Model Setup Summary                                             ;
++-----------------------------------------------------+----------+---------------+
+; Clock                                               ; Slack    ; End Point TNS ;
++-----------------------------------------------------+----------+---------------+
+; MAX10_CLK1_50                                       ; -138.310 ; -20274.495    ;
+; vga_controller:vga0|clkdiv                          ; -46.330  ; -131.863      ;
+; vga_controller:vga0|vs                              ; -41.141  ; -41.141       ;
+; u0|sdram_pll|sd1|pll7|clk[0]                        ; 8.888    ; 0.000         ;
+; altera_reserved_tck                                 ; 11.321   ; 0.000         ;
+; clk_dram_ext                                        ; 15.604   ; 0.000         ;
+; vga_controller:vga0|hs                              ; 34.237   ; 0.000         ;
+; color_mapper:color0|draw_cactus:cactus0|change_type ; 37.844   ; 0.000         ;
++-----------------------------------------------------+----------+---------------+
 
 
-+------------------------------------------------------+
-; Slow 1200mV 0C Model Hold Summary                    ;
-+------------------------------+-------+---------------+
-; Clock                        ; Slack ; End Point TNS ;
-+------------------------------+-------+---------------+
-; MAX10_CLK1_50                ; 0.290 ; 0.000         ;
-; vga_controller:vga0|vs       ; 0.291 ; 0.000         ;
-; u0|sdram_pll|sd1|pll7|clk[0] ; 0.293 ; 0.000         ;
-; altera_reserved_tck          ; 0.305 ; 0.000         ;
-; vga_controller:vga0|hs       ; 0.355 ; 0.000         ;
-; vga_controller:vga0|clkdiv   ; 0.529 ; 0.000         ;
-; clk_dram_ext                 ; 0.622 ; 0.000         ;
-+------------------------------+-------+---------------+
++-----------------------------------------------------------------------------+
+; Slow 1200mV 0C Model Hold Summary                                           ;
++-----------------------------------------------------+-------+---------------+
+; Clock                                               ; Slack ; End Point TNS ;
++-----------------------------------------------------+-------+---------------+
+; vga_controller:vga0|vs                              ; 0.291 ; 0.000         ;
+; MAX10_CLK1_50                                       ; 0.305 ; 0.000         ;
+; altera_reserved_tck                                 ; 0.305 ; 0.000         ;
+; u0|sdram_pll|sd1|pll7|clk[0]                        ; 0.306 ; 0.000         ;
+; vga_controller:vga0|clkdiv                          ; 0.399 ; 0.000         ;
+; clk_dram_ext                                        ; 0.622 ; 0.000         ;
+; color_mapper:color0|draw_cactus:cactus0|change_type ; 1.219 ; 0.000         ;
+; vga_controller:vga0|hs                              ; 5.127 ; 0.000         ;
++-----------------------------------------------------+-------+---------------+
 
 
 +-------------------------------------------------------+
@@ -281,9 +287,9 @@ This panel reports FMAX for every clock in the design, regardless of the user-sp
 +------------------------------+--------+---------------+
 ; Clock                        ; Slack  ; End Point TNS ;
 +------------------------------+--------+---------------+
-; u0|sdram_pll|sd1|pll7|clk[0] ; 12.929 ; 0.000         ;
-; altera_reserved_tck          ; 13.048 ; 0.000         ;
-; MAX10_CLK1_50                ; 15.116 ; 0.000         ;
+; altera_reserved_tck          ; 13.381 ; 0.000         ;
+; u0|sdram_pll|sd1|pll7|clk[0] ; 14.914 ; 0.000         ;
+; MAX10_CLK1_50                ; 14.931 ; 0.000         ;
 +------------------------------+--------+---------------+
 
 
@@ -292,26 +298,27 @@ This panel reports FMAX for every clock in the design, regardless of the user-sp
 +------------------------------+-------+---------------+
 ; Clock                        ; Slack ; End Point TNS ;
 +------------------------------+-------+---------------+
-; altera_reserved_tck          ; 1.216 ; 0.000         ;
-; MAX10_CLK1_50                ; 3.527 ; 0.000         ;
-; u0|sdram_pll|sd1|pll7|clk[0] ; 4.878 ; 0.000         ;
+; altera_reserved_tck          ; 1.004 ; 0.000         ;
+; u0|sdram_pll|sd1|pll7|clk[0] ; 3.109 ; 0.000         ;
+; MAX10_CLK1_50                ; 3.704 ; 0.000         ;
 +------------------------------+-------+---------------+
 
 
-+-------------------------------------------------------+
-; Slow 1200mV 0C Model Minimum Pulse Width Summary      ;
-+------------------------------+--------+---------------+
-; Clock                        ; Slack  ; End Point TNS ;
-+------------------------------+--------+---------------+
-; MAX10_CLK1_50                ; 9.566  ; 0.000         ;
-; u0|sdram_pll|sd1|pll7|clk[0] ; 9.686  ; 0.000         ;
-; u0|sdram_pll|sd1|pll7|clk[1] ; 9.874  ; 0.000         ;
-; altera_reserved_tck          ; 14.810 ; 0.000         ;
-; clk_dram_ext                 ; 15.790 ; 0.000         ;
-; vga_controller:vga0|clkdiv   ; 19.643 ; 0.000         ;
-; vga_controller:vga0|hs       ; 19.721 ; 0.000         ;
-; vga_controller:vga0|vs       ; 19.743 ; 0.000         ;
-+------------------------------+--------+---------------+
++------------------------------------------------------------------------------+
+; Slow 1200mV 0C Model Minimum Pulse Width Summary                             ;
++-----------------------------------------------------+--------+---------------+
+; Clock                                               ; Slack  ; End Point TNS ;
++-----------------------------------------------------+--------+---------------+
+; MAX10_CLK1_50                                       ; 9.547  ; 0.000         ;
+; u0|sdram_pll|sd1|pll7|clk[0]                        ; 9.690  ; 0.000         ;
+; u0|sdram_pll|sd1|pll7|clk[1]                        ; 9.874  ; 0.000         ;
+; altera_reserved_tck                                 ; 14.792 ; 0.000         ;
+; clk_dram_ext                                        ; 15.790 ; 0.000         ;
+; vga_controller:vga0|clkdiv                          ; 19.588 ; 0.000         ;
+; vga_controller:vga0|hs                              ; 19.693 ; 0.000         ;
+; vga_controller:vga0|vs                              ; 19.700 ; 0.000         ;
+; color_mapper:color0|draw_cactus:cactus0|change_type ; 19.755 ; 0.000         ;
++-----------------------------------------------------+--------+---------------+
 
 
 ----------------------------------------------
@@ -323,7 +330,7 @@ Typical MTBF of Design is 1e+09 years or 3.15e+16 seconds.
 Number of Synchronizer Chains Found: 19
 Shortest Synchronizer Chain: 2 Registers
 Fraction of Chains for which MTBFs Could Not be Calculated: 0.316
-Worst Case Available Settling Time: 32.419 ns
+Worst Case Available Settling Time: 32.936 ns
 
 Worst-Case MTBF values are calculated based on the worst-case silicon characteristics, with worst-case operating conditions.
   - Under worst-case conditions, an increase of 100ps in available settling time will increase MTBF values by a factor of 1.8
@@ -332,34 +339,36 @@ Typical MTBF values are calculated based on the nominal silicon characteristics,
 
 
 
-+--------------------------------------------------------+
-; Fast 1200mV 0C Model Setup Summary                     ;
-+------------------------------+---------+---------------+
-; Clock                        ; Slack   ; End Point TNS ;
-+------------------------------+---------+---------------+
-; MAX10_CLK1_50                ; -48.784 ; -6496.150     ;
-; vga_controller:vga0|clkdiv   ; -0.347  ; -0.691        ;
-; vga_controller:vga0|vs       ; 4.368   ; 0.000         ;
-; u0|sdram_pll|sd1|pll7|clk[0] ; 11.623  ; 0.000         ;
-; altera_reserved_tck          ; 13.648  ; 0.000         ;
-; clk_dram_ext                 ; 15.553  ; 0.000         ;
-; vga_controller:vga0|hs       ; 39.694  ; 0.000         ;
-+------------------------------+---------+---------------+
++-------------------------------------------------------------------------------+
+; Fast 1200mV 0C Model Setup Summary                                            ;
++-----------------------------------------------------+---------+---------------+
+; Clock                                               ; Slack   ; End Point TNS ;
++-----------------------------------------------------+---------+---------------+
+; MAX10_CLK1_50                                       ; -50.673 ; -5890.070     ;
+; vga_controller:vga0|clkdiv                          ; 1.452   ; 0.000         ;
+; vga_controller:vga0|vs                              ; 3.385   ; 0.000         ;
+; u0|sdram_pll|sd1|pll7|clk[0]                        ; 11.623  ; 0.000         ;
+; altera_reserved_tck                                 ; 13.620  ; 0.000         ;
+; clk_dram_ext                                        ; 15.553  ; 0.000         ;
+; vga_controller:vga0|hs                              ; 36.887  ; 0.000         ;
+; color_mapper:color0|draw_cactus:cactus0|change_type ; 38.980  ; 0.000         ;
++-----------------------------------------------------+---------+---------------+
 
 
-+------------------------------------------------------+
-; Fast 1200mV 0C Model Hold Summary                    ;
-+------------------------------+-------+---------------+
-; Clock                        ; Slack ; End Point TNS ;
-+------------------------------+-------+---------------+
-; MAX10_CLK1_50                ; 0.141 ; 0.000         ;
-; vga_controller:vga0|vs       ; 0.141 ; 0.000         ;
-; u0|sdram_pll|sd1|pll7|clk[0] ; 0.144 ; 0.000         ;
-; altera_reserved_tck          ; 0.148 ; 0.000         ;
-; vga_controller:vga0|hs       ; 0.170 ; 0.000         ;
-; vga_controller:vga0|clkdiv   ; 0.213 ; 0.000         ;
-; clk_dram_ext                 ; 0.311 ; 0.000         ;
-+------------------------------+-------+---------------+
++-----------------------------------------------------------------------------+
+; Fast 1200mV 0C Model Hold Summary                                           ;
++-----------------------------------------------------+-------+---------------+
+; Clock                                               ; Slack ; End Point TNS ;
++-----------------------------------------------------+-------+---------------+
+; MAX10_CLK1_50                                       ; 0.008 ; 0.000         ;
+; vga_controller:vga0|vs                              ; 0.142 ; 0.000         ;
+; altera_reserved_tck                                 ; 0.148 ; 0.000         ;
+; u0|sdram_pll|sd1|pll7|clk[0]                        ; 0.148 ; 0.000         ;
+; vga_controller:vga0|clkdiv                          ; 0.174 ; 0.000         ;
+; clk_dram_ext                                        ; 0.311 ; 0.000         ;
+; color_mapper:color0|draw_cactus:cactus0|change_type ; 0.538 ; 0.000         ;
+; vga_controller:vga0|hs                              ; 2.549 ; 0.000         ;
++-----------------------------------------------------+-------+---------------+
 
 
 +-------------------------------------------------------+
@@ -367,9 +376,9 @@ Typical MTBF values are calculated based on the nominal silicon characteristics,
 +------------------------------+--------+---------------+
 ; Clock                        ; Slack  ; End Point TNS ;
 +------------------------------+--------+---------------+
-; altera_reserved_tck          ; 14.323 ; 0.000         ;
-; u0|sdram_pll|sd1|pll7|clk[0] ; 16.288 ; 0.000         ;
-; MAX10_CLK1_50                ; 17.361 ; 0.000         ;
+; altera_reserved_tck          ; 14.516 ; 0.000         ;
+; MAX10_CLK1_50                ; 17.181 ; 0.000         ;
+; u0|sdram_pll|sd1|pll7|clk[0] ; 17.348 ; 0.000         ;
 +------------------------------+--------+---------------+
 
 
@@ -378,26 +387,27 @@ Typical MTBF values are calculated based on the nominal silicon characteristics,
 +------------------------------+-------+---------------+
 ; Clock                        ; Slack ; End Point TNS ;
 +------------------------------+-------+---------------+
-; altera_reserved_tck          ; 0.564 ; 0.000         ;
-; MAX10_CLK1_50                ; 1.854 ; 0.000         ;
-; u0|sdram_pll|sd1|pll7|clk[0] ; 2.546 ; 0.000         ;
+; altera_reserved_tck          ; 0.477 ; 0.000         ;
+; u0|sdram_pll|sd1|pll7|clk[0] ; 1.650 ; 0.000         ;
+; MAX10_CLK1_50                ; 1.960 ; 0.000         ;
 +------------------------------+-------+---------------+
 
 
-+-------------------------------------------------------+
-; Fast 1200mV 0C Model Minimum Pulse Width Summary      ;
-+------------------------------+--------+---------------+
-; Clock                        ; Slack  ; End Point TNS ;
-+------------------------------+--------+---------------+
-; MAX10_CLK1_50                ; 9.357  ; 0.000         ;
-; u0|sdram_pll|sd1|pll7|clk[0] ; 9.720  ; 0.000         ;
-; u0|sdram_pll|sd1|pll7|clk[1] ; 9.957  ; 0.000         ;
-; altera_reserved_tck          ; 14.563 ; 0.000         ;
-; clk_dram_ext                 ; 16.000 ; 0.000         ;
-; vga_controller:vga0|clkdiv   ; 19.528 ; 0.000         ;
-; vga_controller:vga0|vs       ; 19.669 ; 0.000         ;
-; vga_controller:vga0|hs       ; 19.747 ; 0.000         ;
-+------------------------------+--------+---------------+
++------------------------------------------------------------------------------+
+; Fast 1200mV 0C Model Minimum Pulse Width Summary                             ;
++-----------------------------------------------------+--------+---------------+
+; Clock                                               ; Slack  ; End Point TNS ;
++-----------------------------------------------------+--------+---------------+
+; MAX10_CLK1_50                                       ; 9.374  ; 0.000         ;
+; u0|sdram_pll|sd1|pll7|clk[0]                        ; 9.720  ; 0.000         ;
+; u0|sdram_pll|sd1|pll7|clk[1]                        ; 9.957  ; 0.000         ;
+; altera_reserved_tck                                 ; 14.566 ; 0.000         ;
+; clk_dram_ext                                        ; 16.000 ; 0.000         ;
+; vga_controller:vga0|clkdiv                          ; 19.569 ; 0.000         ;
+; vga_controller:vga0|vs                              ; 19.645 ; 0.000         ;
+; vga_controller:vga0|hs                              ; 19.724 ; 0.000         ;
+; color_mapper:color0|draw_cactus:cactus0|change_type ; 19.733 ; 0.000         ;
++-----------------------------------------------------+--------+---------------+
 
 
 ----------------------------------------------
@@ -409,7 +419,7 @@ Typical MTBF of Design is 1e+09 years or 3.15e+16 seconds.
 Number of Synchronizer Chains Found: 19
 Shortest Synchronizer Chain: 2 Registers
 Fraction of Chains for which MTBFs Could Not be Calculated: 0.316
-Worst Case Available Settling Time: 36.356 ns
+Worst Case Available Settling Time: 36.628 ns
 
 Worst-Case MTBF values are calculated based on the worst-case silicon characteristics, with worst-case operating conditions.
   - Under worst-case conditions, an increase of 100ps in available settling time will increase MTBF values by a factor of 1.8
@@ -418,30 +428,32 @@ Typical MTBF values are calculated based on the nominal silicon characteristics,
 
 
 
-+-----------------------------------------------------------------------------------------------+
-; Multicorner Timing Analysis Summary                                                           ;
-+-------------------------------+------------+-------+----------+---------+---------------------+
-; Clock                         ; Setup      ; Hold  ; Recovery ; Removal ; Minimum Pulse Width ;
-+-------------------------------+------------+-------+----------+---------+---------------------+
-; Worst-case Slack              ; -149.298   ; 0.141 ; 12.298   ; 0.564   ; 9.357               ;
-;  MAX10_CLK1_50                ; -149.298   ; 0.141 ; 14.659   ; 1.854   ; 9.357               ;
-;  altera_reserved_tck          ; 11.144     ; 0.148 ; 12.845   ; 0.564   ; 14.563              ;
-;  clk_dram_ext                 ; 15.442     ; 0.311 ; N/A      ; N/A     ; 15.790              ;
-;  u0|sdram_pll|sd1|pll7|clk[0] ; 8.256      ; 0.144 ; 12.298   ; 2.546   ; 9.686               ;
-;  u0|sdram_pll|sd1|pll7|clk[1] ; N/A        ; N/A   ; N/A      ; N/A     ; 9.849               ;
-;  vga_controller:vga0|clkdiv   ; -57.988    ; 0.213 ; N/A      ; N/A     ; 19.528              ;
-;  vga_controller:vga0|hs       ; 39.298     ; 0.170 ; N/A      ; N/A     ; 19.721              ;
-;  vga_controller:vga0|vs       ; -47.337    ; 0.141 ; N/A      ; N/A     ; 19.669              ;
-; Design-wide TNS               ; -24167.481 ; 0.0   ; 0.0      ; 0.0     ; 0.0                 ;
-;  MAX10_CLK1_50                ; -23951.973 ; 0.000 ; 0.000    ; 0.000   ; 0.000               ;
-;  altera_reserved_tck          ; 0.000      ; 0.000 ; 0.000    ; 0.000   ; 0.000               ;
-;  clk_dram_ext                 ; 0.000      ; 0.000 ; N/A      ; N/A     ; 0.000               ;
-;  u0|sdram_pll|sd1|pll7|clk[0] ; 0.000      ; 0.000 ; 0.000    ; 0.000   ; 0.000               ;
-;  u0|sdram_pll|sd1|pll7|clk[1] ; N/A        ; N/A   ; N/A      ; N/A     ; 0.000               ;
-;  vga_controller:vga0|clkdiv   ; -168.171   ; 0.000 ; N/A      ; N/A     ; 0.000               ;
-;  vga_controller:vga0|hs       ; 0.000      ; 0.000 ; N/A      ; N/A     ; 0.000               ;
-;  vga_controller:vga0|vs       ; -47.337    ; 0.000 ; N/A      ; N/A     ; 0.000               ;
-+-------------------------------+------------+-------+----------+---------+---------------------+
++----------------------------------------------------------------------------------------------------------------------+
+; Multicorner Timing Analysis Summary                                                                                  ;
++------------------------------------------------------+------------+-------+----------+---------+---------------------+
+; Clock                                                ; Setup      ; Hold  ; Recovery ; Removal ; Minimum Pulse Width ;
++------------------------------------------------------+------------+-------+----------+---------+---------------------+
+; Worst-case Slack                                     ; -153.698   ; 0.008 ; 13.192   ; 0.477   ; 9.374               ;
+;  MAX10_CLK1_50                                       ; -153.698   ; 0.008 ; 14.367   ; 1.960   ; 9.374               ;
+;  altera_reserved_tck                                 ; 11.014     ; 0.148 ; 13.192   ; 0.477   ; 14.566              ;
+;  clk_dram_ext                                        ; 15.442     ; 0.311 ; N/A      ; N/A     ; 15.790              ;
+;  color_mapper:color0|draw_cactus:cactus0|change_type ; 37.680     ; 0.538 ; N/A      ; N/A     ; 19.733              ;
+;  u0|sdram_pll|sd1|pll7|clk[0]                        ; 8.256      ; 0.148 ; 14.391   ; 1.650   ; 9.690               ;
+;  u0|sdram_pll|sd1|pll7|clk[1]                        ; N/A        ; N/A   ; N/A      ; N/A     ; 9.849               ;
+;  vga_controller:vga0|clkdiv                          ; -54.752    ; 0.174 ; N/A      ; N/A     ; 19.505              ;
+;  vga_controller:vga0|hs                              ; 33.670     ; 2.549 ; N/A      ; N/A     ; 19.693              ;
+;  vga_controller:vga0|vs                              ; -49.024    ; 0.142 ; N/A      ; N/A     ; 19.645              ;
+; Design-wide TNS                                      ; -23028.658 ; 0.0   ; 0.0      ; 0.0     ; 0.0                 ;
+;  MAX10_CLK1_50                                       ; -22823.086 ; 0.000 ; 0.000    ; 0.000   ; 0.000               ;
+;  altera_reserved_tck                                 ; 0.000      ; 0.000 ; 0.000    ; 0.000   ; 0.000               ;
+;  clk_dram_ext                                        ; 0.000      ; 0.000 ; N/A      ; N/A     ; 0.000               ;
+;  color_mapper:color0|draw_cactus:cactus0|change_type ; 0.000      ; 0.000 ; N/A      ; N/A     ; 0.000               ;
+;  u0|sdram_pll|sd1|pll7|clk[0]                        ; 0.000      ; 0.000 ; 0.000    ; 0.000   ; 0.000               ;
+;  u0|sdram_pll|sd1|pll7|clk[1]                        ; N/A        ; N/A   ; N/A      ; N/A     ; 0.000               ;
+;  vga_controller:vga0|clkdiv                          ; -156.548   ; 0.000 ; N/A      ; N/A     ; 0.000               ;
+;  vga_controller:vga0|hs                              ; 0.000      ; 0.000 ; N/A      ; N/A     ; 0.000               ;
+;  vga_controller:vga0|vs                              ; -49.024    ; 0.000 ; N/A      ; N/A     ; 0.000               ;
++------------------------------------------------------+------------+-------+----------+---------+---------------------+
 
 
 +------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
@@ -1053,67 +1065,75 @@ Typical MTBF values are calculated based on the nominal silicon characteristics,
 +---------------------+--------------+---------------------+---------------------+------------------------------+------------------------------+---------------------+---------------------+--------------------------------------+--------------------------------------+-----------------------------+-----------------------------+----------------------------+----------------------------+-----------------------------+-----------------------------+--------------------+--------------------+-------------------------------------+-------------------------------------+----------------------------+----------------------------+---------------------------+---------------------------+
 
 
-+---------------------------------------------------------------------------------------------------------------+
-; Setup Transfers                                                                                               ;
-+------------------------------+------------------------------+--------------+------------+----------+----------+
-; From Clock                   ; To Clock                     ; RR Paths     ; FR Paths   ; RF Paths ; FF Paths ;
-+------------------------------+------------------------------+--------------+------------+----------+----------+
-; altera_reserved_tck          ; altera_reserved_tck          ; 1523         ; 0          ; 40       ; 3        ;
-; clk_dram_ext                 ; altera_reserved_tck          ; false path   ; 0          ; 0        ; 0        ;
-; MAX10_CLK1_50                ; altera_reserved_tck          ; false path   ; 0          ; 0        ; 0        ;
-; altera_reserved_tck          ; clk_dram_ext                 ; 0            ; false path ; 0        ; 0        ;
-; MAX10_CLK1_50                ; clk_dram_ext                 ; 10           ; 0          ; 0        ; 0        ;
-; u0|sdram_pll|sd1|pll7|clk[0] ; clk_dram_ext                 ; 53           ; 0          ; 0        ; 0        ;
-; altera_reserved_tck          ; MAX10_CLK1_50                ; false path   ; false path ; 0        ; 0        ;
-; clk_dram_ext                 ; MAX10_CLK1_50                ; 2            ; 0          ; 0        ; 0        ;
-; MAX10_CLK1_50                ; MAX10_CLK1_50                ; 280262       ; 0          ; 0        ; 0        ;
-; u0|sdram_pll|sd1|pll7|clk[0] ; MAX10_CLK1_50                ; 68           ; 0          ; 0        ; 0        ;
-; vga_controller:vga0|clkdiv   ; MAX10_CLK1_50                ; 10886378     ; 1          ; 0        ; 0        ;
-; vga_controller:vga0|hs       ; MAX10_CLK1_50                ; 22           ; 0          ; 0        ; 0        ;
-; vga_controller:vga0|vs       ; MAX10_CLK1_50                ; > 2147483647 ; 0          ; 0        ; 0        ;
-; clk_dram_ext                 ; u0|sdram_pll|sd1|pll7|clk[0] ; 16           ; 0          ; 0        ; 0        ;
-; MAX10_CLK1_50                ; u0|sdram_pll|sd1|pll7|clk[0] ; 105          ; 0          ; 0        ; 0        ;
-; u0|sdram_pll|sd1|pll7|clk[0] ; u0|sdram_pll|sd1|pll7|clk[0] ; 29676        ; 0          ; 0        ; 0        ;
-; MAX10_CLK1_50                ; vga_controller:vga0|clkdiv   ; 7654         ; 0          ; 0        ; 0        ;
-; vga_controller:vga0|clkdiv   ; vga_controller:vga0|clkdiv   ; 276255       ; 0          ; 0        ; 0        ;
-; vga_controller:vga0|hs       ; vga_controller:vga0|clkdiv   ; 74           ; 0          ; 0        ; 0        ;
-; vga_controller:vga0|vs       ; vga_controller:vga0|clkdiv   ; > 2147483647 ; 0          ; 0        ; 0        ;
-; vga_controller:vga0|hs       ; vga_controller:vga0|hs       ; 1            ; 0          ; 0        ; 0        ;
-; MAX10_CLK1_50                ; vga_controller:vga0|vs       ; 585          ; 0          ; 0        ; 0        ;
-; vga_controller:vga0|vs       ; vga_controller:vga0|vs       ; > 2147483647 ; 0          ; 0        ; 0        ;
-+------------------------------+------------------------------+--------------+------------+----------+----------+
++-------------------------------------------------------------------------------------------------------------------------------------------------------------+
+; Setup Transfers                                                                                                                                             ;
++-----------------------------------------------------+-----------------------------------------------------+--------------+------------+----------+----------+
+; From Clock                                          ; To Clock                                            ; RR Paths     ; FR Paths   ; RF Paths ; FF Paths ;
++-----------------------------------------------------+-----------------------------------------------------+--------------+------------+----------+----------+
+; altera_reserved_tck                                 ; altera_reserved_tck                                 ; 1523         ; 0          ; 40       ; 3        ;
+; clk_dram_ext                                        ; altera_reserved_tck                                 ; false path   ; 0          ; 0        ; 0        ;
+; MAX10_CLK1_50                                       ; altera_reserved_tck                                 ; false path   ; 0          ; 0        ; 0        ;
+; altera_reserved_tck                                 ; clk_dram_ext                                        ; 0            ; false path ; 0        ; 0        ;
+; MAX10_CLK1_50                                       ; clk_dram_ext                                        ; 10           ; 0          ; 0        ; 0        ;
+; u0|sdram_pll|sd1|pll7|clk[0]                        ; clk_dram_ext                                        ; 53           ; 0          ; 0        ; 0        ;
+; vga_controller:vga0|vs                              ; color_mapper:color0|draw_cactus:cactus0|change_type ; 16           ; 0          ; 0        ; 0        ;
+; altera_reserved_tck                                 ; MAX10_CLK1_50                                       ; false path   ; false path ; 0        ; 0        ;
+; clk_dram_ext                                        ; MAX10_CLK1_50                                       ; 2            ; 0          ; 0        ; 0        ;
+; color_mapper:color0|draw_cactus:cactus0|change_type ; MAX10_CLK1_50                                       ; 1716333      ; 0          ; 0        ; 0        ;
+; MAX10_CLK1_50                                       ; MAX10_CLK1_50                                       ; 298009       ; 0          ; 0        ; 0        ;
+; u0|sdram_pll|sd1|pll7|clk[0]                        ; MAX10_CLK1_50                                       ; 68           ; 0          ; 0        ; 0        ;
+; vga_controller:vga0|clkdiv                          ; MAX10_CLK1_50                                       ; 10168674     ; 1          ; 0        ; 0        ;
+; vga_controller:vga0|hs                              ; MAX10_CLK1_50                                       ; 22           ; 0          ; 0        ; 0        ;
+; vga_controller:vga0|vs                              ; MAX10_CLK1_50                                       ; > 2147483647 ; 0          ; 0        ; 0        ;
+; clk_dram_ext                                        ; u0|sdram_pll|sd1|pll7|clk[0]                        ; 16           ; 0          ; 0        ; 0        ;
+; MAX10_CLK1_50                                       ; u0|sdram_pll|sd1|pll7|clk[0]                        ; 105          ; 0          ; 0        ; 0        ;
+; u0|sdram_pll|sd1|pll7|clk[0]                        ; u0|sdram_pll|sd1|pll7|clk[0]                        ; 26684        ; 0          ; 0        ; 0        ;
+; color_mapper:color0|draw_cactus:cactus0|change_type ; vga_controller:vga0|clkdiv                          ; 46782        ; 0          ; 0        ; 0        ;
+; MAX10_CLK1_50                                       ; vga_controller:vga0|clkdiv                          ; 9022         ; 0          ; 0        ; 0        ;
+; vga_controller:vga0|clkdiv                          ; vga_controller:vga0|clkdiv                          ; 256584       ; 0          ; 0        ; 0        ;
+; vga_controller:vga0|hs                              ; vga_controller:vga0|clkdiv                          ; 74           ; 0          ; 0        ; 0        ;
+; vga_controller:vga0|vs                              ; vga_controller:vga0|clkdiv                          ; > 2147483647 ; 0          ; 0        ; 0        ;
+; vga_controller:vga0|hs                              ; vga_controller:vga0|hs                              ; 1            ; 0          ; 0        ; 0        ;
+; color_mapper:color0|draw_cactus:cactus0|change_type ; vga_controller:vga0|vs                              ; 1409         ; 1          ; 0        ; 0        ;
+; MAX10_CLK1_50                                       ; vga_controller:vga0|vs                              ; 585          ; 0          ; 0        ; 0        ;
+; vga_controller:vga0|vs                              ; vga_controller:vga0|vs                              ; > 2147483647 ; 0          ; 0        ; 0        ;
++-----------------------------------------------------+-----------------------------------------------------+--------------+------------+----------+----------+
 Entries labeled "false path" only account for clock-to-clock false paths and not path-based false paths. As a result, actual path counts may be lower than reported.
 
 
-+---------------------------------------------------------------------------------------------------------------+
-; Hold Transfers                                                                                                ;
-+------------------------------+------------------------------+--------------+------------+----------+----------+
-; From Clock                   ; To Clock                     ; RR Paths     ; FR Paths   ; RF Paths ; FF Paths ;
-+------------------------------+------------------------------+--------------+------------+----------+----------+
-; altera_reserved_tck          ; altera_reserved_tck          ; 1523         ; 0          ; 40       ; 3        ;
-; clk_dram_ext                 ; altera_reserved_tck          ; false path   ; 0          ; 0        ; 0        ;
-; MAX10_CLK1_50                ; altera_reserved_tck          ; false path   ; 0          ; 0        ; 0        ;
-; altera_reserved_tck          ; clk_dram_ext                 ; 0            ; false path ; 0        ; 0        ;
-; MAX10_CLK1_50                ; clk_dram_ext                 ; 10           ; 0          ; 0        ; 0        ;
-; u0|sdram_pll|sd1|pll7|clk[0] ; clk_dram_ext                 ; 53           ; 0          ; 0        ; 0        ;
-; altera_reserved_tck          ; MAX10_CLK1_50                ; false path   ; false path ; 0        ; 0        ;
-; clk_dram_ext                 ; MAX10_CLK1_50                ; 2            ; 0          ; 0        ; 0        ;
-; MAX10_CLK1_50                ; MAX10_CLK1_50                ; 280262       ; 0          ; 0        ; 0        ;
-; u0|sdram_pll|sd1|pll7|clk[0] ; MAX10_CLK1_50                ; 68           ; 0          ; 0        ; 0        ;
-; vga_controller:vga0|clkdiv   ; MAX10_CLK1_50                ; 10886378     ; 1          ; 0        ; 0        ;
-; vga_controller:vga0|hs       ; MAX10_CLK1_50                ; 22           ; 0          ; 0        ; 0        ;
-; vga_controller:vga0|vs       ; MAX10_CLK1_50                ; > 2147483647 ; 0          ; 0        ; 0        ;
-; clk_dram_ext                 ; u0|sdram_pll|sd1|pll7|clk[0] ; 16           ; 0          ; 0        ; 0        ;
-; MAX10_CLK1_50                ; u0|sdram_pll|sd1|pll7|clk[0] ; 105          ; 0          ; 0        ; 0        ;
-; u0|sdram_pll|sd1|pll7|clk[0] ; u0|sdram_pll|sd1|pll7|clk[0] ; 29676        ; 0          ; 0        ; 0        ;
-; MAX10_CLK1_50                ; vga_controller:vga0|clkdiv   ; 7654         ; 0          ; 0        ; 0        ;
-; vga_controller:vga0|clkdiv   ; vga_controller:vga0|clkdiv   ; 276255       ; 0          ; 0        ; 0        ;
-; vga_controller:vga0|hs       ; vga_controller:vga0|clkdiv   ; 74           ; 0          ; 0        ; 0        ;
-; vga_controller:vga0|vs       ; vga_controller:vga0|clkdiv   ; > 2147483647 ; 0          ; 0        ; 0        ;
-; vga_controller:vga0|hs       ; vga_controller:vga0|hs       ; 1            ; 0          ; 0        ; 0        ;
-; MAX10_CLK1_50                ; vga_controller:vga0|vs       ; 585          ; 0          ; 0        ; 0        ;
-; vga_controller:vga0|vs       ; vga_controller:vga0|vs       ; > 2147483647 ; 0          ; 0        ; 0        ;
-+------------------------------+------------------------------+--------------+------------+----------+----------+
++-------------------------------------------------------------------------------------------------------------------------------------------------------------+
+; Hold Transfers                                                                                                                                              ;
++-----------------------------------------------------+-----------------------------------------------------+--------------+------------+----------+----------+
+; From Clock                                          ; To Clock                                            ; RR Paths     ; FR Paths   ; RF Paths ; FF Paths ;
++-----------------------------------------------------+-----------------------------------------------------+--------------+------------+----------+----------+
+; altera_reserved_tck                                 ; altera_reserved_tck                                 ; 1523         ; 0          ; 40       ; 3        ;
+; clk_dram_ext                                        ; altera_reserved_tck                                 ; false path   ; 0          ; 0        ; 0        ;
+; MAX10_CLK1_50                                       ; altera_reserved_tck                                 ; false path   ; 0          ; 0        ; 0        ;
+; altera_reserved_tck                                 ; clk_dram_ext                                        ; 0            ; false path ; 0        ; 0        ;
+; MAX10_CLK1_50                                       ; clk_dram_ext                                        ; 10           ; 0          ; 0        ; 0        ;
+; u0|sdram_pll|sd1|pll7|clk[0]                        ; clk_dram_ext                                        ; 53           ; 0          ; 0        ; 0        ;
+; vga_controller:vga0|vs                              ; color_mapper:color0|draw_cactus:cactus0|change_type ; 16           ; 0          ; 0        ; 0        ;
+; altera_reserved_tck                                 ; MAX10_CLK1_50                                       ; false path   ; false path ; 0        ; 0        ;
+; clk_dram_ext                                        ; MAX10_CLK1_50                                       ; 2            ; 0          ; 0        ; 0        ;
+; color_mapper:color0|draw_cactus:cactus0|change_type ; MAX10_CLK1_50                                       ; 1716333      ; 0          ; 0        ; 0        ;
+; MAX10_CLK1_50                                       ; MAX10_CLK1_50                                       ; 298009       ; 0          ; 0        ; 0        ;
+; u0|sdram_pll|sd1|pll7|clk[0]                        ; MAX10_CLK1_50                                       ; 68           ; 0          ; 0        ; 0        ;
+; vga_controller:vga0|clkdiv                          ; MAX10_CLK1_50                                       ; 10168674     ; 1          ; 0        ; 0        ;
+; vga_controller:vga0|hs                              ; MAX10_CLK1_50                                       ; 22           ; 0          ; 0        ; 0        ;
+; vga_controller:vga0|vs                              ; MAX10_CLK1_50                                       ; > 2147483647 ; 0          ; 0        ; 0        ;
+; clk_dram_ext                                        ; u0|sdram_pll|sd1|pll7|clk[0]                        ; 16           ; 0          ; 0        ; 0        ;
+; MAX10_CLK1_50                                       ; u0|sdram_pll|sd1|pll7|clk[0]                        ; 105          ; 0          ; 0        ; 0        ;
+; u0|sdram_pll|sd1|pll7|clk[0]                        ; u0|sdram_pll|sd1|pll7|clk[0]                        ; 26684        ; 0          ; 0        ; 0        ;
+; color_mapper:color0|draw_cactus:cactus0|change_type ; vga_controller:vga0|clkdiv                          ; 46782        ; 0          ; 0        ; 0        ;
+; MAX10_CLK1_50                                       ; vga_controller:vga0|clkdiv                          ; 9022         ; 0          ; 0        ; 0        ;
+; vga_controller:vga0|clkdiv                          ; vga_controller:vga0|clkdiv                          ; 256584       ; 0          ; 0        ; 0        ;
+; vga_controller:vga0|hs                              ; vga_controller:vga0|clkdiv                          ; 74           ; 0          ; 0        ; 0        ;
+; vga_controller:vga0|vs                              ; vga_controller:vga0|clkdiv                          ; > 2147483647 ; 0          ; 0        ; 0        ;
+; vga_controller:vga0|hs                              ; vga_controller:vga0|hs                              ; 1            ; 0          ; 0        ; 0        ;
+; color_mapper:color0|draw_cactus:cactus0|change_type ; vga_controller:vga0|vs                              ; 1409         ; 1          ; 0        ; 0        ;
+; MAX10_CLK1_50                                       ; vga_controller:vga0|vs                              ; 585          ; 0          ; 0        ; 0        ;
+; vga_controller:vga0|vs                              ; vga_controller:vga0|vs                              ; > 2147483647 ; 0          ; 0        ; 0        ;
++-----------------------------------------------------+-----------------------------------------------------+--------------+------------+----------+----------+
 Entries labeled "false path" only account for clock-to-clock false paths and not path-based false paths. As a result, actual path counts may be lower than reported.
 
 
@@ -1128,7 +1148,7 @@ Entries labeled "false path" only account for clock-to-clock false paths and not
 ; MAX10_CLK1_50                ; u0|sdram_pll|sd1|pll7|clk[0] ; 3        ; 0        ; 0        ; 0        ;
 ; u0|sdram_pll|sd1|pll7|clk[0] ; u0|sdram_pll|sd1|pll7|clk[0] ; 500      ; 0        ; 0        ; 0        ;
 ; clk_dram_ext                 ; vga_controller:vga0|clkdiv   ; 22       ; 0        ; 0        ; 0        ;
-; clk_dram_ext                 ; vga_controller:vga0|vs       ; 137      ; 0        ; 0        ; 0        ;
+; clk_dram_ext                 ; vga_controller:vga0|vs       ; 170      ; 0        ; 0        ; 0        ;
 +------------------------------+------------------------------+----------+----------+----------+----------+
 Entries labeled "false path" only account for clock-to-clock false paths and not path-based false paths. As a result, actual path counts may be lower than reported.
 
@@ -1144,7 +1164,7 @@ Entries labeled "false path" only account for clock-to-clock false paths and not
 ; MAX10_CLK1_50                ; u0|sdram_pll|sd1|pll7|clk[0] ; 3        ; 0        ; 0        ; 0        ;
 ; u0|sdram_pll|sd1|pll7|clk[0] ; u0|sdram_pll|sd1|pll7|clk[0] ; 500      ; 0        ; 0        ; 0        ;
 ; clk_dram_ext                 ; vga_controller:vga0|clkdiv   ; 22       ; 0        ; 0        ; 0        ;
-; clk_dram_ext                 ; vga_controller:vga0|vs       ; 137      ; 0        ; 0        ; 0        ;
+; clk_dram_ext                 ; vga_controller:vga0|vs       ; 170      ; 0        ; 0        ; 0        ;
 +------------------------------+------------------------------+----------+----------+----------+----------+
 Entries labeled "false path" only account for clock-to-clock false paths and not path-based false paths. As a result, actual path counts may be lower than reported.
 
@@ -1175,20 +1195,21 @@ No non-DPA dedicated SERDES Receiver circuitry present in device or used in desi
 +---------------------------------+-------+------+
 
 
-+---------------------------------------------------------------------------------------+
-; Clock Status Summary                                                                  ;
-+------------------------------+------------------------------+-----------+-------------+
-; Target                       ; Clock                        ; Type      ; Status      ;
-+------------------------------+------------------------------+-----------+-------------+
-; DRAM_CLK                     ; clk_dram_ext                 ; Generated ; Constrained ;
-; MAX10_CLK1_50                ; MAX10_CLK1_50                ; Base      ; Constrained ;
-; altera_reserved_tck          ; altera_reserved_tck          ; Base      ; Constrained ;
-; u0|sdram_pll|sd1|pll7|clk[0] ; u0|sdram_pll|sd1|pll7|clk[0] ; Generated ; Constrained ;
-; u0|sdram_pll|sd1|pll7|clk[1] ; u0|sdram_pll|sd1|pll7|clk[1] ; Generated ; Constrained ;
-; vga_controller:vga0|clkdiv   ; vga_controller:vga0|clkdiv   ; Base      ; Constrained ;
-; vga_controller:vga0|hs       ; vga_controller:vga0|hs       ; Base      ; Constrained ;
-; vga_controller:vga0|vs       ; vga_controller:vga0|vs       ; Base      ; Constrained ;
-+------------------------------+------------------------------+-----------+-------------+
++-------------------------------------------------------------------------------------------------------------------------------------+
+; Clock Status Summary                                                                                                                ;
++-----------------------------------------------------+-----------------------------------------------------+-----------+-------------+
+; Target                                              ; Clock                                               ; Type      ; Status      ;
++-----------------------------------------------------+-----------------------------------------------------+-----------+-------------+
+; DRAM_CLK                                            ; clk_dram_ext                                        ; Generated ; Constrained ;
+; MAX10_CLK1_50                                       ; MAX10_CLK1_50                                       ; Base      ; Constrained ;
+; altera_reserved_tck                                 ; altera_reserved_tck                                 ; Base      ; Constrained ;
+; color_mapper:color0|draw_cactus:cactus0|change_type ; color_mapper:color0|draw_cactus:cactus0|change_type ; Base      ; Constrained ;
+; u0|sdram_pll|sd1|pll7|clk[0]                        ; u0|sdram_pll|sd1|pll7|clk[0]                        ; Generated ; Constrained ;
+; u0|sdram_pll|sd1|pll7|clk[1]                        ; u0|sdram_pll|sd1|pll7|clk[1]                        ; Generated ; Constrained ;
+; vga_controller:vga0|clkdiv                          ; vga_controller:vga0|clkdiv                          ; Base      ; Constrained ;
+; vga_controller:vga0|hs                              ; vga_controller:vga0|hs                              ; Base      ; Constrained ;
+; vga_controller:vga0|vs                              ; vga_controller:vga0|vs                              ; Base      ; Constrained ;
++-----------------------------------------------------+-----------------------------------------------------+-----------+-------------+
 
 
 +--------------------------+
@@ -1197,7 +1218,7 @@ No non-DPA dedicated SERDES Receiver circuitry present in device or used in desi
 Info: *******************************************************************
 Info: Running Quartus Prime Timing Analyzer
     Info: Version 18.1.0 Build 625 09/12/2018 SJ Lite Edition
-    Info: Processing started: Sun Nov 27 00:45:39 2022
+    Info: Processing started: Sun Nov 27 20:30:24 2022
 Info: Command: quartus_sta final -c final
 Info: qsta_default_script.tcl version: #1
 Warning (20013): Ignored 24 assignments for entity "DE10_LITE_Default" -- entity does not exist in design
@@ -1276,6 +1297,7 @@ Warning (332043): Overwriting existing clock: altera_reserved_tck
 Info (332105): Deriving Clocks
     Info (332105): create_clock -period 40.000 -name vga_controller:vga0|clkdiv vga_controller:vga0|clkdiv
     Info (332105): create_clock -period 40.000 -name vga_controller:vga0|vs vga_controller:vga0|vs
+    Info (332105): create_clock -period 40.000 -name color_mapper:color0|draw_cactus:cactus0|change_type color_mapper:color0|draw_cactus:cactus0|change_type
     Info (332105): create_clock -period 40.000 -name vga_controller:vga0|hs vga_controller:vga0|hs
 Warning (332049): Ignored derive_clocks at lab62.sdc(34): Time value "60.0 Hz" is not valid File: D:/Quartus/lizhuang.20/Documents/ece385/final_project/lab62.sdc Line: 34
     Info (332050): derive_clocks -period "60.0 Hz" File: D:/Quartus/lizhuang.20/Documents/ece385/final_project/lab62.sdc Line: 34
@@ -1303,49 +1325,52 @@ Info: Found TIMING_ANALYZER_REPORT_SCRIPT_INCLUDE_DEFAULT_ANALYSIS = ON
 Info: Analyzing Slow 1200mV 85C Model
 Info: Can't run Report Timing Closure Recommendations. The current device family is not supported.
 Critical Warning (332148): Timing requirements not met
-Info (332146): Worst-case setup slack is -149.298
+Info (332146): Worst-case setup slack is -153.698
     Info (332119):     Slack       End Point TNS Clock 
     Info (332119): ========= =================== =====================
-    Info (332119):  -149.298          -23951.973 MAX10_CLK1_50 
-    Info (332119):   -57.988            -168.171 vga_controller:vga0|clkdiv 
-    Info (332119):   -47.337             -47.337 vga_controller:vga0|vs 
+    Info (332119):  -153.698          -22823.086 MAX10_CLK1_50 
+    Info (332119):   -54.752            -156.548 vga_controller:vga0|clkdiv 
+    Info (332119):   -49.024             -49.024 vga_controller:vga0|vs 
     Info (332119):     8.256               0.000 u0|sdram_pll|sd1|pll7|clk[0] 
-    Info (332119):    11.144               0.000 altera_reserved_tck 
+    Info (332119):    11.014               0.000 altera_reserved_tck 
     Info (332119):    15.442               0.000 clk_dram_ext 
-    Info (332119):    39.298               0.000 vga_controller:vga0|hs 
-Info (332146): Worst-case hold slack is 0.323
+    Info (332119):    33.670               0.000 vga_controller:vga0|hs 
+    Info (332119):    37.680               0.000 color_mapper:color0|draw_cactus:cactus0|change_type 
+Info (332146): Worst-case hold slack is 0.325
     Info (332119):     Slack       End Point TNS Clock 
     Info (332119): ========= =================== =====================
-    Info (332119):     0.323               0.000 MAX10_CLK1_50 
-    Info (332119):     0.324               0.000 vga_controller:vga0|vs 
-    Info (332119):     0.327               0.000 u0|sdram_pll|sd1|pll7|clk[0] 
+    Info (332119):     0.325               0.000 vga_controller:vga0|vs 
+    Info (332119):     0.340               0.000 MAX10_CLK1_50 
     Info (332119):     0.340               0.000 altera_reserved_tck 
-    Info (332119):     0.393               0.000 vga_controller:vga0|hs 
-    Info (332119):     0.574               0.000 vga_controller:vga0|clkdiv 
+    Info (332119):     0.341               0.000 u0|sdram_pll|sd1|pll7|clk[0] 
+    Info (332119):     0.435               0.000 vga_controller:vga0|clkdiv 
     Info (332119):     0.673               0.000 clk_dram_ext 
-Info (332146): Worst-case recovery slack is 12.298
+    Info (332119):     1.290               0.000 color_mapper:color0|draw_cactus:cactus0|change_type 
+    Info (332119):     5.554               0.000 vga_controller:vga0|hs 
+Info (332146): Worst-case recovery slack is 13.192
     Info (332119):     Slack       End Point TNS Clock 
     Info (332119): ========= =================== =====================
-    Info (332119):    12.298               0.000 u0|sdram_pll|sd1|pll7|clk[0] 
-    Info (332119):    12.845               0.000 altera_reserved_tck 
-    Info (332119):    14.659               0.000 MAX10_CLK1_50 
-Info (332146): Worst-case removal slack is 1.305
+    Info (332119):    13.192               0.000 altera_reserved_tck 
+    Info (332119):    14.367               0.000 MAX10_CLK1_50 
+    Info (332119):    14.391               0.000 u0|sdram_pll|sd1|pll7|clk[0] 
+Info (332146): Worst-case removal slack is 1.086
     Info (332119):     Slack       End Point TNS Clock 
     Info (332119): ========= =================== =====================
-    Info (332119):     1.305               0.000 altera_reserved_tck 
-    Info (332119):     3.893               0.000 MAX10_CLK1_50 
-    Info (332119):     5.456               0.000 u0|sdram_pll|sd1|pll7|clk[0] 
-Info (332146): Worst-case minimum pulse width slack is 9.539
+    Info (332119):     1.086               0.000 altera_reserved_tck 
+    Info (332119):     3.443               0.000 u0|sdram_pll|sd1|pll7|clk[0] 
+    Info (332119):     4.045               0.000 MAX10_CLK1_50 
+Info (332146): Worst-case minimum pulse width slack is 9.517
     Info (332119):     Slack       End Point TNS Clock 
     Info (332119): ========= =================== =====================
-    Info (332119):     9.539               0.000 MAX10_CLK1_50 
+    Info (332119):     9.517               0.000 MAX10_CLK1_50 
     Info (332119):     9.708               0.000 u0|sdram_pll|sd1|pll7|clk[0] 
     Info (332119):     9.849               0.000 u0|sdram_pll|sd1|pll7|clk[1] 
-    Info (332119):    14.781               0.000 altera_reserved_tck 
+    Info (332119):    14.766               0.000 altera_reserved_tck 
     Info (332119):    15.790               0.000 clk_dram_ext 
-    Info (332119):    19.557               0.000 vga_controller:vga0|clkdiv 
-    Info (332119):    19.722               0.000 vga_controller:vga0|vs 
-    Info (332119):    19.754               0.000 vga_controller:vga0|hs 
+    Info (332119):    19.505               0.000 vga_controller:vga0|clkdiv 
+    Info (332119):    19.740               0.000 vga_controller:vga0|hs 
+    Info (332119):    19.752               0.000 vga_controller:vga0|vs 
+    Info (332119):    19.766               0.000 color_mapper:color0|draw_cactus:cactus0|change_type 
 Info (332114): Report Metastability: Found 19 synchronizer chains.
     Info (332114): Worst-Case MTBF of Design is 1e+09 years or 3.15e+16 seconds.
     Info (332114): Typical MTBF of Design is 1e+09 years or 3.15e+16 seconds.
@@ -1353,7 +1378,7 @@ Info (332114): Report Metastability: Found 19 synchronizer chains.
     Info (332114): Number of Synchronizer Chains Found: 19
     Info (332114): Shortest Synchronizer Chain: 2 Registers
     Info (332114): Fraction of Chains for which MTBFs Could Not be Calculated: 0.316
-    Info (332114): Worst Case Available Settling Time: 31.807 ns
+    Info (332114): Worst Case Available Settling Time: 32.329 ns
     Info (332114): 
     Info (332114): Worst-Case MTBF values are calculated based on the worst-case silicon characteristics, with worst-case operating conditions.
     Info (332114):   - Under worst-case conditions, an increase of 100ps in available settling time will increase MTBF values by a factor of 1.8
@@ -1366,49 +1391,52 @@ Info (332097): The following timing edges are non-unate.  The Timing Analyzer wi
     Info (332098): Cell: altera_internal_jtag  from: tck  to: tckutap
 Info (332123): Deriving Clock Uncertainty. Please refer to report_sdc in the Timing Analyzer to see clock uncertainties.
 Critical Warning (332148): Timing requirements not met
-Info (332146): Worst-case setup slack is -134.563
+Info (332146): Worst-case setup slack is -138.310
     Info (332119):     Slack       End Point TNS Clock 
     Info (332119): ========= =================== =====================
-    Info (332119):  -134.563          -21314.750 MAX10_CLK1_50 
-    Info (332119):   -49.292            -142.531 vga_controller:vga0|clkdiv 
-    Info (332119):   -39.476             -39.476 vga_controller:vga0|vs 
+    Info (332119):  -138.310          -20274.495 MAX10_CLK1_50 
+    Info (332119):   -46.330            -131.863 vga_controller:vga0|clkdiv 
+    Info (332119):   -41.141             -41.141 vga_controller:vga0|vs 
     Info (332119):     8.888               0.000 u0|sdram_pll|sd1|pll7|clk[0] 
-    Info (332119):    11.400               0.000 altera_reserved_tck 
+    Info (332119):    11.321               0.000 altera_reserved_tck 
     Info (332119):    15.604               0.000 clk_dram_ext 
-    Info (332119):    39.362               0.000 vga_controller:vga0|hs 
-Info (332146): Worst-case hold slack is 0.290
+    Info (332119):    34.237               0.000 vga_controller:vga0|hs 
+    Info (332119):    37.844               0.000 color_mapper:color0|draw_cactus:cactus0|change_type 
+Info (332146): Worst-case hold slack is 0.291
     Info (332119):     Slack       End Point TNS Clock 
     Info (332119): ========= =================== =====================
-    Info (332119):     0.290               0.000 MAX10_CLK1_50 
     Info (332119):     0.291               0.000 vga_controller:vga0|vs 
-    Info (332119):     0.293               0.000 u0|sdram_pll|sd1|pll7|clk[0] 
+    Info (332119):     0.305               0.000 MAX10_CLK1_50 
     Info (332119):     0.305               0.000 altera_reserved_tck 
-    Info (332119):     0.355               0.000 vga_controller:vga0|hs 
-    Info (332119):     0.529               0.000 vga_controller:vga0|clkdiv 
+    Info (332119):     0.306               0.000 u0|sdram_pll|sd1|pll7|clk[0] 
+    Info (332119):     0.399               0.000 vga_controller:vga0|clkdiv 
     Info (332119):     0.622               0.000 clk_dram_ext 
-Info (332146): Worst-case recovery slack is 12.929
+    Info (332119):     1.219               0.000 color_mapper:color0|draw_cactus:cactus0|change_type 
+    Info (332119):     5.127               0.000 vga_controller:vga0|hs 
+Info (332146): Worst-case recovery slack is 13.381
     Info (332119):     Slack       End Point TNS Clock 
     Info (332119): ========= =================== =====================
-    Info (332119):    12.929               0.000 u0|sdram_pll|sd1|pll7|clk[0] 
-    Info (332119):    13.048               0.000 altera_reserved_tck 
-    Info (332119):    15.116               0.000 MAX10_CLK1_50 
-Info (332146): Worst-case removal slack is 1.216
+    Info (332119):    13.381               0.000 altera_reserved_tck 
+    Info (332119):    14.914               0.000 u0|sdram_pll|sd1|pll7|clk[0] 
+    Info (332119):    14.931               0.000 MAX10_CLK1_50 
+Info (332146): Worst-case removal slack is 1.004
     Info (332119):     Slack       End Point TNS Clock 
     Info (332119): ========= =================== =====================
-    Info (332119):     1.216               0.000 altera_reserved_tck 
-    Info (332119):     3.527               0.000 MAX10_CLK1_50 
-    Info (332119):     4.878               0.000 u0|sdram_pll|sd1|pll7|clk[0] 
-Info (332146): Worst-case minimum pulse width slack is 9.566
+    Info (332119):     1.004               0.000 altera_reserved_tck 
+    Info (332119):     3.109               0.000 u0|sdram_pll|sd1|pll7|clk[0] 
+    Info (332119):     3.704               0.000 MAX10_CLK1_50 
+Info (332146): Worst-case minimum pulse width slack is 9.547
     Info (332119):     Slack       End Point TNS Clock 
     Info (332119): ========= =================== =====================
-    Info (332119):     9.566               0.000 MAX10_CLK1_50 
-    Info (332119):     9.686               0.000 u0|sdram_pll|sd1|pll7|clk[0] 
+    Info (332119):     9.547               0.000 MAX10_CLK1_50 
+    Info (332119):     9.690               0.000 u0|sdram_pll|sd1|pll7|clk[0] 
     Info (332119):     9.874               0.000 u0|sdram_pll|sd1|pll7|clk[1] 
-    Info (332119):    14.810               0.000 altera_reserved_tck 
+    Info (332119):    14.792               0.000 altera_reserved_tck 
     Info (332119):    15.790               0.000 clk_dram_ext 
-    Info (332119):    19.643               0.000 vga_controller:vga0|clkdiv 
-    Info (332119):    19.721               0.000 vga_controller:vga0|hs 
-    Info (332119):    19.743               0.000 vga_controller:vga0|vs 
+    Info (332119):    19.588               0.000 vga_controller:vga0|clkdiv 
+    Info (332119):    19.693               0.000 vga_controller:vga0|hs 
+    Info (332119):    19.700               0.000 vga_controller:vga0|vs 
+    Info (332119):    19.755               0.000 color_mapper:color0|draw_cactus:cactus0|change_type 
 Info (332114): Report Metastability: Found 19 synchronizer chains.
     Info (332114): Worst-Case MTBF of Design is 1e+09 years or 3.15e+16 seconds.
     Info (332114): Typical MTBF of Design is 1e+09 years or 3.15e+16 seconds.
@@ -1416,7 +1444,7 @@ Info (332114): Report Metastability: Found 19 synchronizer chains.
     Info (332114): Number of Synchronizer Chains Found: 19
     Info (332114): Shortest Synchronizer Chain: 2 Registers
     Info (332114): Fraction of Chains for which MTBFs Could Not be Calculated: 0.316
-    Info (332114): Worst Case Available Settling Time: 32.419 ns
+    Info (332114): Worst Case Available Settling Time: 32.936 ns
     Info (332114): 
     Info (332114): Worst-Case MTBF values are calculated based on the worst-case silicon characteristics, with worst-case operating conditions.
     Info (332114):   - Under worst-case conditions, an increase of 100ps in available settling time will increase MTBF values by a factor of 1.8
@@ -1427,49 +1455,52 @@ Info (332097): The following timing edges are non-unate.  The Timing Analyzer wi
     Info (332098): Cell: altera_internal_jtag  from: tck  to: tckutap
 Info (332123): Deriving Clock Uncertainty. Please refer to report_sdc in the Timing Analyzer to see clock uncertainties.
 Critical Warning (332148): Timing requirements not met
-Info (332146): Worst-case setup slack is -48.784
+Info (332146): Worst-case setup slack is -50.673
     Info (332119):     Slack       End Point TNS Clock 
     Info (332119): ========= =================== =====================
-    Info (332119):   -48.784           -6496.150 MAX10_CLK1_50 
-    Info (332119):    -0.347              -0.691 vga_controller:vga0|clkdiv 
-    Info (332119):     4.368               0.000 vga_controller:vga0|vs 
+    Info (332119):   -50.673           -5890.070 MAX10_CLK1_50 
+    Info (332119):     1.452               0.000 vga_controller:vga0|clkdiv 
+    Info (332119):     3.385               0.000 vga_controller:vga0|vs 
     Info (332119):    11.623               0.000 u0|sdram_pll|sd1|pll7|clk[0] 
-    Info (332119):    13.648               0.000 altera_reserved_tck 
+    Info (332119):    13.620               0.000 altera_reserved_tck 
     Info (332119):    15.553               0.000 clk_dram_ext 
-    Info (332119):    39.694               0.000 vga_controller:vga0|hs 
-Info (332146): Worst-case hold slack is 0.141
+    Info (332119):    36.887               0.000 vga_controller:vga0|hs 
+    Info (332119):    38.980               0.000 color_mapper:color0|draw_cactus:cactus0|change_type 
+Info (332146): Worst-case hold slack is 0.008
     Info (332119):     Slack       End Point TNS Clock 
     Info (332119): ========= =================== =====================
-    Info (332119):     0.141               0.000 MAX10_CLK1_50 
-    Info (332119):     0.141               0.000 vga_controller:vga0|vs 
-    Info (332119):     0.144               0.000 u0|sdram_pll|sd1|pll7|clk[0] 
+    Info (332119):     0.008               0.000 MAX10_CLK1_50 
+    Info (332119):     0.142               0.000 vga_controller:vga0|vs 
     Info (332119):     0.148               0.000 altera_reserved_tck 
-    Info (332119):     0.170               0.000 vga_controller:vga0|hs 
-    Info (332119):     0.213               0.000 vga_controller:vga0|clkdiv 
+    Info (332119):     0.148               0.000 u0|sdram_pll|sd1|pll7|clk[0] 
+    Info (332119):     0.174               0.000 vga_controller:vga0|clkdiv 
     Info (332119):     0.311               0.000 clk_dram_ext 
-Info (332146): Worst-case recovery slack is 14.323
+    Info (332119):     0.538               0.000 color_mapper:color0|draw_cactus:cactus0|change_type 
+    Info (332119):     2.549               0.000 vga_controller:vga0|hs 
+Info (332146): Worst-case recovery slack is 14.516
     Info (332119):     Slack       End Point TNS Clock 
     Info (332119): ========= =================== =====================
-    Info (332119):    14.323               0.000 altera_reserved_tck 
-    Info (332119):    16.288               0.000 u0|sdram_pll|sd1|pll7|clk[0] 
-    Info (332119):    17.361               0.000 MAX10_CLK1_50 
-Info (332146): Worst-case removal slack is 0.564
+    Info (332119):    14.516               0.000 altera_reserved_tck 
+    Info (332119):    17.181               0.000 MAX10_CLK1_50 
+    Info (332119):    17.348               0.000 u0|sdram_pll|sd1|pll7|clk[0] 
+Info (332146): Worst-case removal slack is 0.477
     Info (332119):     Slack       End Point TNS Clock 
     Info (332119): ========= =================== =====================
-    Info (332119):     0.564               0.000 altera_reserved_tck 
-    Info (332119):     1.854               0.000 MAX10_CLK1_50 
-    Info (332119):     2.546               0.000 u0|sdram_pll|sd1|pll7|clk[0] 
-Info (332146): Worst-case minimum pulse width slack is 9.357
+    Info (332119):     0.477               0.000 altera_reserved_tck 
+    Info (332119):     1.650               0.000 u0|sdram_pll|sd1|pll7|clk[0] 
+    Info (332119):     1.960               0.000 MAX10_CLK1_50 
+Info (332146): Worst-case minimum pulse width slack is 9.374
     Info (332119):     Slack       End Point TNS Clock 
     Info (332119): ========= =================== =====================
-    Info (332119):     9.357               0.000 MAX10_CLK1_50 
+    Info (332119):     9.374               0.000 MAX10_CLK1_50 
     Info (332119):     9.720               0.000 u0|sdram_pll|sd1|pll7|clk[0] 
     Info (332119):     9.957               0.000 u0|sdram_pll|sd1|pll7|clk[1] 
-    Info (332119):    14.563               0.000 altera_reserved_tck 
+    Info (332119):    14.566               0.000 altera_reserved_tck 
     Info (332119):    16.000               0.000 clk_dram_ext 
-    Info (332119):    19.528               0.000 vga_controller:vga0|clkdiv 
-    Info (332119):    19.669               0.000 vga_controller:vga0|vs 
-    Info (332119):    19.747               0.000 vga_controller:vga0|hs 
+    Info (332119):    19.569               0.000 vga_controller:vga0|clkdiv 
+    Info (332119):    19.645               0.000 vga_controller:vga0|vs 
+    Info (332119):    19.724               0.000 vga_controller:vga0|hs 
+    Info (332119):    19.733               0.000 color_mapper:color0|draw_cactus:cactus0|change_type 
 Info (332114): Report Metastability: Found 19 synchronizer chains.
     Info (332114): Worst-Case MTBF of Design is 1e+09 years or 3.15e+16 seconds.
     Info (332114): Typical MTBF of Design is 1e+09 years or 3.15e+16 seconds.
@@ -1477,7 +1508,7 @@ Info (332114): Report Metastability: Found 19 synchronizer chains.
     Info (332114): Number of Synchronizer Chains Found: 19
     Info (332114): Shortest Synchronizer Chain: 2 Registers
     Info (332114): Fraction of Chains for which MTBFs Could Not be Calculated: 0.316
-    Info (332114): Worst Case Available Settling Time: 36.356 ns
+    Info (332114): Worst Case Available Settling Time: 36.628 ns
     Info (332114): 
     Info (332114): Worst-Case MTBF values are calculated based on the worst-case silicon characteristics, with worst-case operating conditions.
     Info (332114):   - Under worst-case conditions, an increase of 100ps in available settling time will increase MTBF values by a factor of 1.8
@@ -1487,7 +1518,7 @@ Info (332101): Design is fully constrained for setup requirements
 Info (332101): Design is fully constrained for hold requirements
 Info: Quartus Prime Timing Analyzer was successful. 0 errors, 44 warnings
     Info: Peak virtual memory: 5094 megabytes
-    Info: Processing ended: Sun Nov 27 00:45:46 2022
+    Info: Processing ended: Sun Nov 27 20:30:31 2022
     Info: Elapsed time: 00:00:07
     Info: Total CPU time (on all processors): 00:00:20
 
