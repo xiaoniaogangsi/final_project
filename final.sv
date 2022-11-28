@@ -25,6 +25,7 @@ module control (input Reset, frame_clk,
 							CAKE,
 							DEAD}		Action;
 		Dragon mydragon;	
+		
 
 		initial begin
 		

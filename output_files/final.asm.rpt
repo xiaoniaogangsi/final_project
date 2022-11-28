@@ -1,5 +1,5 @@
 Assembler report for final
-Sat Nov 26 19:44:13 2022
+Sat Nov 26 20:57:04 2022
 Quartus Prime Version 18.1.0 Build 625 09/12/2018 SJ Lite Edition
 
 
@@ -11,7 +11,7 @@ Quartus Prime Version 18.1.0 Build 625 09/12/2018 SJ Lite Edition
   3. Assembler Settings
   4. Assembler Encrypted IP Cores Summary
   5. Assembler Generated Files
-  6. Assembler Device Options: D:/Quartus/lizhuang.20/Documents/ece385/final_project/output_files/final.sof
+  6. Assembler Device Options: D:/UIUC_Junior/2022_fall/ECE385/Final_Project/Final_385/final_project/output_files/final.sof
   7. Assembler Messages
 
 
@@ -38,7 +38,7 @@ refer to the applicable agreement for further details.
 +---------------------------------------------------------------+
 ; Assembler Summary                                             ;
 +-----------------------+---------------------------------------+
-; Assembler Status      ; Successful - Sat Nov 26 19:44:13 2022 ;
+; Assembler Status      ; Successful - Sat Nov 26 20:57:04 2022 ;
 ; Revision Name         ; final                                 ;
 ; Top-level Entity Name ; lab62                                 ;
 ; Family                ; MAX 10                                ;
@@ -63,23 +63,23 @@ refer to the applicable agreement for further details.
 +--------+------------------------+--------------+
 
 
-+------------------------------------------------------------------------------+
-; Assembler Generated Files                                                    ;
-+------------------------------------------------------------------------------+
-; File Name                                                                    ;
-+------------------------------------------------------------------------------+
-; D:/Quartus/lizhuang.20/Documents/ece385/final_project/output_files/final.sof ;
-+------------------------------------------------------------------------------+
++----------------------------------------------------------------------------------------------+
+; Assembler Generated Files                                                                    ;
++----------------------------------------------------------------------------------------------+
+; File Name                                                                                    ;
++----------------------------------------------------------------------------------------------+
+; D:/UIUC_Junior/2022_fall/ECE385/Final_Project/Final_385/final_project/output_files/final.sof ;
++----------------------------------------------------------------------------------------------+
 
 
-+--------------------------------------------------------------------------------------------------------+
-; Assembler Device Options: D:/Quartus/lizhuang.20/Documents/ece385/final_project/output_files/final.sof ;
-+----------------+---------------------------------------------------------------------------------------+
-; Option         ; Setting                                                                               ;
-+----------------+---------------------------------------------------------------------------------------+
-; JTAG usercode  ; 0x00CAAD37                                                                            ;
-; Checksum       ; 0x00CAAD37                                                                            ;
-+----------------+---------------------------------------------------------------------------------------+
++------------------------------------------------------------------------------------------------------------------------+
+; Assembler Device Options: D:/UIUC_Junior/2022_fall/ECE385/Final_Project/Final_385/final_project/output_files/final.sof ;
++----------------+-------------------------------------------------------------------------------------------------------+
+; Option         ; Setting                                                                                               ;
++----------------+-------------------------------------------------------------------------------------------------------+
+; JTAG usercode  ; 0x00CAAD37                                                                                            ;
+; Checksum       ; 0x00CAAD37                                                                                            ;
++----------------+-------------------------------------------------------------------------------------------------------+
 
 
 +--------------------+
@@ -88,15 +88,15 @@ refer to the applicable agreement for further details.
 Info: *******************************************************************
 Info: Running Quartus Prime Assembler
     Info: Version 18.1.0 Build 625 09/12/2018 SJ Lite Edition
-    Info: Processing started: Sat Nov 26 19:44:09 2022
+    Info: Processing started: Sat Nov 26 20:56:57 2022
 Info: Command: quartus_asm --read_settings_files=off --write_settings_files=off final -c final
 Warning (18236): Number of processors has not been specified which may cause overloading on shared machines.  Set the global assignment NUM_PARALLEL_PROCESSORS in your QSF to an appropriate value for best performance.
 Info (115031): Writing out detailed assembly data for power analysis
 Info (115030): Assembler is generating device programming files
 Info: Quartus Prime Assembler was successful. 0 errors, 1 warning
-    Info: Peak virtual memory: 4738 megabytes
-    Info: Processing ended: Sat Nov 26 19:44:13 2022
-    Info: Elapsed time: 00:00:04
-    Info: Total CPU time (on all processors): 00:00:03
+    Info: Peak virtual memory: 4737 megabytes
+    Info: Processing ended: Sat Nov 26 20:57:04 2022
+    Info: Elapsed time: 00:00:07
+    Info: Total CPU time (on all processors): 00:00:06
 
 

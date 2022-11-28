@@ -5,18 +5,18 @@ module Draw_Engine (input Clk50, row_Clk, Reset,
 						  input Draw_Back, Draw_Ground,   //layer_1
 						  input Draw_Cloud,  //layer_2
 						  input Draw_Cactus, Draw_Buff, Draw_Rock, Draw_Pterosaur, //layer_3
-						  input Draw_Scoce, Draw_Fire,Draw_Runner, Draw_Start, Draw_Over, //layer_4
+						  input Draw_Score, Draw_Fire,Draw_Runner, Draw_Start, Draw_Over, //layer_4
 						   
 						  
 						  input [17:0] address_Back, address_Ground, 
 						  input [17:0] address_Cloud,  
 						  input [17:0] address_Cactus, address_Buff, address_Rock, address_Pterosaur,
-						  input [17:0] address_Score，address_Fire,address_Runner, address_Start, address_Over,
+						  input [17:0] address_Score, address_Fire,address_Runner, address_Start, address_Over,
 						  input [9:0] DrawX, DrawY,
 						  output [17:0] draw_address,
 						  output [9:0] write_X, write_Y
 						  );
-//	enum logic [1:0] {	WAIT, ADD} Counter_State, Counter_Next_State;
+//	enum logic [1:0] {WAIT, ADD} Counter_State, Counter_Next_State;
 	
 //	always_ff @ (posedge Clk50 or posedge Reset)
 //	begin
@@ -37,17 +37,18 @@ module Draw_Engine (input Clk50, row_Clk, Reset,
 //				if (
 //	end
 	
-	enum logic [3:0] {  		
-								LAYER_1,
-								LAYER_2,
-								LAYER_3,
-								LAYER_4,
-								REST}   State, Next_State;   // Internal state logic
 	logic [9:0] WriteX, WriteY;
-	logic Layer_1_on, Layer_2_on, Layer_3_on, Layer_4_on;
+	logic Layer_1_on, Layer_2_on, Layer_3_on, Layer_4_on, Smaller;
 	logic [1:0] Layer_1_type;
 	logic [3:0] Layer_3_type;
 	logic [4:0] Layer_4_type;
+	
+	enum logic [2:0] {REST,
+							LAYER_1,
+							LAYER_2,
+							LAYER_3,
+							LAYER_4}   State, Next_State;   // Internal state logic
+							
 	always_ff @ (posedge Clk50 or posedge Reset)
 	begin
 		if (Reset)
@@ -55,6 +56,7 @@ module Draw_Engine (input Clk50, row_Clk, Reset,
 			State <= LAYER_1;
 			WriteX <= 10'b0000000000;
 			WriteY <= 10'b0000000000;
+		end
 		else
 			State <= Next_State;
 	end
@@ -81,8 +83,9 @@ module Draw_Engine (input Clk50, row_Clk, Reset,
 		begin
 			//default state is staying at the current state;
 			Next_State = State;
-			unique case (State)
-				LAYER_1:
+			case (State)
+				LAYER_1 :
+				begin
 					if (Layer_2_on == 0 && Layer_3_on == 0 && Layer_4_on == 0)
 						Next_State = LAYER_1;
 					else if (Layer_2_on)
@@ -91,7 +94,9 @@ module Draw_Engine (input Clk50, row_Clk, Reset,
 						Next_State = LAYER_3;
 					else if (Layer_2_on == 0 && Layer_3_on == 0 && Layer_4_on) 
 						Next_State = LAYER_4;
+				end
 				LAYER_2 :
+				begin
 					if (Layer_2_on && Layer_3_on == 0 && Layer_4_on == 0)
 						Next_State = LAYER_1;
 					else if (Layer_2_on && Layer_3_on)
@@ -100,26 +105,33 @@ module Draw_Engine (input Clk50, row_Clk, Reset,
 						Next_State = LAYER_4;
 					else
 						Next_State = LAYER_1;
+				end
 				LAYER_3 :
+				begin
 					if (Layer_3_on && Layer_4_on == 0)
 						Next_State = LAYER_1;
 					else if (Layer_3_on && Layer_4_on)
 						Next_State = LAYER_4;
 					else 
 						Next_State = LAYER_1;
+				end
 				LAYER_4 : 
+				begin
 					if (Smaller)
 						Next_State = LAYER_1;
 					else 
 						Next_State = REST;
+				end
 				REST :
+				begin
 					if (row_Clk == 0)
 						Next_State = LAYER_1;
 					else 
 						Next_State = REST;
+				end
 				//for debugging
 				default : 
-				Next_state = LAYER_1;
+				Next_State = LAYER_1;
 			endcase
 			
 //			address_Back, address_Ground,  
@@ -127,7 +139,7 @@ module Draw_Engine (input Clk50, row_Clk, Reset,
 //			address_Cactus, address_Buff, address_Rock, address_Pterosaur,
 //			address_Score，address_Fire,address_Runner, address_Start, address_Over,
 			case (State)
-				REST:
+				REST: ;
 				LAYER_1 :
 				begin
 					case (Layer_1_type)
@@ -176,11 +188,12 @@ module Draw_Engine (input Clk50, row_Clk, Reset,
 						default: ;
 					endcase
 				end
+			endcase
 		end
 		
 		//produce WriteX
 		//In this way, DrawX and WriteX will be synchronized after one REST state. Excellent!
-		always_ff (posedge Clk50)
+		always_ff @ (posedge Clk50)
 		begin
 			if (State == REST)
 				WriteX <= 10'b0000000000;
@@ -192,8 +205,5 @@ module Draw_Engine (input Clk50, row_Clk, Reset,
 		
 		assign write_X = WriteX;
 		assign write_Y = WriteY;
-
-	
-		
 		
 endmodule
