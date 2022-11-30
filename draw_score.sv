@@ -134,18 +134,18 @@ module draw_score (	input Clk50, pixel_Clk, frame_Clk, Reset,
 		end
 	end
 	
-	always_ff @ (posedge Clk50)
-//	always_comb
+//	always_ff @ (posedge Clk50)
+	always_comb
 	begin
 		case (score_on_wr)
-			3'b001: start <= num[score1];
-			3'b010: start <= num[score2];
-			3'b011: start <= num[score3];
-			3'b100: start <= num[score4];
-			3'b101: start <= num[score5];
-			default: start <= 0;
+			3'b001: start = num[score1];
+			3'b010: start = num[score2];
+			3'b011: start = num[score3];
+			3'b100: start = num[score4];
+			3'b101: start = num[score5];
+			default: start = 0;
 		endcase
-		offset <= DistY*SizeX + DistX;
+		offset = DistY*SizeX + DistX;
 	end
 	assign address = start + offset;
 	

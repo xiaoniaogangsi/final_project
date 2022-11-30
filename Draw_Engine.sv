@@ -14,7 +14,8 @@ module Draw_Engine (input Clk50, row_Clk, Reset,
 						  input [17:0] address_Score, address_Fire, address_Runner, address_Start, address_Over,
 						  input [9:0] DrawX, DrawY,
 						  output [17:0] draw_address,
-						  output [9:0] write_X, write_Y
+						  output [9:0] write_X, write_Y,
+						  output [2:0] write_which_layer
 						  );
 //	enum logic [1:0] {	WAIT, ADD} Counter_State, Counter_Next_State;
 	
@@ -41,7 +42,9 @@ module Draw_Engine (input Clk50, row_Clk, Reset,
 							LAYER_2,
 							LAYER_3,
 							LAYER_4,
-							REST}   State, Next_State;   // Internal state logic
+							REST,
+							PIXEL_FINISH
+							}   State, Next_State;   // Internal state logic
 	logic [9:0] WriteX, WriteY;
 	logic Layer_1_on, Layer_2_on, Layer_3_on, Layer_4_on;
 	logic [1:0] Layer_1_type;
@@ -52,15 +55,22 @@ module Draw_Engine (input Clk50, row_Clk, Reset,
 	begin
 		if (Reset)
 		begin
-			State <= LAYER_1;
-			WriteX <= 10'b0000000000;
-			WriteY <= 10'b0000000000;
+			State <= PIXEL_FINISH;
+			//State <= LAYER_1;
+			//WriteX <= 10'b0000000000;
+			//WriteY <= 10'b0000000000;
 		end
 		else
 			State <= Next_State;
 	end
 	
-	assign WriteY = DrawY + 1;
+	always_comb
+	begin
+		if (DrawY == 524)
+			WriteY = 0;
+		else
+			WriteY = DrawY + 1;
+	end
 	assign Layer_1_on = Draw_Back | Draw_Ground;
 	assign Layer_2_on = Draw_Cloud;
 	assign Layer_3_on = Draw_Cactus | Draw_Buff | Draw_Rock | Draw_Pterosaur;
@@ -73,7 +83,7 @@ module Draw_Engine (input Clk50, row_Clk, Reset,
 	logic Smaller;		//Indicate whether WriteX is smaller than 640 (still inside the screen)
 	always_comb //produce smaller
 	begin
-		if (WriteX<640 && WriteX>=0)
+		if (WriteX<10'd640)
 			Smaller = 1;
 		else
 			Smaller = 0;
@@ -86,80 +96,116 @@ module Draw_Engine (input Clk50, row_Clk, Reset,
 			unique case (State)
 				LAYER_1 :
 				begin
-					if (Layer_2_on == 0 && Layer_3_on == 0 && Layer_4_on == 0)
-						Next_State = LAYER_1;
-					else if (Layer_2_on)
-						Next_State = LAYER_2;
-					else if (Layer_2_on == 0 && Layer_3_on)
-						Next_State = LAYER_3;
-					else if (Layer_2_on == 0 && Layer_3_on == 0 && Layer_4_on) 
-						Next_State = LAYER_4;
+					if (Smaller == 0)
+						Next_State = REST;
+					else
+					begin
+						if (Layer_2_on == 0 && Layer_3_on == 0 && Layer_4_on == 0)
+							Next_State = PIXEL_FINISH;
+						else if (Layer_2_on)
+							Next_State = LAYER_2;
+						else if (Layer_2_on == 0 && Layer_3_on)
+							Next_State = LAYER_3;
+						else if (Layer_2_on == 0 && Layer_3_on == 0 && Layer_4_on) 
+							Next_State = LAYER_4;
+						else
+							Next_State = PIXEL_FINISH;
+					end
 				end
 				LAYER_2 :
 				begin
-					if (Layer_2_on && Layer_3_on == 0 && Layer_4_on == 0)
-						Next_State = LAYER_1;
-					else if (Layer_2_on && Layer_3_on)
-						Next_State = LAYER_3;
-					else if (Layer_2_on && Layer_2_on == 0 && Layer_2_on)
-						Next_State = LAYER_4;
+					if (Smaller == 0)
+						Next_State = REST;
 					else
-						Next_State = LAYER_1;
+					begin
+						if (Layer_2_on && Layer_3_on == 0 && Layer_4_on == 0)
+							Next_State = PIXEL_FINISH;
+						else if (Layer_2_on && Layer_3_on)
+							Next_State = LAYER_3;
+						else if (Layer_2_on && Layer_3_on == 0 && Layer_4_on)
+							Next_State = LAYER_4;
+						else
+							Next_State = PIXEL_FINISH;
+					end
 				end
 				LAYER_3 :
 				begin
-					if (Layer_3_on && Layer_4_on == 0)
-						Next_State = LAYER_1;
-					else if (Layer_3_on && Layer_4_on)
-						Next_State = LAYER_4;
-					else 
-						Next_State = LAYER_1;
+					if (Smaller == 0)
+						Next_State = REST;
+					else
+					begin
+						if (Layer_3_on && Layer_4_on == 0)
+							Next_State = PIXEL_FINISH;
+						else if (Layer_3_on && Layer_4_on)
+							Next_State = LAYER_4;
+						else 
+							Next_State = PIXEL_FINISH;
+					end
 				end
 				LAYER_4 : 
 				begin
-					if (Smaller)
+					if (Smaller == 0)
+						Next_State = REST;
+					else
+						Next_State = PIXEL_FINISH;
+				end
+				PIXEL_FINISH :
+				begin
+					if (Smaller)	//If this pixel is still inside the screen
 						Next_State = LAYER_1;
-					else 
+					else 				//Writing this line is finished, wait for DrawX finishes, and then DrawX and WriteX can start together.
 						Next_State = REST;
 				end
 				REST :
 				begin
-					if (row_Clk == 0)
+					if (DrawX == 0)
 						Next_State = LAYER_1;
 					else 
 						Next_State = REST;
 				end
 				//for debugging
 				default : 
-					Next_State = LAYER_1;
+					Next_State = PIXEL_FINISH;
 			endcase
-			
+		end
+	
+	always_comb
+		begin
 //			address_Back, address_Ground,  
 //			address_Cloud,  
 //			address_Cactus, address_Buff, address_Rock, address_Pterosaur,
 //			address_Score，address_Fire,address_Runner, address_Start, address_Over,
 			case (State)
-				REST:
+				REST:	
+				begin
+					write_which_layer = 3'b000;
+					draw_address = 18'd20;
+				end
 				LAYER_1 :
 				begin
+					write_which_layer = 3'b001;
 					case (Layer_1_type)
 						2'b10:
 							draw_address = address_Back;
 						2'b01:
 							draw_address = address_Ground;
-						default: ;
+						default: 
+							draw_address = 18'd20;
 					endcase
 				end
 				LAYER_2 :
 				begin
+					write_which_layer = 3'b010;
 					case (Draw_Cloud)
 						1'b1: 
 							draw_address = address_Cloud;
-						default: ;
+						default: 
+							draw_address = 18'd20;
 					endcase
 				end
 				LAYER_3 :
 				begin
+					write_which_layer = 3'b011;
 					case (Layer_3_type)
 						4'b1000 :
 							draw_address = address_Cactus;
@@ -169,11 +215,13 @@ module Draw_Engine (input Clk50, row_Clk, Reset,
 							draw_address = address_Rock;
 						4'b0001 :
 							draw_address = address_Pterosaur;
-						default : ;
+						default : 
+							draw_address = 18'd20;
 					endcase
 				end
 				LAYER_4 :
 				begin
+					write_which_layer = 3'b100;
 					case (Layer_4_type)
 						5'b10000:
 							draw_address = address_Score;
@@ -185,22 +233,35 @@ module Draw_Engine (input Clk50, row_Clk, Reset,
 							draw_address = address_Start;
 						5'b00001:
 							draw_address = address_Over;
-						default: ;
+						default: 
+							draw_address = 18'd20;
 					endcase
+				end
+				PIXEL_FINISH :
+				begin
+					write_which_layer = 3'b000;
+					draw_address = 18'd20;
 				end
 			endcase
 		end
 		
 		//produce WriteX
 		//In this way, DrawX and WriteX will be synchronized after one REST state. Excellent!
-		always_ff @ (posedge Clk50)
+		always_ff @ (posedge Clk50 or posedge Reset)
 		begin
-			if (State == REST)
+			if (Reset)
 				WriteX <= 10'b0000000000;
-			else if (State == LAYER_1)
-				WriteX <= WriteX + 1;
-			else 
-				WriteX <= WriteX;
+			else
+			begin
+				if (State == REST)
+					WriteX <= 10'b0000000000;
+				else if (State == PIXEL_FINISH)
+				begin
+					WriteX <= WriteX + 1;
+				end
+				else 
+					WriteX <= WriteX;
+			end
 		end
 		
 		assign write_X = WriteX;
