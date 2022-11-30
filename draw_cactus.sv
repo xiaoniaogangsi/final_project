@@ -162,11 +162,11 @@ module draw_cactus (	input Clk50, pixel_Clk, frame_Clk, Reset,
 			frame_count <= frame_count + 1;
 	end
 	
-	always_ff @ (posedge Clk50)
-//	always_comb
+//	always_ff @ (posedge Clk50)
+	always_comb
 	begin
-		start <= cactus_addr;
-		offset <= DistY*SizeX + DistX;
+		start = cactus_addr;
+		offset = DistY*SizeX + DistX;
 	end
 	assign address = start + offset;
 

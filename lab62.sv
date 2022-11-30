@@ -68,7 +68,7 @@ logic Reset_h, vssig, blank, sync, VGA_Clk;
 	logic [3:0] hex_num_4, hex_num_3, hex_num_1, hex_num_0; //4 bit input hex digits
 	logic [1:0] signs;
 	logic [1:0] hundreds;
-	logic [9:0] drawxsig, drawysig, ballxsig, ballysig, ballsizesig;
+	logic [9:0] drawxsig, drawysig, runnerxsig, runnerysig, ballsizesig;
 	logic [7:0] Red, Blue, Green;
 	logic [7:0] keycode;
 
@@ -174,8 +174,8 @@ vga_controller vga0(
 ball ball0(.Reset(Reset_h), 
 			  .frame_clk(VGA_VS),
 			  .keycode(keycode),
-           .BallX(ballxsig), 
-			  .BallY(ballysig), 
+           .BallX(runnerxsig), 
+			  .BallY(runnerysig), 
 			  .BallS(ballsizesig) );
 color_mapper color0(.Clk50(MAX10_CLK1_50),//modified here
 						  .pixel_Clk(VGA_Clk),	//modified here
@@ -183,11 +183,10 @@ color_mapper color0(.Clk50(MAX10_CLK1_50),//modified here
 						  .Reset(Reset_h),		//modified here
 						  .blank(blank),			//modified here
 						  .row_Clk(VGA_HS),		//modified here
-						  .BallX(ballxsig), 
-						  .BallY(ballysig), 
+						  .PosX(runnerxsig), 
+						  .PosY(runnerysig), 
 						  .DrawX(drawxsig), 
 						  .DrawY(drawysig), 
-						  .Ball_size(ballsizesig),
                     .Red(Red), 
 						  .Green(Green), 
 						  .Blue(Blue));
