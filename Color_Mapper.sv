@@ -14,190 +14,196 @@
 
 
 module  color_mapper ( input 					 Clk50, pixel_Clk, frame_Clk, Reset, blank, row_Clk,
-							  input        [9:0]  BallX, BallY, DrawX, DrawY, Ball_size,
+							  input        [9:0]  PosX, PosY, DrawX, DrawY,
                        output logic [7:0]  Red, Green, Blue );
-    
-    logic ball_on_dr,ball_on_wr;
 	 
-	 /* test begin */
-	 logic flag;
-	 
-	 /* test finish */
-	 
- /* Old Ball: Generated square box by checking if the current pixel is within a square of length
-    2*Ball_Size, centered at (BallX, BallY).  Note that this requires unsigned comparisons.
-	 
-    if ((DrawX >= BallX - Ball_size) &&
-       (DrawX <= BallX + Ball_size) &&
-       (DrawY >= BallY - Ball_size) &&
-       (DrawY <= BallY + Ball_size))
-
-     New Ball: Generates (pixelated) circle by using the standard circle formula.  Note that while 
-     this single line is quite powerful descriptively, it causes the synthesis tool to use up three
-     of the 12 available multipliers on the chip!  Since the multiplicants are required to be signed,
-	  we have to first cast them from logic to int (signed by default) before they are multiplied). */
-	  
-    int DistX, DistY, Size;
-	 int SizeX, SizeY;
-//	   assign DistX = DrawX - BallX;
-//    assign DistY = DrawY - BallY;
-    assign Size = Ball_size;
-	 
-	 logic [17:0] address_runner, address_cloud, address_score, address_horizon, address_cactus;
-	 logic [17:0] draw_address;	//current Address for the picture we want to draw (start+offset)
-//	 logic [3:0] color_index;		//color index we get from the ROM
-	 logic [3:0] color_index_buffer; //color index from frame_buffer
-	 logic [7:0]  Red_p, Green_p, Blue_p;
-	 logic istransparent;
-	 
-	 logic cloud_on_dr,cloud_on_wr;
-	 logic [9:0] cloud_locX, cloud_locY;
-	 
-//	 parameter [17:0] Trex = 18'd225383;
-//	 parameter [17:0] Trex_X = 18'd88;
-//	 parameter [17:0] Trex_Y = 18'd90;	
+	logic [17:0] address_runner, address_cloud, address_score, address_horizon, address_cactus;
+	logic [17:0] draw_address;	//current Address for the picture we want to draw (start+offset)
+	logic [3:0] color_index;		//color index we get from the ROM
+	logic [3:0] color_index_buffer; //color index from frame_buffer
+	logic [7:0]  Red_p, Green_p, Blue_p;
 	
-	 logic [2:0] score_on_dr,score_on_wr;	//000 means off, 001~101 means on1~on5.
-	 logic horizon_on_dr, horizon_on_wr;
-	 logic cactus_on_dr, cactus_on_wr;
-	 
-	// 800 horizontal pixels indexed 0 to 799
-   // 525 vertical pixels indexed 0 to 524
+   logic runner_on_dr, runner_on_wr;	
+	logic cloud_on_dr,cloud_on_wr;
+	logic [2:0] score_on_dr,score_on_wr;	//000 means off, 001~101 means on1~on5.
+	logic horizon_on_dr, horizon_on_wr;
+	logic cactus_on_dr, cactus_on_wr;
+	
+	logic istransparent;
   
-	always_ff @ (posedge row_Clk)
-	begin
-		buffer_select <= ~(buffer_select);
-	end
-	
-
-//	always_ff @ (posedge Clk50 or posedge Reset )
-//	begin: counter_proc
-//		  if ( Reset ) 
-//			begin 
-//				 WriteX <= 10'b0000000000;
-//				 WriteY <= 10'b0000000000;
-//				 loop_counter <= 1'b0;
-//			end
-//				
-//		  else 
-//			 if ( WriteX == hpixels )  //If WriteX has reached the end of pixel count
-//			  begin 
-//					WriteX <= 10'b0000000000;
-//					//loop_counter <= loop_counter + 1;
-//					loop_counter <= ~(loop_counter);
-//					if (loop_counter == 1'b1)
-//					begin
-//						if ( WriteY == vlines )   //if WriteY has reached end of line count
-//							 WriteY <= 10'b0000000000;
-//						else 
-//						begin
-//							WriteY <= (WriteY + 1);
-//						end
-//					end
-//			  end
-//			 else 
-//				  WriteX <= (WriteX + 1);  //no statement about WriteY, implied WriteY <= WriteY;
-//	 end 
-	
-
-	 
-	draw_runner runner0(.*, 
-							.PosX(BallX), .PosY(BallY),
-							.runner_on_wr(ball_on_wr),
-							.runner_on_dr(ball_on_dr),
-							.address(address_runner));
+	logic buffer_select;
+	assign buffer_select = WriteY[0];
+  
+	draw_runner runner0(.*, .address(address_runner));
 	draw_cloud cloud0(.*, .address(address_cloud));
 	draw_score score0(.*, .address(address_score));
 	draw_horizon horizon0(.*, .address(address_horizon));
 	draw_cactus cactus0(.*, .address(address_cactus));
 	
-	enum logic [4:0]{runner, cloud, score} State, Next_State;
+//	always_comb
+//	begin
+//		if (ball_on_wr)
+//			draw_address = address_runner;
+//		else if (score_on_wr != 3'b000)
+//			draw_address = address_score;
+//		else if (cloud_on_wr)
+//			draw_address = address_cloud;
+//		else if (cactus_on_wr)
+//			draw_address = address_cactus;
+//		else if (horizon_on_wr)
+//			draw_address = address_horizon;
+//		else
+//			draw_address = 18'd20;
+//	end
+	
+	logic Dead, Enter;
+	logic score_on_1bit;
+	assign score_on_1bit = (score_on_wr == 3'b000)? 1'b0 : 1'b1;
+	logic [2:0] write_which_layer;	//Indicate we are writing which layer, 000 means no writing.
+	
+	Draw_Engine draw(.*, 
+						  .Draw_Back(~horizon_on_wr), .Draw_Ground(horizon_on_wr),   //layer_1
+						  .Draw_Cloud(cloud_on_wr),  //layer_2
+						  .Draw_Cactus(cactus_on_wr), .Draw_Buff(1'b0), .Draw_Rock(1'b0), .Draw_Pterosaur(1'b0), //layer_3
+						  .Draw_Score(score_on_1bit), .Draw_Fire(1'b0), .Draw_Runner(runner_on_wr), .Draw_Start(1'b0), .Draw_Over(1'b0), //layer_4						   
+						  
+						  .address_Back(18'd20), .address_Ground(address_horizon), 
+						  .address_Cloud(address_cloud),  
+						  .address_Cactus(address_cactus), .address_Buff(18'd0), .address_Rock(18'd0), .address_Pterosaur(18'd0),
+						  .address_Score(address_score), .address_Fire(18'd0), .address_Runner(address_runner), .address_Start(18'd0), .address_Over(18'd0),
+						  .DrawX(DrawX), .DrawY(DrawY),
+						  .draw_address(draw_address),
+						  .write_X(WriteX), .write_Y(WriteY),
+						  .write_which_layer(write_which_layer));	
+
+	logic [3:0] empty_data_in;
+	assign empty_data_in = 4'b0000;
+	logic [15:0] empty_addr;
+	assign empty_addr = 0;
+//	logic [3:0] color_index[4:0];		//color index we get from the ROM
+	logic [15:0] four_color_indices;	//color index we get from the ROM
+//	spriterom1 sprite1(.address_a(draw_address[15:0]),
+//							.address_b(empty_addr),
+//							.clock(Clk50),
+//							.data_a(empty_data_in),
+//							.data_b(empty_data_in),
+//							.wren_a(1'b0),
+//							.wren_b(1'b0),
+//							.q_a(color_index[0]),
+//							.q_b(4'bZ));
+//	spriterom2 sprite2(.address_a(draw_address[15:0]),
+//							.address_b(empty_addr),
+//							.clock(Clk50),
+//							.data_a(empty_data_in),
+//							.data_b(empty_data_in),
+//							.wren_a(1'b0),
+//							.wren_b(1'b0),
+//							.q_a(color_index[1]),
+//							.q_b(4'bZ));
+//	spriterom3 sprite3(.address_a(draw_address[15:0]),
+//							.address_b(empty_addr),
+//							.clock(Clk50),
+//							.data_a(empty_data_in),
+//							.data_b(empty_data_in),
+//							.wren_a(1'b0),
+//							.wren_b(1'b0),
+//							.q_a(color_index[2]),
+//							.q_b(4'bZ));
+//	spriterom4 sprite4(.address_a(draw_address[15:0]),
+//							.address_b(empty_addr),
+//							.clock(Clk50),
+//							.data_a(empty_data_in),
+//							.data_b(empty_data_in),
+//							.wren_a(1'b0),
+//							.wren_b(1'b0),
+//							.q_a(color_index[3]),
+//							.q_b(4'bZ));
+	logic [15:0] rom_address;
+	assign rom_address = draw_address[17:2];	//draw_address Mod 4
+	spriterom16 sprite0(.address_a(rom_address[15:0]),
+							.address_b(empty_addr),
+							.clock(Clk50),
+							.data_a(empty_data_in),
+							.data_b(empty_data_in),
+							.wren_a(1'b0),
+							.wren_b(1'b0),
+							.q_a(four_color_indices),
+							.q_b(4'bZ));
 	
 	always_comb
 	begin
-		if (ball_on_wr)
-			draw_address = address_runner;
-		else if (score_on_wr != 3'b000)
-			draw_address = address_score;
-		else if (cloud_on_wr)
-			draw_address = address_cloud;
-		else if (cactus_on_wr)
-			draw_address = address_cactus;
-		else if (horizon_on_wr)
-			draw_address = address_horizon;
+		case (draw_address[1:0])
+		2'b00:	color_index = four_color_indices[15:12];
+		2'b01:	color_index = four_color_indices[11:8];
+		2'b10:	color_index = four_color_indices[7:4];
+		2'b11:	color_index = four_color_indices[3:0];
+		endcase
+	end
+
+//	assign color_index[4]=color_index[draw_address[17:16]];
+
+	logic[9:0] WriteX, WriteY;
+//	assign WriteY=DrawY+1;
+//	assign WriteX[9:1]=DrawX[8:0];
+//	assign WriteX[0]=last_digit;
+//
+//	logic last_digit;
+//
+//	always_ff @ (posedge Clk50)
+//	begin
+//		if (DrawX==799)
+//			last_digit<=0;
+//		else
+//		begin
+//			last_digit<=~last_digit;
+//		end
+//	end
+	logic transparent;
+	logic transparent_in;
+	
+	always_comb
+	begin
+		if (color_index == 4'h0)	//Color index 0 means transparent color.
+			transparent = 1;
 		else
-			draw_address = 18'd20;
+			transparent = 0;
+	end
+	always_comb
+	begin
+		if (color_index_in == 4'h0)	//Color index 0 means transparent color.
+			transparent_in = 1;
+		else
+			transparent_in = 0;
 	end
 	
-
-	 
-//	spriteROM sprite(.read_address(draw_address),
-//							.Clk(Clk50),
-//							.data_Out(color_index));
-
-	logic [3:0] data_in;
-	assign data_in = 4'b0000;
-	logic [15:0] empty_addr;
-	assign empty_addr = 0;
-	logic [3:0] color_index[4:0];		//color index we get from the ROM
-	spriterom1 sprite1(.address_a(draw_address[15:0]),
-							.address_b(empty_addr),
-							.clock(Clk50),
-							.data_a(data_in),
-							.data_b(data_in),
-							.wren_a(1'b0),
-							.wren_b(1'b0),
-							.q_a(color_index[0]),
-							.q_b(4'bZ));
-	spriterom2 sprite2(.address_a(draw_address[15:0]),
-							.address_b(empty_addr),
-							.clock(Clk50),
-							.data_a(data_in),
-							.data_b(data_in),
-							.wren_a(1'b0),
-							.wren_b(1'b0),
-							.q_a(color_index[1]),
-							.q_b(4'bZ));
-	spriterom3 sprite3(.address_a(draw_address[15:0]),
-							.address_b(empty_addr),
-							.clock(Clk50),
-							.data_a(data_in),
-							.data_b(data_in),
-							.wren_a(1'b0),
-							.wren_b(1'b0),
-							.q_a(color_index[2]),
-							.q_b(4'bZ));
-	spriterom4 sprite4(.address_a(draw_address[15:0]),
-							.address_b(empty_addr),
-							.clock(Clk50),
-							.data_a(data_in),
-							.data_b(data_in),
-							.wren_a(1'b0),
-							.wren_b(1'b0),
-							.q_a(color_index[3]),
-							.q_b(4'bZ));
-
-	assign color_index[4]=color_index[draw_address[17:16]];
-
-	logic[9:0] WriteX,WriteY;
-	assign WriteY=DrawY+1;
-	assign WriteX[9:1]=DrawX[8:0];
-	assign WriteX[0]=last_digit;
-
-	logic last_digit;
-
-	always_ff @ (posedge Clk50)
+	logic [3:0] color_index_in;
+	always_comb
 	begin
-		if (DrawX==799)
-			last_digit<=0;
-		else
+		if (write_which_layer == 3'b001)		//When writing Layer 1 (Background)
 		begin
-			last_digit<=~last_digit;
+			//In Layer 1, if this area is the horizon, but is transparent, still fill in the background color.
+			if ((horizon_on_wr_delay == 1'b1) && (transparent == 1'b1))
+				color_index_in = 4'h4;	//Background color index
+			else	//If this area is the horizon, and is not transparent, write the horizon in.
+				color_index_in = color_index;	
+		end
+		else	//In other layers, take the color from the ROM directly
+		begin
+			color_index_in = color_index;	
 		end
 	end
 	
-	frame_buffer frame_buffer0(.Clk50(Clk50), .pixel_Clk(pixel_Clk), .Reset(Reset), .write_en(1'b1),
-										.write_data(color_index[4]),
+	logic write_en;
+	always_comb
+	begin
+		if (write_which_layer == 3'b001)		//When writing Layer 1 (Background)
+			write_en = 1'b1;
+		else	//In other layers, if it is transparent, we do not allow write, else you can write.
+			write_en = ~transparent_in;
+	end
+	
+	frame_buffer frame_buffer0(.Clk50(~Clk50), .pixel_Clk(pixel_Clk), .Reset(Reset), .write_en(write_en),
+										.write_data(color_index_in),
 										.write_X(WriteX), .read_X(DrawX),
 										.write_Y(WriteY), .read_Y(DrawY),
 										.select(buffer_select),
@@ -206,13 +212,59 @@ module  color_mapper ( input 					 Clk50, pixel_Clk, frame_Clk, Reset, blank, ro
 	palette palette0(.*, .color(color_index_buffer),
 				.Red(Red_p),
 				.Green(Green_p),
-				.Blue(Blue_p),
-				.clk(pixel_Clk));
+				.Blue(Blue_p));
 	  
 	 
-	 always_ff @ (posedge pixel_Clk)
-    begin:RGB_Display
-		flag<=0;
+//	 always_ff @ (posedge pixel_Clk)
+//    begin:RGB_Display
+//		flag<=0;
+//		if (blank == 1'b0)
+//		begin
+//			Red <= 8'h00; 
+//			Green <= 8'h00;
+//			Blue <= 8'h00;
+//		end
+//		else
+//		begin
+//        if (((ball_on_dr == 1'b1) || 
+//		  (cloud_on_dr == 1'b1) || 
+//		  (score_on_dr != 3'b000) || 
+//		  (horizon_on_dr == 1'b1) ||
+//		  (cactus_on_dr == 1'b1)) 
+//		  && (istransparent == 1'b0)) 
+//        begin 
+////				Red <= Red_p;
+////				Green <= Green_p;
+////				Blue <= Blue_p;
+//				flag<=1;
+//        end       
+//
+//		  if (~flag) 
+//		   begin 
+////            Red <= 8'h00; 
+////            Green <= 8'h00;
+////            Blue <= 8'h7f - DrawX[9:3];
+//            Red <= 8'hA0; 
+//            Green <= 8'hA0;
+//            Blue <= 8'hA0;
+//			end
+//		  else
+//			begin
+//				Red <= Red_p;
+//				Green <= Green_p;
+//				Blue <= Blue_p;
+//			end
+//		end
+//	end	
+	
+	logic horizon_on_wr_delay;
+	always_ff @ (posedge Clk50)
+	begin
+		horizon_on_wr_delay <= horizon_on_wr;
+	end
+
+	always_ff @ (posedge pixel_Clk)
+   begin:RGB_Display
 		if (blank == 1'b0)
 		begin
 			Red <= 8'h00; 
@@ -221,35 +273,10 @@ module  color_mapper ( input 					 Clk50, pixel_Clk, frame_Clk, Reset, blank, ro
 		end
 		else
 		begin
-        if (((ball_on_dr == 1'b1) || 
-		  (cloud_on_dr == 1'b1) || 
-		  (score_on_dr != 3'b000) || 
-		  (horizon_on_dr == 1'b1) ||
-		  (cactus_on_dr == 1'b1)) 
-		  && (istransparent == 1'b0)) 
-        begin 
-//				Red <= Red_p;
-//				Green <= Green_p;
-//				Blue <= Blue_p;
-				flag<=1;
-        end       
-
-		  if (~flag) 
-		   begin 
-//            Red <= 8'h00; 
-//            Green <= 8'h00;
-//            Blue <= 8'h7f - DrawX[9:3];
-            Red <= 8'hA0; 
-            Green <= 8'hA0;
-            Blue <= 8'hA0;
-			end
-		  else
-			begin
-				Red <= Red_p;
-				Green <= Green_p;
-				Blue <= Blue_p;
-			end
+			Red <= Red_p;
+			Green <= Green_p;
+			Blue <= Blue_p;
 		end
 	end	
-    
+ 
 endmodule

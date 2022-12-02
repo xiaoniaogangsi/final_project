@@ -1,5 +1,4 @@
 module palette(input logic [3:0] color,
-					input clk,
 					output logic istransparent,
 					output logic [7:0]  Red, Green, Blue);
 //The palette module is used to map the color index into RGB values
@@ -47,11 +46,11 @@ module palette(input logic [3:0] color,
 				Blue = 8'hF6;
 				istransparent = 1'b0;
 			end
-			4'h4:
+			4'h4:		//Background Color
 			begin
-				Red = 8'hF7;
-				Green = 8'hF7;
-				Blue = 8'hF7;
+				Red = 8'hA0;	//F7; originally
+				Green = 8'hA0;	//F7; originally
+				Blue = 8'hA0;	//F7; originally
 				istransparent = 1'b0;
 			end
 			4'h5:

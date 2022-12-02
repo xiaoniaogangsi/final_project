@@ -45,10 +45,10 @@ module draw_horizon (input Clk50, pixel_Clk, frame_Clk,
 			frame_count <= frame_count + 1;
 	end
 	
-	always_ff @ (posedge Clk50)
-//	always_comb
+//	always_ff @ (posedge Clk50)
+	always_comb
 	begin
-		offset <= DistY*SizeX + DistX;
+		offset = DistY*SizeX + DistX;
 	end
 	assign address = start + offset;
 	
