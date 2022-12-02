@@ -240,7 +240,7 @@ module Draw_Engine (input Clk50, row_Clk, Reset,
 				PIXEL_FINISH :
 				begin
 					write_which_layer = 3'b000;
-					draw_address = 18'd20;
+					draw_address = 18'd0;
 				end
 			endcase
 		end

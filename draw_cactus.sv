@@ -3,7 +3,9 @@ module draw_cactus (	input Clk50, pixel_Clk, frame_Clk, Reset,
 							input [9:0] DrawX, DrawY,
 							output logic cactus_on_wr,
 							output logic cactus_on_dr,
-							output logic [17:0] address);
+							output logic [17:0] address,
+							output int Cactus_PosX, Cactus_PosY,
+							output int Cactus_SizeX, Cactus_SizeY);
 //	 $readmemh("sprite/cactus_large1_50x100.txt", mem, 0, 4999);
 //	 $readmemh("sprite/cactus_large2_100x100.txt", mem, 5000, 14999);
 //	 $readmemh("sprite/cactus_large3_150x100.txt", mem, 15000, 29999);
@@ -197,5 +199,10 @@ module draw_cactus (	input Clk50, pixel_Clk, frame_Clk, Reset,
 		 else 
 			cactus_on_wr = 1'b0;
     end 
-	 			
+	 
+	assign Cactus_PosX = PosX;
+	assign Cactus_PosY = PosY;
+	assign Cactus_SizeX = cactus_X;
+	assign Cactus_SizeY = cactus_Y;
+	
 endmodule
