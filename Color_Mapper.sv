@@ -17,7 +17,7 @@ module  color_mapper ( input 					 Clk50, pixel_Clk, frame_Clk, Reset, blank, ro
 							  input        [9:0]  PosX, PosY, DrawX, DrawY,
                        output logic [7:0]  Red, Green, Blue );
 	 
-	logic [17:0] address_runner, address_cloud, address_score, address_horizon, address_cactus;
+	logic [17:0] address_runner, address_cloud, address_score, address_horizon, address_cactus, address_pterosaur;
 	logic [17:0] draw_address;	//current Address for the picture we want to draw (start+offset)
 	logic [3:0] color_index;		//color index we get from the ROM
 	logic [3:0] color_index_buffer; //color index from frame_buffer
@@ -28,17 +28,22 @@ module  color_mapper ( input 					 Clk50, pixel_Clk, frame_Clk, Reset, blank, ro
 	logic [2:0] score_on_dr,score_on_wr;	//000 means off, 001~101 means on1~on5.
 	logic horizon_on_dr, horizon_on_wr;
 	logic cactus_on_dr, cactus_on_wr;
+	logic pterosaur_on_dr, pterosaur_on_wr;
 	
 	logic istransparent;
   
 	logic buffer_select;
 	assign buffer_select = WriteY[0];
+	
+	int Cactus_PosX, Cactus_PosY;
+	int Cactus_SizeX, Cactus_SizeY;
   
 	draw_runner runner0(.*, .address(address_runner));
 	draw_cloud cloud0(.*, .address(address_cloud));
 	draw_score score0(.*, .address(address_score));
 	draw_horizon horizon0(.*, .address(address_horizon));
 	draw_cactus cactus0(.*, .address(address_cactus));
+	draw_pterosaur pterosaur(.*, .address(address_pterosaur));
 	
 //	always_comb
 //	begin
@@ -64,12 +69,12 @@ module  color_mapper ( input 					 Clk50, pixel_Clk, frame_Clk, Reset, blank, ro
 	Draw_Engine draw(.*, 
 						  .Draw_Back(~horizon_on_wr), .Draw_Ground(horizon_on_wr),   //layer_1
 						  .Draw_Cloud(cloud_on_wr),  //layer_2
-						  .Draw_Cactus(cactus_on_wr), .Draw_Buff(1'b0), .Draw_Rock(1'b0), .Draw_Pterosaur(1'b0), //layer_3
+						  .Draw_Cactus(cactus_on_wr), .Draw_Buff(1'b0), .Draw_Rock(1'b0), .Draw_Pterosaur(pterosaur_on_wr), //layer_3
 						  .Draw_Score(score_on_1bit), .Draw_Fire(1'b0), .Draw_Runner(runner_on_wr), .Draw_Start(1'b0), .Draw_Over(1'b0), //layer_4						   
 						  
 						  .address_Back(18'd20), .address_Ground(address_horizon), 
 						  .address_Cloud(address_cloud),  
-						  .address_Cactus(address_cactus), .address_Buff(18'd0), .address_Rock(18'd0), .address_Pterosaur(18'd0),
+						  .address_Cactus(address_cactus), .address_Buff(18'd0), .address_Rock(18'd0), .address_Pterosaur(address_pterosaur),
 						  .address_Score(address_score), .address_Fire(18'd0), .address_Runner(address_runner), .address_Start(18'd0), .address_Over(18'd0),
 						  .DrawX(DrawX), .DrawY(DrawY),
 						  .draw_address(draw_address),
@@ -122,7 +127,7 @@ module  color_mapper ( input 					 Clk50, pixel_Clk, frame_Clk, Reset, blank, ro
 	assign rom_address = draw_address[17:2];	//draw_address Mod 4
 	spriterom16 sprite0(.address_a(rom_address[15:0]),
 							.address_b(empty_addr),
-							.clock(Clk50),
+							.clock(~Clk50),
 							.data_a(empty_data_in),
 							.data_b(empty_data_in),
 							.wren_a(1'b0),
@@ -199,10 +204,11 @@ module  color_mapper ( input 					 Clk50, pixel_Clk, frame_Clk, Reset, blank, ro
 		if (write_which_layer == 3'b001)		//When writing Layer 1 (Background)
 			write_en = 1'b1;
 		else	//In other layers, if it is transparent, we do not allow write, else you can write.
-			write_en = ~transparent_in;
+			//write_en = ~transparent_in;
+			write_en = ~transparent;
 	end
 	
-	frame_buffer frame_buffer0(.Clk50(~Clk50), .pixel_Clk(pixel_Clk), .Reset(Reset), .write_en(write_en),
+	frame_buffer frame_buffer0(.Clk50(~Clk50), .pixel_Clk(~pixel_Clk), .Reset(Reset), .write_en(write_en),
 										.write_data(color_index_in),
 										.write_X(WriteX), .read_X(DrawX),
 										.write_Y(WriteY), .read_Y(DrawY),
