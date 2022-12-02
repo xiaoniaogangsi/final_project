@@ -5,11 +5,11 @@
 module control (input Reset, frame_clk,
 					 input [7:0] keycode,
 					 output Dead,Enter);
-		int Dragon_X = 80;
-		int Ground_Level = 230;
+		int Dragon_X_Pos = 120;
+		int Ground_Level = 412;
 		int Dragon_X_Size = 88; //To be determinied
 		int Dragon_Y_Size = 94; //To be determinied
-		parameter [9:0] Cactus_X_Size = 10; //To be determinied
+		int Cactus_X_Size = 10; //To be determinied
 		int Gravity = 2;
 
 		enum logic [3:0] {  		
@@ -25,11 +25,12 @@ module control (input Reset, frame_clk,
 							CAKE,
 							DEAD}		Action;
 		Dragon mydragon;	
+		
 
 		initial begin
 		
 		//X_POS, Y_POS, Y_MOTION, X_SIZE, Y_SIZE, LIFE, STATE
-			mydragon = '{80, 230, 0, 88, 94, 1, 0};
+			mydragon = '{120, 412, 0, 88, 94, 1, 0};
 		end
 		
 		//state machine that controls the user interface.
