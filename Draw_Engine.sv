@@ -139,7 +139,7 @@ module Draw_Engine (input Clk50, row_Clk, Reset,
 //			address_Cactus, address_Buff, address_Rock, address_Pterosaur,
 //			address_Score，address_Fire,address_Runner, address_Start, address_Over,
 			case (State)
-				REST:
+				REST: ;
 				LAYER_1 :
 				begin
 					case (Layer_1_type)
