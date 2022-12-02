@@ -3,7 +3,8 @@ module draw_score (	input Clk50, pixel_Clk, frame_Clk, Reset,
 							input [9:0] DrawX, DrawY,
 							output logic [2:0] score_on_dr,
 							output logic [2:0] score_on_wr,
-							output logic [17:0] address);
+							output logic [17:0] address,
+							output int score_out);
 	//For score_on, 000 means off, 001~101 means on1~on5.
 	
 	//	 $readmemh("sprite/num_0_18x21.txt", mem, 168215, 168592);
@@ -200,5 +201,7 @@ module draw_score (	input Clk50, pixel_Clk, frame_Clk, Reset,
 			score_on_dr = 3'b000;
 	end 
 	end
-
+	
+	assign score_out = score;
+	
 endmodule

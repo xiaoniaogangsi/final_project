@@ -30,17 +30,18 @@ module  color_mapper ( input 					 Clk50, pixel_Clk, frame_Clk, Reset, blank, ro
 	logic cactus_on_dr, cactus_on_wr;
 	logic pterosaur_on_dr, pterosaur_on_wr;
 	
-	logic istransparent;
+	logic isnight;
   
 	logic buffer_select;
 	assign buffer_select = WriteY[0];
 	
+	int score;
 	int Cactus_PosX, Cactus_PosY;
 	int Cactus_SizeX, Cactus_SizeY;
   
 	draw_runner runner0(.*, .address(address_runner));
 	draw_cloud cloud0(.*, .address(address_cloud));
-	draw_score score0(.*, .address(address_score));
+	draw_score score0(.*, .address(address_score), .score_out(score));
 	draw_horizon horizon0(.*, .address(address_horizon));
 	draw_cactus cactus0(.*, .address(address_cactus));
 	draw_pterosaur pterosaur(.*, .address(address_pterosaur));
@@ -214,6 +215,14 @@ module  color_mapper ( input 					 Clk50, pixel_Clk, frame_Clk, Reset, blank, ro
 										.write_Y(WriteY), .read_Y(DrawY),
 										.select(buffer_select),
 										.read_data(color_index_buffer));
+	
+	always_comb
+	begin
+		if ((score > 200) && (score % 700 >= 0) && (score % 700 <= 200))
+			isnight = 1'b1;
+		else
+			isnight = 1'b0;
+	end
 	
 	palette palette0(.*, .color(color_index_buffer),
 				.Red(Red_p),
