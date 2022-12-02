@@ -1,5 +1,5 @@
 Timing Analyzer report for final
-Fri Dec 02 02:38:58 2022
+Fri Dec 02 04:45:49 2022
 Quartus Prime Version 18.1.0 Build 625 09/12/2018 SJ Lite Edition
 
 
@@ -87,18 +87,17 @@ refer to the applicable agreement for further details.
 +----------------------------+-------------+
 ; Processors                 ; Number      ;
 +----------------------------+-------------+
-; Number detected on machine ; 16          ;
-; Maximum allowed            ; 16          ;
+; Number detected on machine ; 4           ;
+; Maximum allowed            ; 4           ;
 ;                            ;             ;
-; Average used               ; 4.59        ;
-; Maximum used               ; 16          ;
+; Average used               ; 2.17        ;
+; Maximum used               ; 4           ;
 ;                            ;             ;
 ; Usage by Processor         ; % Time Used ;
 ;     Processor 1            ; 100.0%      ;
-;     Processor 2            ;  26.4%      ;
-;     Processor 3            ;  25.2%      ;
-;     Processor 4            ;  24.2%      ;
-;     Processors 5-16        ;  23.6%      ;
+;     Processor 2            ;  39.9%      ;
+;     Processor 3            ;  38.8%      ;
+;     Processor 4            ;  37.9%      ;
 +----------------------------+-------------+
 
 
@@ -107,10 +106,10 @@ refer to the applicable agreement for further details.
 +-----------------------------------------------------------------------------+--------+--------------------------+
 ; SDC File Path                                                               ; Status ; Read at                  ;
 +-----------------------------------------------------------------------------+--------+--------------------------+
-; lab62_soc/synthesis/submodules/altera_reset_controller.sdc                  ; OK     ; Fri Dec 02 02:38:52 2022 ;
-; lab62_soc/synthesis/submodules/altera_avalon_st_handshake_clock_crosser.sdc ; OK     ; Fri Dec 02 02:38:52 2022 ;
-; lab62_soc/synthesis/submodules/lab62_soc_nios2_gen2_0_cpu.sdc               ; OK     ; Fri Dec 02 02:38:52 2022 ;
-; lab62.sdc                                                                   ; OK     ; Fri Dec 02 02:38:52 2022 ;
+; lab62_soc/synthesis/submodules/altera_reset_controller.sdc                  ; OK     ; Fri Dec 02 04:45:35 2022 ;
+; lab62_soc/synthesis/submodules/altera_avalon_st_handshake_clock_crosser.sdc ; OK     ; Fri Dec 02 04:45:35 2022 ;
+; lab62_soc/synthesis/submodules/lab62_soc_nios2_gen2_0_cpu.sdc               ; OK     ; Fri Dec 02 04:45:35 2022 ;
+; lab62.sdc                                                                   ; OK     ; Fri Dec 02 04:45:35 2022 ;
 +-----------------------------------------------------------------------------+--------+--------------------------+
 
 
@@ -1222,7 +1221,7 @@ No non-DPA dedicated SERDES Receiver circuitry present in device or used in desi
 Info: *******************************************************************
 Info: Running Quartus Prime Timing Analyzer
     Info: Version 18.1.0 Build 625 09/12/2018 SJ Lite Edition
-    Info: Processing started: Fri Dec 02 02:38:50 2022
+    Info: Processing started: Fri Dec 02 04:45:30 2022
 Info: Command: quartus_sta final -c final
 Info: qsta_default_script.tcl version: #1
 Warning (20013): Ignored 24 assignments for entity "DE10_LITE_Default" -- entity does not exist in design
@@ -1251,7 +1250,7 @@ Warning (20013): Ignored 24 assignments for entity "DE10_LITE_Default" -- entity
     Warning (20014): Assignment for entity set_global_assignment -name PARTITION_EXTRACT_HARD_BLOCK_NODES ON -entity DE10_LITE_Default -section_id Top was ignored
     Warning (20014): Assignment for entity set_global_assignment -name PARTITION_ENABLE_STRICT_PRESERVATION OFF -entity DE10_LITE_Default -section_id Top was ignored
 Warning (18236): Number of processors has not been specified which may cause overloading on shared machines.  Set the global assignment NUM_PARALLEL_PROCESSORS in your QSF to an appropriate value for best performance.
-Info (20030): Parallel compilation is enabled and will use 16 of the 16 processors detected
+Info (20030): Parallel compilation is enabled and will use 4 of the 4 processors detected
 Info (21077): Low junction temperature is 0 degrees C
 Info (21077): High junction temperature is 85 degrees C
 Info (332164): Evaluating HDL-embedded SDC commands
@@ -1291,37 +1290,37 @@ Info (332104): Reading SDC File: 'lab62_soc/synthesis/submodules/altera_reset_co
 Info (332104): Reading SDC File: 'lab62_soc/synthesis/submodules/altera_avalon_st_handshake_clock_crosser.sdc'
 Info (332104): Reading SDC File: 'lab62_soc/synthesis/submodules/lab62_soc_nios2_gen2_0_cpu.sdc'
 Info (332104): Reading SDC File: 'lab62.sdc'
-Warning (332174): Ignored filter at lab62.sdc(9): ADC_CLK_10 could not be matched with a port File: D:/Quartus/lizhuang.20/Documents/ece385/final_project/lab62.sdc Line: 9
-Warning (332049): Ignored create_clock at lab62.sdc(9): Argument <targets> is an empty collection File: D:/Quartus/lizhuang.20/Documents/ece385/final_project/lab62.sdc Line: 9
-    Info (332050): create_clock -period "10.0 MHz" [get_ports ADC_CLK_10] File: D:/Quartus/lizhuang.20/Documents/ece385/final_project/lab62.sdc Line: 9
-Warning (332174): Ignored filter at lab62.sdc(11): MAX10_CLK2_50 could not be matched with a port File: D:/Quartus/lizhuang.20/Documents/ece385/final_project/lab62.sdc Line: 11
-Warning (332049): Ignored create_clock at lab62.sdc(11): Argument <targets> is an empty collection File: D:/Quartus/lizhuang.20/Documents/ece385/final_project/lab62.sdc Line: 11
-    Info (332050): create_clock -period "50.0 MHz" [get_ports MAX10_CLK2_50] File: D:/Quartus/lizhuang.20/Documents/ece385/final_project/lab62.sdc Line: 11
+Warning (332174): Ignored filter at lab62.sdc(9): ADC_CLK_10 could not be matched with a port File: D:/UIUC_Junior/2022_fall/ECE385/Final_Project/Final_385/final_project/lab62.sdc Line: 9
+Warning (332049): Ignored create_clock at lab62.sdc(9): Argument <targets> is an empty collection File: D:/UIUC_Junior/2022_fall/ECE385/Final_Project/Final_385/final_project/lab62.sdc Line: 9
+    Info (332050): create_clock -period "10.0 MHz" [get_ports ADC_CLK_10] File: D:/UIUC_Junior/2022_fall/ECE385/Final_Project/Final_385/final_project/lab62.sdc Line: 9
+Warning (332174): Ignored filter at lab62.sdc(11): MAX10_CLK2_50 could not be matched with a port File: D:/UIUC_Junior/2022_fall/ECE385/Final_Project/Final_385/final_project/lab62.sdc Line: 11
+Warning (332049): Ignored create_clock at lab62.sdc(11): Argument <targets> is an empty collection File: D:/UIUC_Junior/2022_fall/ECE385/Final_Project/Final_385/final_project/lab62.sdc Line: 11
+    Info (332050): create_clock -period "50.0 MHz" [get_ports MAX10_CLK2_50] File: D:/UIUC_Junior/2022_fall/ECE385/Final_Project/Final_385/final_project/lab62.sdc Line: 11
 Warning (332043): Overwriting existing clock: altera_reserved_tck
 Info (332105): Deriving Clocks
     Info (332105): create_clock -period 40.000 -name vga_controller:vga0|clkdiv vga_controller:vga0|clkdiv
     Info (332105): create_clock -period 40.000 -name vga_controller:vga0|vs vga_controller:vga0|vs
     Info (332105): create_clock -period 40.000 -name color_mapper:color0|draw_pterosaur:pterosaur|change_height color_mapper:color0|draw_pterosaur:pterosaur|change_height
     Info (332105): create_clock -period 40.000 -name color_mapper:color0|draw_cactus:cactus0|change_type color_mapper:color0|draw_cactus:cactus0|change_type
-Warning (332049): Ignored derive_clocks at lab62.sdc(34): Time value "60.0 Hz" is not valid File: D:/Quartus/lizhuang.20/Documents/ece385/final_project/lab62.sdc Line: 34
-    Info (332050): derive_clocks -period "60.0 Hz" File: D:/Quartus/lizhuang.20/Documents/ece385/final_project/lab62.sdc Line: 34
-Warning (332049): Ignored derive_clocks at lab62.sdc(34): Option -period: Clock period must be greater than 0 File: D:/Quartus/lizhuang.20/Documents/ece385/final_project/lab62.sdc Line: 34
+Warning (332049): Ignored derive_clocks at lab62.sdc(34): Time value "60.0 Hz" is not valid File: D:/UIUC_Junior/2022_fall/ECE385/Final_Project/Final_385/final_project/lab62.sdc Line: 34
+    Info (332050): derive_clocks -period "60.0 Hz" File: D:/UIUC_Junior/2022_fall/ECE385/Final_Project/Final_385/final_project/lab62.sdc Line: 34
+Warning (332049): Ignored derive_clocks at lab62.sdc(34): Option -period: Clock period must be greater than 0 File: D:/UIUC_Junior/2022_fall/ECE385/Final_Project/Final_385/final_project/lab62.sdc Line: 34
 Info (332110): Deriving PLL clocks
     Info (332110): create_generated_clock -source {u0|sdram_pll|sd1|pll7|inclk[0]} -duty_cycle 50.00 -name {u0|sdram_pll|sd1|pll7|clk[0]} {u0|sdram_pll|sd1|pll7|clk[0]}
     Info (332110): create_generated_clock -source {u0|sdram_pll|sd1|pll7|inclk[0]} -phase -18.00 -duty_cycle 50.00 -name {u0|sdram_pll|sd1|pll7|clk[1]} {u0|sdram_pll|sd1|pll7|clk[1]}
 Info (332151): Clock uncertainty is not calculated until you update the timing netlist.
-Warning (332054): Assignment set_input_delay is accepted but has some problems at lab62.sdc(73): Positional argument <targets> with value [get_ports {altera_reserved_*}]: Port altera_reserved_tdo is not an input port. File: D:/Quartus/lizhuang.20/Documents/ece385/final_project/lab62.sdc Line: 73
-    Info (332050): set_input_delay -max -clock clk_dram_ext 5.9 [get_ports altera_reserved_*] File: D:/Quartus/lizhuang.20/Documents/ece385/final_project/lab62.sdc Line: 73
-Warning (332054): Assignment set_input_delay is accepted but has some problems at lab62.sdc(74): Positional argument <targets> with value [get_ports {altera_reserved_*}]: Port altera_reserved_tdo is not an input port. File: D:/Quartus/lizhuang.20/Documents/ece385/final_project/lab62.sdc Line: 74
-    Info (332050): set_input_delay -min -clock clk_dram_ext 3.0 [get_ports altera_reserved_*] File: D:/Quartus/lizhuang.20/Documents/ece385/final_project/lab62.sdc Line: 74
-Warning (332054): Assignment set_output_delay is accepted but has some problems at lab62.sdc(106): Positional argument <targets> with value [get_ports {altera_reserved_*}]: Port altera_reserved_tdi is not an output port. File: D:/Quartus/lizhuang.20/Documents/ece385/final_project/lab62.sdc Line: 106
-    Info (332050): set_output_delay -max -clock clk_dram_ext 1.6  [get_ports altera_reserved_*] File: D:/Quartus/lizhuang.20/Documents/ece385/final_project/lab62.sdc Line: 106
-Warning (332054): Assignment set_output_delay is accepted but has some problems at lab62.sdc(106): Positional argument <targets> with value [get_ports {altera_reserved_*}]: Port altera_reserved_tck is not an output port. File: D:/Quartus/lizhuang.20/Documents/ece385/final_project/lab62.sdc Line: 106
-Warning (332054): Assignment set_output_delay is accepted but has some problems at lab62.sdc(106): Positional argument <targets> with value [get_ports {altera_reserved_*}]: Port altera_reserved_tms is not an output port. File: D:/Quartus/lizhuang.20/Documents/ece385/final_project/lab62.sdc Line: 106
-Warning (332054): Assignment set_output_delay is accepted but has some problems at lab62.sdc(107): Positional argument <targets> with value [get_ports {altera_reserved_*}]: Port altera_reserved_tdi is not an output port. File: D:/Quartus/lizhuang.20/Documents/ece385/final_project/lab62.sdc Line: 107
-    Info (332050): set_output_delay -min -clock clk_dram_ext -0.9 [get_ports altera_reserved_*] File: D:/Quartus/lizhuang.20/Documents/ece385/final_project/lab62.sdc Line: 107
-Warning (332054): Assignment set_output_delay is accepted but has some problems at lab62.sdc(107): Positional argument <targets> with value [get_ports {altera_reserved_*}]: Port altera_reserved_tck is not an output port. File: D:/Quartus/lizhuang.20/Documents/ece385/final_project/lab62.sdc Line: 107
-Warning (332054): Assignment set_output_delay is accepted but has some problems at lab62.sdc(107): Positional argument <targets> with value [get_ports {altera_reserved_*}]: Port altera_reserved_tms is not an output port. File: D:/Quartus/lizhuang.20/Documents/ece385/final_project/lab62.sdc Line: 107
+Warning (332054): Assignment set_input_delay is accepted but has some problems at lab62.sdc(73): Positional argument <targets> with value [get_ports {altera_reserved_*}]: Port altera_reserved_tdo is not an input port. File: D:/UIUC_Junior/2022_fall/ECE385/Final_Project/Final_385/final_project/lab62.sdc Line: 73
+    Info (332050): set_input_delay -max -clock clk_dram_ext 5.9 [get_ports altera_reserved_*] File: D:/UIUC_Junior/2022_fall/ECE385/Final_Project/Final_385/final_project/lab62.sdc Line: 73
+Warning (332054): Assignment set_input_delay is accepted but has some problems at lab62.sdc(74): Positional argument <targets> with value [get_ports {altera_reserved_*}]: Port altera_reserved_tdo is not an input port. File: D:/UIUC_Junior/2022_fall/ECE385/Final_Project/Final_385/final_project/lab62.sdc Line: 74
+    Info (332050): set_input_delay -min -clock clk_dram_ext 3.0 [get_ports altera_reserved_*] File: D:/UIUC_Junior/2022_fall/ECE385/Final_Project/Final_385/final_project/lab62.sdc Line: 74
+Warning (332054): Assignment set_output_delay is accepted but has some problems at lab62.sdc(106): Positional argument <targets> with value [get_ports {altera_reserved_*}]: Port altera_reserved_tdi is not an output port. File: D:/UIUC_Junior/2022_fall/ECE385/Final_Project/Final_385/final_project/lab62.sdc Line: 106
+    Info (332050): set_output_delay -max -clock clk_dram_ext 1.6  [get_ports altera_reserved_*] File: D:/UIUC_Junior/2022_fall/ECE385/Final_Project/Final_385/final_project/lab62.sdc Line: 106
+Warning (332054): Assignment set_output_delay is accepted but has some problems at lab62.sdc(106): Positional argument <targets> with value [get_ports {altera_reserved_*}]: Port altera_reserved_tck is not an output port. File: D:/UIUC_Junior/2022_fall/ECE385/Final_Project/Final_385/final_project/lab62.sdc Line: 106
+Warning (332054): Assignment set_output_delay is accepted but has some problems at lab62.sdc(106): Positional argument <targets> with value [get_ports {altera_reserved_*}]: Port altera_reserved_tms is not an output port. File: D:/UIUC_Junior/2022_fall/ECE385/Final_Project/Final_385/final_project/lab62.sdc Line: 106
+Warning (332054): Assignment set_output_delay is accepted but has some problems at lab62.sdc(107): Positional argument <targets> with value [get_ports {altera_reserved_*}]: Port altera_reserved_tdi is not an output port. File: D:/UIUC_Junior/2022_fall/ECE385/Final_Project/Final_385/final_project/lab62.sdc Line: 107
+    Info (332050): set_output_delay -min -clock clk_dram_ext -0.9 [get_ports altera_reserved_*] File: D:/UIUC_Junior/2022_fall/ECE385/Final_Project/Final_385/final_project/lab62.sdc Line: 107
+Warning (332054): Assignment set_output_delay is accepted but has some problems at lab62.sdc(107): Positional argument <targets> with value [get_ports {altera_reserved_*}]: Port altera_reserved_tck is not an output port. File: D:/UIUC_Junior/2022_fall/ECE385/Final_Project/Final_385/final_project/lab62.sdc Line: 107
+Warning (332054): Assignment set_output_delay is accepted but has some problems at lab62.sdc(107): Positional argument <targets> with value [get_ports {altera_reserved_*}]: Port altera_reserved_tms is not an output port. File: D:/UIUC_Junior/2022_fall/ECE385/Final_Project/Final_385/final_project/lab62.sdc Line: 107
 Info (332097): The following timing edges are non-unate.  The Timing Analyzer will assume pos-unate behavior for these edges in the clock network.
     Info (332098): Cell: altera_internal_jtag  from: tck  to: tckutap
 Info (332123): Deriving Clock Uncertainty. Please refer to report_sdc in the Timing Analyzer to see clock uncertainties.
@@ -1521,9 +1520,9 @@ Info (332114): Report Metastability: Found 166 synchronizer chains.
 Info (332101): Design is fully constrained for setup requirements
 Info (332101): Design is fully constrained for hold requirements
 Info: Quartus Prime Timing Analyzer was successful. 0 errors, 44 warnings
-    Info: Peak virtual memory: 5116 megabytes
-    Info: Processing ended: Fri Dec 02 02:38:58 2022
-    Info: Elapsed time: 00:00:08
-    Info: Total CPU time (on all processors): 00:00:25
+    Info: Peak virtual memory: 4963 megabytes
+    Info: Processing ended: Fri Dec 02 04:45:49 2022
+    Info: Elapsed time: 00:00:19
+    Info: Total CPU time (on all processors): 00:00:31
 
 

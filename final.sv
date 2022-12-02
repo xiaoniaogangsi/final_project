@@ -1,15 +1,24 @@
 `include "struct_declaration.sv"
-//Description: the file controls the collision and movement and objects
+//Purpose: the file controls the collision and movement and objects
 //				   in the game. The module will output parallel draw signal to
 //					render engine.
+//Description: To integrate the module into the design:
+//					1. ObstacleX and Y are the size of cactus or pterosaur;
+//					2. use Dead signal to freeze the motion of cactus and pterosaur;
+//					3. PosX and PoxY the same as defined in draw_cactus and draw_prerosaur
+//					
+//
 module control (input Reset, frame_clk,
+					 input pt_off,
+					 input int type,
+					 input int PosX, PosY,
+					 input int ObstacleX, ObstacleY,
 					 input [7:0] keycode,
-					 output Dead,Enter);
+					 output Dead);
 		int Dragon_X_Pos = 120;
-		int Ground_Level = 412;
-		int Dragon_X_Size = 88; //To be determinied
-		int Dragon_Y_Size = 94; //To be determinied
-		int Cactus_X_Size = 10; //To be determinied
+		int Ground_Level = 412; //take the middle of the gound sprite: 400 + 12.
+		int Dragon_X_Size = 88; //correct.
+		int Dragon_Y_Size = 94; //correct.
 		int Gravity = 2;
 
 		enum logic [3:0] {  		
@@ -29,7 +38,7 @@ module control (input Reset, frame_clk,
 
 		initial begin
 		
-		//X_POS, Y_POS, Y_MOTION, X_SIZE, Y_SIZE, LIFE, STATE
+		//initial_X_POS, initial_Y_POS, Y_MOTION, X_SIZE, Y_SIZE, LIFE, STATE
 			mydragon = '{120, 412, 0, 88, 94, 1, 0};
 		end
 		
@@ -104,7 +113,7 @@ module control (input Reset, frame_clk,
 				8'h26 : //DOWN
 				begin
 					Action <= DUCK;
-					mydragon.State <= Action;
+					//mydragon.State <= Action;
 				end
 				default: ;
 			endcase
@@ -113,31 +122,75 @@ module control (input Reset, frame_clk,
 			if (Bottem + mydragon.Dragon_Y_Motion >= Ground_Level)
 			begin
 				//when the dragon reach the ground in the next state, the motion will change to zero instantaneously.
+				Action <= RUN;
 				mydragon.Dragon_Y_Motion <= 0; 
 				mydragon.Dragon_Y_Pos <= Ground_Level;
 			end
 			else 
 			begin
+				Action <= JUMP;
 				mydragon.Dragon_Y_Motion <= (mydragon.Dragon_Y_Motion + Gravity);
 				mydragon.Dragon_Y_Pos <= (mydragon.Dragon_Y_Pos + mydragon.Dragon_Y_Motion);
 			end
 		end
 		
-		//control code of the cactus.
-//		always_ff @ (posedge frame_clk)
-//		begin 
-//			
-//		end 
+		int test_point1_x = Right_Edge;
+		int test_point1_y = mydragon.Dragon_Y_Pos - mydragon.Dragon_Y_Size/2;
 		
-		//
+		int test_point2_x = Right_Edge;
+		int test_point2_y = mydragon.Dragon_Y_Pos - mydragon.Dragon_Y_Size/4;
 		
-		always_comb  //Produce Enter
+		int test_point3_x = mydragon.Dragon_X_Pos;
+		int test_point3_y = mydragon.Dragon_Y_Pos - mydragon.Dragon_Y_Size/2;
+		
+		int test_point4_x = mydragon.Dragon_X_Pos;
+		int test_point4_y = mydragon.Dragon_Y_Pos + mydragon.Dragon_Y_Size/4;
+		
+//		input int PosX, PosY,
+//		input int ObstacleX, ObstacleY,
+		//collision judgement.
+		always_ff @ (posedge frame_clk)
 		begin
-		if (keycode == 8'h0c)
-			Enter = 1;
-		else
-			Enter = 0;
+			if (pt_off == 0)
+			begin
+				if ((test_point1_x >= PosX) && (test_point1_x < PosX + ObstacleX) && (test_point1_y >= PosY) && (test_point1_y< PosY + ObstacleY))
+				begin
+					Dead <= 1;
+					Action <= DEAD;
+					mydragon.Dragon_Y_Motion <= 0;
+				end
+				else if ((test_point2_x >= PosX) && (test_point2_x < PosX + ObstacleX) && (test_point2_y >= PosY) && (test_point2_y< PosY + ObstacleY))
+				begin
+					Dead <= 1;
+					Action <= DEAD;
+					mydragon.Dragon_Y_Motion <= 0;
+				end
+				else if ((test_point3_x >= PosX) && (test_point3_x < PosX + ObstacleX) && (test_point3_y >= PosY) && (test_point3_y< PosY + ObstacleY))
+				begin
+					Dead <= 1;
+					Action <= DEAD;
+					mydragon.Dragon_Y_Motion <= 0;
+				end
+				else if ((test_point4_x >= PosX) && (test_point4_x < PosX + ObstacleX) && (test_point4_y >= PosY) && (test_point4_y< PosY + ObstacleY))
+				begin
+					Dead <= 1;
+					Action <= DEAD;
+					mydragon.Dragon_Y_Motion <= 0;
+				end
+				else 
+					Dead <=0;
+			end
+			else 
+				Dead <=0;
 		end
+		
+//		always_comb  //Produce Enter
+//		begin
+//		if (keycode == 8'h0c)
+//			Enter = 1;
+//		else
+//			Enter = 0;
+//		end
 endmodule
 
 
