@@ -22,7 +22,7 @@ module draw_pterosaur(  input Clk50, pixel_Clk, frame_Clk, Reset,
 	
 	initial
 	begin
-		PosX = 640;
+		PosX = 1000;
 		PosY = 120;
 		frame_count1 = 1;
 		frame_count2 = 1;
@@ -82,7 +82,7 @@ module draw_pterosaur(  input Clk50, pixel_Clk, frame_Clk, Reset,
 			if (PosX == -pterosaur_X)
 			begin
 				change_height <= 1;
-				PosX <= 640;
+				PosX <= 1000;
 			end
 			else
 				PosX <= PosX - 2;

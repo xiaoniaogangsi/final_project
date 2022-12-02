@@ -1,5 +1,5 @@
 module palette(input logic [3:0] color,
-					output logic istransparent,
+					input logic isnight,
 					output logic [7:0]  Red, Green, Blue);
 //The palette module is used to map the color index into RGB values
 //The colors used in the project includes:
@@ -17,92 +17,160 @@ module palette(input logic [3:0] color,
 //	always_ff @ (posedge clk)
 	always_comb
 	begin
+		if (~isnight)
+		begin
 		case (color)
-			4'h0:
+			4'h0:		//Transparent
 			begin
 				Red = 8'h80;
 				Green = 8'h00;
 				Blue = 8'h80;
-				istransparent = 1'b1;
 			end
 			4'h1:
 			begin
 				Red = 8'hEF;
 				Green = 8'hEF;
 				Blue = 8'hEF;
-				istransparent = 1'b0;
 			end
 			4'h2:
 			begin
 				Red = 8'hF0;
 				Green = 8'hF0;
 				Blue = 8'hF0;
-				istransparent = 1'b0;
 			end
 			4'h3:
 			begin
 				Red = 8'hF6;
 				Green = 8'hF6;
 				Blue = 8'hF6;
-				istransparent = 1'b0;
 			end
 			4'h4:		//Background Color
 			begin
 				Red = 8'hA0;	//F7; originally
 				Green = 8'hA0;	//F7; originally
 				Blue = 8'hA0;	//F7; originally
-				istransparent = 1'b0;
 			end
 			4'h5:
 			begin
 				Red = 8'hF8;
 				Green = 8'hF8;
 				Blue = 8'hF8;
-				istransparent = 1'b0;
 			end
 			4'h6:
 			begin
 				Red = 8'hFE;
 				Green = 8'hFE;
 				Blue = 8'hFE;
-				istransparent = 1'b0;
 			end
 			4'h7:
 			begin
 				Red = 8'hFF;
 				Green = 8'hFF;
 				Blue = 8'hFF;
-				istransparent = 1'b0;
 			end
 			4'h8:
 			begin
 				Red = 8'h53;
 				Green = 8'h53;
 				Blue = 8'h53;
-				istransparent = 1'b0;
 			end
 			4'h9:
 			begin
 				Red = 8'hB9;
 				Green = 8'hB9;
 				Blue = 8'hB9;
-				istransparent = 1'b0;
 			end
 			4'hA:
 			begin
 				Red = 8'hDA;
 				Green = 8'hDA;
 				Blue = 8'hDA;
-				istransparent = 1'b0;
 			end
 			default:		//Give black
 			begin
 				Red = 8'h00;
 				Green = 8'h00;
 				Blue = 8'h00;
-				istransparent = 1'b0;
 			end
 		endcase
+		end
+		else	//Night
+		begin
+		case (color)
+			4'h0:		//Transparent
+			begin
+				Red = 8'h80;
+				Green = 8'h00;
+				Blue = 8'h80;
+			end
+			4'h1:
+			begin
+				Red = 8'hEF;
+				Green = 8'hEF;
+				Blue = 8'hEF;
+			end
+			4'h2:
+			begin
+				Red = 8'hF0;
+				Green = 8'hF0;
+				Blue = 8'hF0;
+			end
+			4'h3:
+			begin
+				Red = 8'hF6;
+				Green = 8'hF6;
+				Blue = 8'hF6;
+			end
+			4'h4:		//Background Color: At night is #202020
+			begin
+				Red = 8'h20;	
+				Green = 8'h20;	
+				Blue = 8'h20;	
+			end
+			4'h5:
+			begin
+				Red = 8'hF8;
+				Green = 8'hF8;
+				Blue = 8'hF8;
+			end
+			4'h6:
+			begin
+				Red = 8'hFE;
+				Green = 8'hFE;
+				Blue = 8'hFE;
+			end
+			4'h7:
+			begin
+				Red = 8'hFF;
+				Green = 8'hFF;
+				Blue = 8'hFF;
+			end
+			4'h8:	//At night is #ACACAC
+			begin
+				Red = 8'hAC;
+				Green = 8'hAC;
+				Blue = 8'hAC;
+			end
+			4'h9:
+			begin
+				Red = 8'hB9;
+				Green = 8'hB9;
+				Blue = 8'hB9;
+			end
+			4'hA:
+			begin
+				Red = 8'hDA;
+				Green = 8'hDA;
+				Blue = 8'hDA;
+			end
+			default:		//Give black
+			begin
+				Red = 8'h00;
+				Green = 8'h00;
+				Blue = 8'h00;
+			end
+		endcase
+		end
 	end
 
 endmodule
