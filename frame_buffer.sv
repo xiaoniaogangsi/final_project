@@ -9,31 +9,31 @@ module frame_buffer (input Clk50, pixel_Clk, Reset, write_en,
 	logic [9:0] address1, address2;
 	logic [3:0] out1, out2;
 	//Each line buffer has 2^10 = 1024 addresses, enough to hold one row (640 pixels).
-	logic Clk1, Clk2;
+//	logic Clk1, Clk2;
 	
-	always_comb
-	begin
-		if (select)
-		begin
-			Clk1 = Clk50;
-			Clk2 = pixel_Clk;
-		end
-		else
-		begin
-			Clk1 = pixel_Clk;
-			Clk2 = Clk50;
-		end
-	end
+//	always_comb
+//	begin
+//		if (select)
+//		begin
+//			Clk1 = Clk50;
+//			Clk2 = pixel_Clk;
+//		end
+//		else
+//		begin
+//			Clk1 = pixel_Clk;
+//			Clk2 = Clk50;
+//		end
+//	end
 	
 	buffer row_buffer1(.aclr(Reset),
 							.address(address1),
-							.clock(Clk1),
+							.clock(Clk50),
 							.data(write_data),
 							.wren(we1),
 							.q(out1));
 	buffer row_buffer2(.aclr(Reset),
 							.address(address2),
-							.clock(Clk2),
+							.clock(Clk50),
 							.data(write_data),
 							.wren(we2),
 							.q(out2));
