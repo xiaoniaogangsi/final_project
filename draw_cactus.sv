@@ -1,11 +1,13 @@
 module draw_cactus (	input Clk50, pixel_Clk, frame_Clk, Reset,
 							input [9:0] WriteX, WriteY,
 							input [9:0] DrawX, DrawY,
+							input int Ptero_PosX, Ptero_PosY,
 							output logic cactus_on_wr,
 							output logic cactus_on_dr,
 							output logic [17:0] address,
 							output int Cactus_PosX, Cactus_PosY,
-							output int Cactus_SizeX, Cactus_SizeY);
+							output int Cactus_SizeX, Cactus_SizeY,
+							output logic ca_off);
 //	 $readmemh("sprite/cactus_large1_50x100.txt", mem, 0, 4999);
 //	 $readmemh("sprite/cactus_large2_100x100.txt", mem, 5000, 14999);
 //	 $readmemh("sprite/cactus_large3_150x100.txt", mem, 15000, 29999);
@@ -28,6 +30,9 @@ module draw_cactus (	input Clk50, pixel_Clk, frame_Clk, Reset,
 	int cactus_small2X = 68;
 	int cactus_small3X = 102;	
 	
+	int pterosaur_X = 92;
+	int pterosaur_Y = 80;
+	
 	int frame_count;	
 	logic [17:0] start, offset;
 	int PosX, PosY;
@@ -36,7 +41,16 @@ module draw_cactus (	input Clk50, pixel_Clk, frame_Clk, Reset,
 	int cactus_X, cactus_Y;
 	logic change_type;
 	
-	enum logic [2:0] {Large1, Large2, Large3, Small1, Small2, Small3} cactus_type; 
+	enum logic [2:0] {Large1, Large2, Large3, Small1, Small2, Small3, None} cactus_type, Next_cactus_type;
+
+	always_ff @ (posedge change_type or posedge Reset)
+	begin
+		if (Reset)
+			cactus_type <= None;
+		else 
+			cactus_type <= Next_cactus_type;
+	end
+	
 	always_comb
 	begin
 		unique case (cactus_type)
@@ -46,6 +60,7 @@ module draw_cactus (	input Clk50, pixel_Clk, frame_Clk, Reset,
 					cactus_X = cactus_large1X;
 					cactus_Y = cactus_largeY;
 					PosY = 320;
+					ca_off = 1'b0;
 				end
 			Large2: 
 				begin
@@ -53,6 +68,7 @@ module draw_cactus (	input Clk50, pixel_Clk, frame_Clk, Reset,
 					cactus_X = cactus_large2X;
 					cactus_Y = cactus_largeY;
 					PosY = 320;
+					ca_off = 1'b0;
 				end
 			Large3: 
 				begin
@@ -60,6 +76,7 @@ module draw_cactus (	input Clk50, pixel_Clk, frame_Clk, Reset,
 					cactus_X = cactus_large3X;
 					cactus_Y = cactus_largeY;
 					PosY = 320;
+					ca_off = 1'b0;
 				end
 			Small1: 
 				begin
@@ -67,6 +84,7 @@ module draw_cactus (	input Clk50, pixel_Clk, frame_Clk, Reset,
 					cactus_X = cactus_small1X;
 					cactus_Y = cactus_smallY;
 					PosY = 350;
+					ca_off = 1'b0;
 				end
 			Small2: 
 				begin
@@ -74,6 +92,7 @@ module draw_cactus (	input Clk50, pixel_Clk, frame_Clk, Reset,
 					cactus_X = cactus_small2X;
 					cactus_Y = cactus_smallY;
 					PosY = 350;
+					ca_off = 1'b0;
 				end
 			Small3: 
 				begin
@@ -81,6 +100,15 @@ module draw_cactus (	input Clk50, pixel_Clk, frame_Clk, Reset,
 					cactus_X = cactus_small3X;
 					cactus_Y = cactus_smallY;
 					PosY = 350;
+					ca_off = 1'b0;
+				end
+			None:
+				begin
+					cactus_addr = 18'd20;
+					cactus_X = 0;
+					cactus_Y = 0;
+					PosY = 480;
+					ca_off = 1'b1;
 				end
 		endcase
 	end
@@ -121,20 +149,26 @@ module draw_cactus (	input Clk50, pixel_Clk, frame_Clk, Reset,
 	end
 	LFSR #(6) gen_rand (.*, .Clk(frame_Clk), .Enable(1'b1), .Out(rand_num));
 	
-	always_ff @ (posedge change_type)
+	always_comb
 	begin:Choose_draw_type
-		if (rand_num >= 6'd0 && rand_num < 6'd16)			//Possibility = 1/4
-			cactus_type = Large1;
-		else if (rand_num >= 6'd16 && rand_num < 6'd24) //Possibility = 1/8
-			cactus_type = Large2;
-		else if (rand_num >= 6'd24 && rand_num < 6'd32)	//Possibility = 1/8
-			cactus_type = Large3;
-		else if (rand_num >= 6'd32 && rand_num < 6'd48) //Possibility = 1/4
-			cactus_type = Small1;
-		else if (rand_num >= 6'd48 && rand_num < 6'd56) //Possibility = 1/8
-			cactus_type = Small2;
-		else 															//Possibility = 1/8
-			cactus_type = Small3;
+		Next_cactus_type = cactus_type;
+		if (Ptero_PosX + pterosaur_X > 320 || Ptero_PosX < 0)
+			Next_cactus_type = None;
+		else
+		begin
+			if (rand_num >= 6'd0 && rand_num < 6'd16)			//Possibility = 1/4
+				Next_cactus_type = Large1;
+			else if (rand_num >= 6'd16 && rand_num < 6'd24) //Possibility = 1/8
+				Next_cactus_type = Large2;
+			else if (rand_num >= 6'd24 && rand_num < 6'd32)	//Possibility = 1/8
+				Next_cactus_type = Large3;
+			else if (rand_num >= 6'd32 && rand_num < 6'd48) //Possibility = 1/4
+				Next_cactus_type = Small1;
+			else if (rand_num >= 6'd48 && rand_num < 6'd56) //Possibility = 1/8
+				Next_cactus_type = Small2;
+			else 															//Possibility = 1/8
+				Next_cactus_type = Small3;
+		end
 	end
 
 	always_comb
@@ -177,10 +211,8 @@ module draw_cactus (	input Clk50, pixel_Clk, frame_Clk, Reset,
 		 if ((DrawX >= PosX || PosX < 0) &&
 			 (DrawX < PosX + cactus_X) &&
 			 (DrawY >= PosY) &&
-			 (DrawY < PosY + cactus_Y)
-	//		 && (istransparent == 1'b0)
-	//		 && (ball_on == 1'b0)
-			 )
+			 (DrawY < PosY + cactus_Y) &&
+			 (~ca_off))
 			cactus_on_dr = 1'b1;
 		 else 
 			cactus_on_dr = 1'b0;
@@ -191,10 +223,8 @@ module draw_cactus (	input Clk50, pixel_Clk, frame_Clk, Reset,
 		 if ((WriteX >= PosX || PosX < 0) &&
 			 (WriteX < PosX + cactus_X) &&
 			 (WriteY >= PosY) &&
-			 (WriteY < PosY + cactus_Y)
-	//		 && (istransparent == 1'b0)
-	//		 && (ball_on == 1'b0)
-			 )
+			 (WriteY < PosY + cactus_Y) &&
+			 (~ca_off))
 			cactus_on_wr = 1'b1;
 		 else 
 			cactus_on_wr = 1'b0;

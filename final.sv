@@ -8,19 +8,19 @@
 //					3. PosX and PoxY the same as defined in draw_cactus and draw_prerosaur
 //					
 //
-module control (input Reset, frame_clk,
-					 input pt_off, ca_off
-					 input int type,
+module control (input Reset, frame_Clk,
+					 input pt_off, ca_off,
 					 input int Ptero_PosX, Ptero_PosY,
 					 input int Fire_PosX, Fire_PosY,
 					 input int Buff_PosX, Buff_PosY,
 					 input int Cactus_PosX, Cactus_PosY,
-					 input int Cactus_X_Size, Cactus_Y_Size,
+					 input int Cactus_SizeX, Cactus_SizeY,
 					 input [7:0] keycode,
-					 output Dead);
+					 output logic [9:0] Dino_PosX, Dino_PosY,
+					 output logic Dead);
 		int Ground_Level = 412; //take the middle of the gound sprite: 400 + 12.
 		int Dragon_X_Pos = 120;
-		int Dragon_Y_Pos = Ground_Level;
+		int Dragon_Y_Pos = 412;
 		int Dragon_X_Size = 88; //correct.
 		int Dragon_Y_Size = 94; //correct.
 		
@@ -51,7 +51,7 @@ module control (input Reset, frame_clk,
 		end
 		
 		//state machine that controls the user interface.
-		always_ff @ (posedge frame_clk)
+		always_ff @ (posedge frame_Clk)
 		begin
 			if (keycode == 8'h0d)
 				State <= Start;
@@ -76,12 +76,15 @@ module control (input Reset, frame_clk,
 		end
 		
 		int Jump_counter;
-		int Bottem = mydragon.Dragon_Y_Pos + mydragon.Dragon_Y_Size/2; //take caution!
-		int Right_Edge = mydragon.Dragon_X_Pos + mydragon.Dragon_X_Size/2;
-		int Left_Edge =  mydragon.Dragon_X_Pos - mydragon.Dragon_X_Size/2;
+		int Top, Bottom;
+		int Right_Edge, Left_Edge;
+		assign Top = mydragon.Dragon_Y_Pos - mydragon.Dragon_Y_Size/2;
+		assign Bottom = mydragon.Dragon_Y_Pos + mydragon.Dragon_Y_Size/2; //take caution!
+		assign Right_Edge = mydragon.Dragon_X_Pos + mydragon.Dragon_X_Size/2;
+		assign Left_Edge =  mydragon.Dragon_X_Pos - mydragon.Dragon_X_Size/2;
 		
 		//control code of the little dragon
-		always_ff @ (posedge frame_clk)
+		always_ff @ (posedge frame_Clk)
 		begin 
 			//keycode processing
 			case (keycode)
@@ -90,7 +93,7 @@ module control (input Reset, frame_clk,
 						Jump_counter <= Jump_counter+1;
 				else if (Jump_counter<30)
 							begin
-								if (Bottem == Ground_Level)
+								if (Bottom == Ground_Level)
 								begin
 									mydragon.Dragon_Y_Motion <= -10;
 								end
@@ -105,7 +108,7 @@ module control (input Reset, frame_clk,
 						//longer storage force
 						else
 							begin
-								if (Bottem == Ground_Level)
+								if (Bottom == Ground_Level)
 								begin
 									mydragon.Dragon_Y_Motion <= -20;
 								end
@@ -127,7 +130,7 @@ module control (input Reset, frame_clk,
 			endcase
 			
 			//simulation of gravity
-			if (Bottem + mydragon.Dragon_Y_Motion >= Ground_Level)
+			if (Bottom + mydragon.Dragon_Y_Motion >= Ground_Level)
 			begin
 				//when the dragon reach the ground in the next state, the motion will change to zero instantaneously.
 				Action <= RUN;
@@ -142,22 +145,27 @@ module control (input Reset, frame_clk,
 			end
 		end
 		
-		int test_point1_x = Right_Edge;
-		int test_point1_y = mydragon.Dragon_Y_Pos - mydragon.Dragon_Y_Size/2;
+		int test_point1_x, test_point1_y;
+		int test_point2_x, test_point2_y;
+		int test_point3_x, test_point3_y;
+		int test_point4_x, test_point4_y;
+			
+		assign test_point1_x = Right_Edge;
+		assign test_point1_y = mydragon.Dragon_Y_Pos - mydragon.Dragon_Y_Size/2;
 		
-		int test_point2_x = Right_Edge;
-		int test_point2_y = mydragon.Dragon_Y_Pos - mydragon.Dragon_Y_Size/4;
+		assign test_point2_x = Right_Edge;
+		assign test_point2_y = mydragon.Dragon_Y_Pos - mydragon.Dragon_Y_Size/4;
 		
-		int test_point3_x = mydragon.Dragon_X_Pos;
-		int test_point3_y = mydragon.Dragon_Y_Pos - mydragon.Dragon_Y_Size/2;
+		assign test_point3_x = mydragon.Dragon_X_Pos;
+		assign test_point3_y = mydragon.Dragon_Y_Pos - mydragon.Dragon_Y_Size/2;
 		
-		int test_point4_x = mydragon.Dragon_X_Pos;
-		int test_point4_y = mydragon.Dragon_Y_Pos + mydragon.Dragon_Y_Size/4;
+		assign test_point4_x = mydragon.Dragon_X_Pos;
+		assign test_point4_y = mydragon.Dragon_Y_Pos + mydragon.Dragon_Y_Size/4;
 		
 //		input int PosX, PosY,
 //		input int ObstacleX, ObstacleY,
 		//collision judgement between dragon and ptero.
-		always_ff @ (posedge frame_clk)
+		always_ff @ (posedge frame_Clk)
 		begin
 			if (pt_off == 0)
 			begin
@@ -193,29 +201,29 @@ module control (input Reset, frame_clk,
 		end
 		
 		//collision judgement between dragon and cactus.
-		always_ff @ (posedge frame_clk)
+		always_ff @ (posedge frame_Clk)
 		begin
 			if (ca_off == 0)
 			begin
-				if ((test_point1_x >= Cactus_PosX) && (test_point1_x < Cactus_PosX + Cactus_X_Size) && (test_point1_y >= Cactus_PosY) && (test_point1_y< Cactus_PosY + Cactus_Y_Size))
+				if ((test_point1_x >= Cactus_PosX) && (test_point1_x < Cactus_PosX + Cactus_SizeX) && (test_point1_y >= Cactus_PosY) && (test_point1_y< Cactus_PosY + Cactus_SizeY))
 				begin
 					Dead <= 1;
 					Action <= DEAD;
 					mydragon.Dragon_Y_Motion <= 0;
 				end
-				else if ((test_point2_x >= Cactus_PosX) && (test_point2_x < Cactus_PosX + Cactus_X_Size) && (test_point2_y >= Cactus_PosY) && (test_point2_y< Cactus_PosY + Cactus_Y_Size))
+				else if ((test_point2_x >= Cactus_PosX) && (test_point2_x < Cactus_PosX + Cactus_SizeX) && (test_point2_y >= Cactus_PosY) && (test_point2_y< Cactus_PosY + Cactus_SizeY))
 				begin
 					Dead <= 1;
 					Action <= DEAD;
 					mydragon.Dragon_Y_Motion <= 0;
 				end
-				else if ((test_point3_x >= Cactus_PosX) && (test_point3_x < Cactus_PosX + Cactus_X_Size) && (test_point3_y >= Cactus_PosY) && (test_point3_y< Cactus_PosY + Cactus_Y_Size))
+				else if ((test_point3_x >= Cactus_PosX) && (test_point3_x < Cactus_PosX + Cactus_SizeX) && (test_point3_y >= Cactus_PosY) && (test_point3_y< Cactus_PosY + Cactus_SizeY))
 				begin
 					Dead <= 1;
 					Action <= DEAD;
 					mydragon.Dragon_Y_Motion <= 0;
 				end
-				else if ((test_point4_x >= Cactus_PosX) && (test_point4_x < Cactus_PosX + Cactus_X_Size) && (test_point4_y >= Cactus_PosY) && (test_point4_y< Cactus_PosY + Cactus_Y_Size))
+				else if ((test_point4_x >= Cactus_PosX) && (test_point4_x < Cactus_PosX + Cactus_SizeX) && (test_point4_y >= Cactus_PosY) && (test_point4_y< Cactus_PosY + Cactus_SizeY))
 				begin
 					Dead <= 1;
 					Action <= DEAD;
@@ -234,6 +242,10 @@ module control (input Reset, frame_clk,
 //		else
 //			Enter = 0;
 //		end
+
+		assign Dino_PosX = Left_Edge;
+		assign Dino_PosY = Top;
+		
 endmodule
 
 

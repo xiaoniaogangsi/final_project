@@ -12,10 +12,9 @@ module fire_control (input frame_Clk, Reset,
 	int Ptero_Y_Size  = 80;
 	int Gravity = 2;
 	
-	int FireX, FireY;
 	int fire_off;
-	int X_Motion;
-	int FireX, FireY;
+	int X_Motion, Y_Motion;
+	
 	initial
 	begin
 		FireX = 640;
@@ -36,7 +35,7 @@ module fire_control (input frame_Clk, Reset,
 			X_Motion = X_Motion;
 	end
 	
-	always_ff @ (posedge frame_clk)
+	always_ff @ (posedge frame_Clk)
 	begin
 		if (score % 500 == 499 && fire_off)
 		begin 
@@ -51,11 +50,11 @@ module fire_control (input frame_Clk, Reset,
 	end
 
 	//collision judgement between dragon and ptero.
-	always_ff @ (posedge frame_clk)
+	always_ff @ (posedge frame_Clk)
 	begin
 		if (fire_off == 0)
 		begin
-			if ((FireX >= Dragon_X_Pos) && (FireX < Dragon_X_Pos + Dragon_X_Size) && (FireY >= Dragon_Y_Pos) && (Fire_Y< Dragon_Y_Pos + Dragon_Y_Size))
+			if ((FireX >= Dragon_X_Pos) && (FireX < Dragon_X_Pos + Dragon_X_Size) && (FireY >= Dragon_Y_Pos) && (FireY< Dragon_Y_Pos + Dragon_Y_Size))
 			begin
 				
 				//Action <= Buff1;
@@ -64,5 +63,6 @@ module fire_control (input frame_Clk, Reset,
 			
 		else 
 			Dead <=0;
+		end
 	end
 endmodule	

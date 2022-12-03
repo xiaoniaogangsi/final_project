@@ -13,8 +13,8 @@
 //-------------------------------------------------------------------------
 
 
-module  gamelogic	   ( input 					 Clk50, pixel_Clk, frame_Clk, Reset, blank, row_Clk,
-							  input        [9:0]  PosX, PosY, DrawX, DrawY,
+module  gamelogic ( 	  input 					 Clk50, pixel_Clk, frame_Clk, Reset, blank, row_Clk,
+							  input        [9:0]  DrawX, DrawY,
 							  input 			[7:0]	 keycode,
                        output logic [7:0]  Red, Green, Blue );
 	 
@@ -22,7 +22,8 @@ module  gamelogic	   ( input 					 Clk50, pixel_Clk, frame_Clk, Reset, blank, ro
 	logic [17:0] draw_address;	//current Address for the picture we want to draw (start+offset)
 	logic [3:0] color_index;		//color index we get from the ROM
 	logic [3:0] color_index_buffer; //color index from frame_buffer
-	logic [7:0]  Red_p, Green_p, Blue_p;
+	logic [7:0] Red_p, Green_p, Blue_p;
+	logic [9:0] PosX, PosY;		//The position of the dinosaur (up-left corner)
 	
    logic runner_on_dr, runner_on_wr;	
 	logic cloud_on_dr,cloud_on_wr;
@@ -37,8 +38,15 @@ module  gamelogic	   ( input 					 Clk50, pixel_Clk, frame_Clk, Reset, blank, ro
 	assign buffer_select = WriteY[0];
 	
 	int score;
+	int Ptero_PosX, Ptero_PosY;
+	int Fire_PosX, Fire_PosY;
+	int Buff_PosX, Buff_PosY;
 	int Cactus_PosX, Cactus_PosY;
 	int Cactus_SizeX, Cactus_SizeY;
+	
+	logic pt_off, ca_off;
+	
+	logic[9:0] WriteX, WriteY;
   
 	draw_runner runner0(.*, .address(address_runner));
 	draw_cloud cloud0(.*, .address(address_cloud));
@@ -47,23 +55,14 @@ module  gamelogic	   ( input 					 Clk50, pixel_Clk, frame_Clk, Reset, blank, ro
 	draw_cactus cactus0(.*, .address(address_cactus));
 	draw_pterosaur pterosaur0(.*, .address(address_pterosaur));
 	
-//	always_comb
-//	begin
-//		if (ball_on_wr)
-//			draw_address = address_runner;
-//		else if (score_on_wr != 3'b000)
-//			draw_address = address_score;
-//		else if (cloud_on_wr)
-//			draw_address = address_cloud;
-//		else if (cactus_on_wr)
-//			draw_address = address_cactus;
-//		else if (horizon_on_wr)
-//			draw_address = address_horizon;
-//		else
-//			draw_address = 18'd20;
-//	end
-	
 	logic Dead, Enter;
+	
+	control control0(.*,
+					 .keycode(keycode),
+					 .Dino_PosX(PosX), .Dino_PosY(PosY),
+					 .Dead(Dead));
+	
+	
 	logic score_on_1bit;
 	assign score_on_1bit = (score_on_wr == 3'b000)? 1'b0 : 1'b1;
 	logic [2:0] write_which_layer;	//Indicate we are writing which layer, 000 means no writing.
@@ -87,44 +86,8 @@ module  gamelogic	   ( input 					 Clk50, pixel_Clk, frame_Clk, Reset, blank, ro
 	assign empty_data_in = 4'b0000;
 	logic [15:0] empty_addr;
 	assign empty_addr = 0;
-//	logic [3:0] color_index[4:0];		//color index we get from the ROM
 	logic [15:0] four_color_indices;	//color index we get from the ROM
-//	spriterom1 sprite1(.address_a(draw_address[15:0]),
-//							.address_b(empty_addr),
-//							.clock(Clk50),
-//							.data_a(empty_data_in),
-//							.data_b(empty_data_in),
-//							.wren_a(1'b0),
-//							.wren_b(1'b0),
-//							.q_a(color_index[0]),
-//							.q_b(4'bZ));
-//	spriterom2 sprite2(.address_a(draw_address[15:0]),
-//							.address_b(empty_addr),
-//							.clock(Clk50),
-//							.data_a(empty_data_in),
-//							.data_b(empty_data_in),
-//							.wren_a(1'b0),
-//							.wren_b(1'b0),
-//							.q_a(color_index[1]),
-//							.q_b(4'bZ));
-//	spriterom3 sprite3(.address_a(draw_address[15:0]),
-//							.address_b(empty_addr),
-//							.clock(Clk50),
-//							.data_a(empty_data_in),
-//							.data_b(empty_data_in),
-//							.wren_a(1'b0),
-//							.wren_b(1'b0),
-//							.q_a(color_index[2]),
-//							.q_b(4'bZ));
-//	spriterom4 sprite4(.address_a(draw_address[15:0]),
-//							.address_b(empty_addr),
-//							.clock(Clk50),
-//							.data_a(empty_data_in),
-//							.data_b(empty_data_in),
-//							.wren_a(1'b0),
-//							.wren_b(1'b0),
-//							.q_a(color_index[3]),
-//							.q_b(4'bZ));
+
 	logic [15:0] rom_address;
 	assign rom_address = draw_address[17:2];	//draw_address \ 4
 	spriterom16 sprite0(.address_a(rom_address[15:0]),
@@ -147,26 +110,7 @@ module  gamelogic	   ( input 					 Clk50, pixel_Clk, frame_Clk, Reset, blank, ro
 		endcase
 	end
 
-//	assign color_index[4]=color_index[draw_address[17:16]];
-
-	logic[9:0] WriteX, WriteY;
-//	assign WriteY=DrawY+1;
-//	assign WriteX[9:1]=DrawX[8:0];
-//	assign WriteX[0]=last_digit;
-//
-//	logic last_digit;
-//
-//	always_ff @ (posedge Clk50)
-//	begin
-//		if (DrawX==799)
-//			last_digit<=0;
-//		else
-//		begin
-//			last_digit<=~last_digit;
-//		end
-//	end
 	logic transparent;
-//	logic transparent_in;
 	
 	always_comb
 	begin
@@ -175,13 +119,6 @@ module  gamelogic	   ( input 					 Clk50, pixel_Clk, frame_Clk, Reset, blank, ro
 		else
 			transparent = 0;
 	end
-//	always_comb
-//	begin
-//		if (color_index_in == 4'h0)	//Color index 0 means transparent color.
-//			transparent_in = 1;
-//		else
-//			transparent_in = 0;
-//	end
 	
 	logic [3:0] color_index_in;
 	always_comb
@@ -189,7 +126,7 @@ module  gamelogic	   ( input 					 Clk50, pixel_Clk, frame_Clk, Reset, blank, ro
 		if (write_which_layer == 3'b001)		//When writing Layer 1 (Background)
 		begin
 			//In Layer 1, if this area is the horizon, but is transparent, still fill in the background color.
-			if ((horizon_on_wr_delay == 1'b1) && (transparent == 1'b1))
+			if ((horizon_on_wr == 1'b1) && (transparent == 1'b1))
 				color_index_in = 4'h4;	//Background color index
 			else	//If this area is the horizon, and is not transparent, write the horizon in.
 				color_index_in = color_index;	
@@ -231,53 +168,11 @@ module  gamelogic	   ( input 					 Clk50, pixel_Clk, frame_Clk, Reset, blank, ro
 				.Blue(Blue_p));
 	  
 	 
-//	 always_ff @ (posedge pixel_Clk)
-//    begin:RGB_Display
-//		flag<=0;
-//		if (blank == 1'b0)
-//		begin
-//			Red <= 8'h00; 
-//			Green <= 8'h00;
-//			Blue <= 8'h00;
-//		end
-//		else
-//		begin
-//        if (((ball_on_dr == 1'b1) || 
-//		  (cloud_on_dr == 1'b1) || 
-//		  (score_on_dr != 3'b000) || 
-//		  (horizon_on_dr == 1'b1) ||
-//		  (cactus_on_dr == 1'b1)) 
-//		  && (istransparent == 1'b0)) 
-//        begin 
-////				Red <= Red_p;
-////				Green <= Green_p;
-////				Blue <= Blue_p;
-//				flag<=1;
-//        end       
-//
-//		  if (~flag) 
-//		   begin 
-////            Red <= 8'h00; 
-////            Green <= 8'h00;
-////            Blue <= 8'h7f - DrawX[9:3];
-//            Red <= 8'hA0; 
-//            Green <= 8'hA0;
-//            Blue <= 8'hA0;
-//			end
-//		  else
-//			begin
-//				Red <= Red_p;
-//				Green <= Green_p;
-//				Blue <= Blue_p;
-//			end
-//		end
-//	end	
-	
-	logic horizon_on_wr_delay;
-	always_ff @ (posedge Clk50)
-	begin
-		horizon_on_wr_delay <= horizon_on_wr;
-	end
+//	logic horizon_on_wr_delay;
+//	always_ff @ (posedge Clk50)
+//	begin
+//		horizon_on_wr_delay <= horizon_on_wr;
+//	end
 
 	always_ff @ (posedge pixel_Clk)
    begin:RGB_Display

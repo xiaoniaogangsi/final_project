@@ -8,8 +8,9 @@ module draw_pterosaur(  input Clk50, pixel_Clk, frame_Clk, Reset,
 							input int Cactus_SizeX, Cactus_SizeY,
 							output logic pterosaur_on_dr,
 							output logic pterosaur_on_wr,
-							//output int PosX, PosY,
-							output logic [17:0] address);
+							output int Ptero_PosX, Ptero_PosY,
+							output logic [17:0] address,
+							output logic pt_off);
 
 	//$readmemh("sprite/pterosaur_wingdown_92x80.txt", mem, 171995, 179354);
 	//$readmemh("sprite/pterosaur_wingup_92x80.txt", mem, 179355, 186714);
@@ -37,8 +38,16 @@ module draw_pterosaur(  input Clk50, pixel_Clk, frame_Clk, Reset,
 		change_height = 1'b0;
 	end
 	
-	enum logic [3:0] {Height1, Height2, Height3, None} draw_type;
-	logic pt_off;
+	enum logic [3:0] {Height1, Height2, Height3, None} draw_type, Next_draw_type;
+	
+	always_ff @ (posedge change_height or posedge Reset)
+	begin
+		if (Reset) 
+			draw_type <= None;
+		else 
+			draw_type <= Next_draw_type;
+	end
+	
 	always_comb
 	begin
 		unique case (draw_type)
@@ -149,18 +158,19 @@ module draw_pterosaur(  input Clk50, pixel_Clk, frame_Clk, Reset,
 	LFSR #(6) gen_rand (.*, .Clk(frame_Clk), .Enable(1'b1), .Out(rand_num));
 	
 	//Change height according to the random number
-	always_ff @ (posedge change_height)
+	always_comb
 	begin:Choose_height
-		if (Cactus_PosX + Cactus_SizeX > 320 || Cactus_Pox < 0)
-			draw_type = None;
+		Next_draw_type = draw_type;
+		if (Cactus_PosX + Cactus_SizeX > 320 || Cactus_PosX < 0)
+			Next_draw_type = None;
 		else
 		begin
 			if (rand_num >= 6'd0 && rand_num < 6'd16)			//Possibility = 1/4
-				draw_type = Height1;
+				Next_draw_type = Height1;
 			else if (rand_num >= 6'd16 && rand_num < 6'd48) //Possibility = 1/2
-				draw_type = Height2;
+				Next_draw_type = Height2;
 			else															//Possibility = 1/4
-				draw_type = Height3;
+				Next_draw_type = Height3;
 		end
 	end
 	
@@ -181,25 +191,24 @@ module draw_pterosaur(  input Clk50, pixel_Clk, frame_Clk, Reset,
        (WriteX < PosX + pterosaur_X) &&
        (WriteY >= PosY) &&
        (WriteY < PosY + pterosaur_Y) &&
-		 (~pt_off)
-//		 && (istransparent == 1'b0)
-		 )
+		 (~pt_off))
       pterosaur_on_wr = 1'b1;
     else 
 		pterosaur_on_wr = 1'b0;
    end
 	
-		always_comb
+	always_comb
    begin:Pterosaur_on_proc
 	 if ((DrawX >= PosX || PosX < 0) &&
        (DrawX < PosX + pterosaur_X) &&
        (DrawY >= PosY) &&
        (DrawY < PosY + pterosaur_Y) &&
-		 (~pt_off)
-//		 && (istransparent == 1'b0)
-		 )
+		 (~pt_off))
       pterosaur_on_dr = 1'b1;
     else 
 		pterosaur_on_dr = 1'b0;
    end
+	
+	assign Ptero_PosX = PosX;
+	assign Ptero_PosY = PosY;
 endmodule

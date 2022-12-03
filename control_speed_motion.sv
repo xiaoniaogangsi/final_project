@@ -1,1 +1,3 @@
-module control_speed_motion
+module control_speed_motion();
+
+endmodule
