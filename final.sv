@@ -9,16 +9,23 @@
 //					
 //
 module control (input Reset, frame_clk,
-					 input pt_off,
+					 input pt_off, ca_off
 					 input int type,
-					 input int PosX, PosY,
-					 input int ObstacleX, ObstacleY,
+					 input int Ptero_PosX, Ptero_PosY,
+					 input int Fire_PosX, Fire_PosY,
+					 input int Buff_PosX, Buff_PosY,
+					 input int Cactus_PosX, Cactus_PosY,
+					 input int Cactus_X_Size, Cactus_Y_Size,
 					 input [7:0] keycode,
 					 output Dead);
-		int Dragon_X_Pos = 120;
 		int Ground_Level = 412; //take the middle of the gound sprite: 400 + 12.
+		int Dragon_X_Pos = 120;
+		int Dragon_Y_Pos = Ground_Level;
 		int Dragon_X_Size = 88; //correct.
 		int Dragon_Y_Size = 94; //correct.
+		
+		int Ptero_X_Size  = 92;
+		int Ptero_Y_Size  = 80;
 		int Gravity = 2;
 
 		enum logic [3:0] {  		
@@ -31,7 +38,8 @@ module control (input Reset, frame_clk,
 							RUN,
 							JUMP,
 							DUCK,
-							CAKE,
+							BUFF1, //renergy
+							BUFF2, //fire mode
 							DEAD}		Action;
 		Dragon mydragon;	
 		
@@ -148,30 +156,30 @@ module control (input Reset, frame_clk,
 		
 //		input int PosX, PosY,
 //		input int ObstacleX, ObstacleY,
-		//collision judgement.
+		//collision judgement between dragon and ptero.
 		always_ff @ (posedge frame_clk)
 		begin
 			if (pt_off == 0)
 			begin
-				if ((test_point1_x >= PosX) && (test_point1_x < PosX + ObstacleX) && (test_point1_y >= PosY) && (test_point1_y< PosY + ObstacleY))
+				if ((test_point1_x >= Ptero_PosX) && (test_point1_x < Ptero_PosX + Ptero_X_Size) && (test_point1_y >= Ptero_PosY) && (test_point1_y< Ptero_PosY + Ptero_Y_Size))
 				begin
 					Dead <= 1;
 					Action <= DEAD;
 					mydragon.Dragon_Y_Motion <= 0;
 				end
-				else if ((test_point2_x >= PosX) && (test_point2_x < PosX + ObstacleX) && (test_point2_y >= PosY) && (test_point2_y< PosY + ObstacleY))
+				else if ((test_point2_x >= Ptero_PosX) && (test_point2_x < Ptero_PosX + Ptero_X_Size) && (test_point2_y >= Ptero_PosY) && (test_point2_y< Ptero_PosY + Ptero_Y_Size))
 				begin
 					Dead <= 1;
 					Action <= DEAD;
 					mydragon.Dragon_Y_Motion <= 0;
 				end
-				else if ((test_point3_x >= PosX) && (test_point3_x < PosX + ObstacleX) && (test_point3_y >= PosY) && (test_point3_y< PosY + ObstacleY))
+				else if ((test_point3_x >= Ptero_PosX) && (test_point3_x < Ptero_PosX + Ptero_X_Size) && (test_point3_y >= Ptero_PosY) && (test_point3_y< Ptero_PosY + Ptero_Y_Size))
 				begin
 					Dead <= 1;
 					Action <= DEAD;
 					mydragon.Dragon_Y_Motion <= 0;
 				end
-				else if ((test_point4_x >= PosX) && (test_point4_x < PosX + ObstacleX) && (test_point4_y >= PosY) && (test_point4_y< PosY + ObstacleY))
+				else if ((test_point4_x >= Ptero_PosX) && (test_point4_x < Ptero_PosX + Ptero_X_Size) && (test_point4_y >= Ptero_PosY) && (test_point4_y< Ptero_PosY + Ptero_Y_Size))
 				begin
 					Dead <= 1;
 					Action <= DEAD;
@@ -184,6 +192,41 @@ module control (input Reset, frame_clk,
 				Dead <=0;
 		end
 		
+		//collision judgement between dragon and cactus.
+		always_ff @ (posedge frame_clk)
+		begin
+			if (ca_off == 0)
+			begin
+				if ((test_point1_x >= Cactus_PosX) && (test_point1_x < Cactus_PosX + Cactus_X_Size) && (test_point1_y >= Cactus_PosY) && (test_point1_y< Cactus_PosY + Cactus_Y_Size))
+				begin
+					Dead <= 1;
+					Action <= DEAD;
+					mydragon.Dragon_Y_Motion <= 0;
+				end
+				else if ((test_point2_x >= Cactus_PosX) && (test_point2_x < Cactus_PosX + Cactus_X_Size) && (test_point2_y >= Cactus_PosY) && (test_point2_y< Cactus_PosY + Cactus_Y_Size))
+				begin
+					Dead <= 1;
+					Action <= DEAD;
+					mydragon.Dragon_Y_Motion <= 0;
+				end
+				else if ((test_point3_x >= Cactus_PosX) && (test_point3_x < Cactus_PosX + Cactus_X_Size) && (test_point3_y >= Cactus_PosY) && (test_point3_y< Cactus_PosY + Cactus_Y_Size))
+				begin
+					Dead <= 1;
+					Action <= DEAD;
+					mydragon.Dragon_Y_Motion <= 0;
+				end
+				else if ((test_point4_x >= Cactus_PosX) && (test_point4_x < Cactus_PosX + Cactus_X_Size) && (test_point4_y >= Cactus_PosY) && (test_point4_y< Cactus_PosY + Cactus_Y_Size))
+				begin
+					Dead <= 1;
+					Action <= DEAD;
+					mydragon.Dragon_Y_Motion <= 0;
+				end
+				else 
+					Dead <=0;
+			end
+			else 
+				Dead <=0;
+		end
 //		always_comb  //Produce Enter
 //		begin
 //		if (keycode == 8'h0c)

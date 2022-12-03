@@ -1,10 +1,14 @@
 module draw_pterosaur(  input Clk50, pixel_Clk, frame_Clk, Reset,
+							//input Dead,
+							//input Speed_up,
+							//input Game_Mode,
 							input [9:0] WriteX, WriteY,
 							input [9:0] DrawX, DrawY,	
 							input int Cactus_PosX, Cactus_PosY,
 							input int Cactus_SizeX, Cactus_SizeY,
 							output logic pterosaur_on_dr,
 							output logic pterosaur_on_wr,
+							//output int PosX, PosY,
 							output logic [17:0] address);
 
 	//$readmemh("sprite/pterosaur_wingdown_92x80.txt", mem, 171995, 179354);
@@ -14,6 +18,9 @@ module draw_pterosaur(  input Clk50, pixel_Clk, frame_Clk, Reset,
 	int pterosaur_X = 92;
 	int pterosaur_Y = 80;
 	int PosX, PosY;
+	//int X_Motion = -2;
+	//int Y_Motion = 0;
+	//int reference = 0;
 	int frame_count1, frame_count2;
 	logic draw_pt1;
 	logic change_height;
@@ -39,21 +46,25 @@ module draw_pterosaur(  input Clk50, pixel_Clk, frame_Clk, Reset,
 				begin
 					PosY = 120;
 					pt_off = 1'b0;
+					//reference = 120;
 				end
 			Height2 :
 				begin
 					PosY = 210;
 					pt_off = 1'b0;
+					//reference = 210;
 				end
 			Height3:
 				begin
 					PosY = 300;
 					pt_off = 1'b0;
+					//reference = 300
 				end
 			None :
 				begin
 					PosY = 480;
 					pt_off = 1'b1;
+					// reference = 500;
 				end
 		endcase
 	end
@@ -66,6 +77,18 @@ module draw_pterosaur(  input Clk50, pixel_Clk, frame_Clk, Reset,
 		DistY = WriteY - PosY;
 	end
 	
+//	always_comb 
+//	begin
+//		if (Dead)
+//		begin
+//			Y_Motion = 0;
+//			X_Motion = 0;
+//		end
+//		else if (Speed_up)
+//			X_Motion = X_Motion*2;
+//		else
+//			X_Motion = X_Motion;
+//	end
 	always_ff @ (posedge frame_Clk)
 	begin
 		if (frame_count1 == 10)
@@ -85,7 +108,12 @@ module draw_pterosaur(  input Clk50, pixel_Clk, frame_Clk, Reset,
 				PosX <= 640;
 			end
 			else
+			begin
+//				Y_Motion <= $5cos(PosY-reference);
+//				PosY <= PosY + Y_Motion;
+//				PosX <= PosX + X_Motion;
 				PosX <= PosX - 2;
+			end
 			frame_count2 <= 1;
 		end
 		else
@@ -123,7 +151,7 @@ module draw_pterosaur(  input Clk50, pixel_Clk, frame_Clk, Reset,
 	//Change height according to the random number
 	always_ff @ (posedge change_height)
 	begin:Choose_height
-		if (Cactus_PosX + Cactus_SizeX > 320)
+		if (Cactus_PosX + Cactus_SizeX > 320 || Cactus_Pox < 0)
 			draw_type = None;
 		else
 		begin
