@@ -162,34 +162,34 @@ logic Reset_h, vssig, blank, sync, VGA_Clk;
 //instantiate a vga_controller, ball, and color_mapper here with the ports.
 vga_controller vga0(
 							.Clk(MAX10_CLK1_50),       // 50 MHz clock
-                     .Reset(Reset_h),     // reset signal
-                     .hs(VGA_HS),        // Horizontal sync pulse.  Active low
-							.vs(VGA_VS),        // Vertical sync pulse.  Active low
-							.pixel_clk(VGA_Clk), // 25 MHz pixel clock output
-							.blank(blank),     // Blanking interval indicator.  Active low.
-							.sync(sync),      // Composite Sync signal.  Active low.  We don't use it in this lab,
+                     .Reset(Reset_h),     		// reset signal
+                     .hs(VGA_HS),        			// Horizontal sync pulse.  Active low
+							.vs(VGA_VS),        			// Vertical sync pulse.  Active low
+							.pixel_clk(VGA_Clk), 		// 25 MHz pixel clock output
+							.blank(blank),     			// Blanking interval indicator.  Active low.
+							.sync(sync),      			// Composite Sync signal.  Active low.  We don't use it in this lab,
 												             //   but the video DAC on the DE2 board requires an input for it.
-							.DrawX(drawxsig),     // horizontal coordinate
-							.DrawY(drawysig) );   // vertical coordinate);
-ball ball0(.Reset(Reset_h), 
-			  .frame_clk(VGA_VS),
-			  .keycode(keycode),
-           .BallX(runnerxsig), 
-			  .BallY(runnerysig), 
-			  .BallS(ballsizesig) );
-color_mapper color0(.Clk50(MAX10_CLK1_50),//modified here
-						  .pixel_Clk(VGA_Clk),	//modified here
-						  .frame_Clk(VGA_VS),	//modified here
-						  .Reset(Reset_h),		//modified here
-						  .blank(blank),			//modified here
-						  .row_Clk(VGA_HS),		//modified here
-						  .PosX(runnerxsig), 
-						  .PosY(runnerysig), 
-						  .DrawX(drawxsig), 
-						  .DrawY(drawysig), 
-                    .Red(Red), 
-						  .Green(Green), 
-						  .Blue(Blue));
+							.DrawX(drawxsig),     		// horizontal coordinate
+							.DrawY(drawysig) );   		// vertical coordinate);
+//ball ball0(.Reset(Reset_h), 
+//			  .frame_clk(VGA_VS),
+//			  .keycode(keycode),
+//           .BallX(runnerxsig), 
+//			  .BallY(runnerysig), 
+//			  .BallS(ballsizesig) );
+gamelogic game(
+					.Clk50(MAX10_CLK1_50),		//modified here
+					.pixel_Clk(VGA_Clk),			//modified here
+					.frame_Clk(VGA_VS),			//modified here
+					.Reset(Reset_h),				//modified here
+					.blank(blank),					//modified here
+					.row_Clk(VGA_HS),				//modified here
+					.keycode(keycode),			//modified here
+					.DrawX(drawxsig), 
+					.DrawY(drawysig), 
+               .Red(Red), 
+					.Green(Green), 
+					.Blue(Blue));
 
 
 endmodule
