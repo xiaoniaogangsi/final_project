@@ -53,13 +53,13 @@ module draw_pterosaur(  input Clk50, pixel_Clk, frame_Clk, Reset,
 		unique case (draw_type)
 			Height1 : 
 				begin
-					PosY = 200;
+					PosY = 210;
 					pt_off = 1'b0;
 					//reference = 120;
 				end
 			Height2 :
 				begin
-					PosY = 250;
+					PosY = 260;
 					pt_off = 1'b0;
 					//reference = 210;
 				end
@@ -121,7 +121,7 @@ module draw_pterosaur(  input Clk50, pixel_Clk, frame_Clk, Reset,
 			begin
 				if (PosX <= 640 && PosX > 0)
 					change_height <= 0;
-				if (PosX <= -pterosaur_X)	//Need a multiple of X_Motion.
+				if (PosX <= -pterosaur_X)
 				begin
 					change_height <= 1;
 					PosX <= 1000;
