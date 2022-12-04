@@ -105,21 +105,21 @@ module palette(input logic [3:0] color,
 			end
 			4'h1:
 			begin
-				Red = 8'hEF;
-				Green = 8'hEF;
-				Blue = 8'hEF;
+				Red = 8'h1F;
+				Green = 8'h1F;
+				Blue = 8'h1F;
 			end
 			4'h2:
 			begin
-				Red = 8'hF0;
-				Green = 8'hF0;
-				Blue = 8'hF0;
+				Red = 8'h00;
+				Green = 8'h00;
+				Blue = 8'h00;
 			end
 			4'h3:
 			begin
-				Red = 8'hF6;
-				Green = 8'hF6;
-				Blue = 8'hF6;
+				Red = 8'h06;
+				Green = 8'h06;
+				Blue = 8'h06;
 			end
 			4'h4:		//Background Color: At night is #202020
 			begin
@@ -129,21 +129,21 @@ module palette(input logic [3:0] color,
 			end
 			4'h5:
 			begin
-				Red = 8'hF8;
-				Green = 8'hF8;
-				Blue = 8'hF8;
+				Red = 8'h08;
+				Green = 8'h08;
+				Blue = 8'h08;
 			end
 			4'h6:
 			begin
-				Red = 8'hFE;
-				Green = 8'hFE;
-				Blue = 8'hFE;
+				Red = 8'h0E;
+				Green = 8'h0E;
+				Blue = 8'h0E;
 			end
 			4'h7:
-			begin
-				Red = 8'hFF;
-				Green = 8'hFF;
-				Blue = 8'hFF;
+			begin		//White become black.
+				Red = 8'h00;
+				Green = 8'h00;
+				Blue = 8'h00;
 			end
 			4'h8:	//At night is #ACACAC
 			begin

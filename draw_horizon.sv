@@ -1,4 +1,5 @@
-module draw_horizon (input Clk50, pixel_Clk, frame_Clk,
+module draw_horizon (input Clk50, pixel_Clk, frame_Clk, Reset,
+								input Dead,
 								input [9:0] WriteX, WriteY,
 								input [9:0] DrawX, DrawY,
 								output logic horizon_on_wr,
@@ -16,12 +17,15 @@ module draw_horizon (input Clk50, pixel_Clk, frame_Clk,
 	int PosX, PosY;
 	int SizeX, SizeY, DistX, DistY;
 	
+	int X_Motion;
+	
 	initial
 	begin
 		PosX = 0;
 		PosY = 400;
 		frame_count = 1;
 		start = horizon;
+		X_Motion = 4;
 	end
 	
 	always_comb
@@ -32,17 +36,35 @@ module draw_horizon (input Clk50, pixel_Clk, frame_Clk,
 		DistY = WriteY - PosY;
 	end
 	
-	always_ff @ (posedge frame_Clk)
+	always_comb
 	begin
-		if (frame_count == 1)
+		if (Dead)
+			X_Motion = 0;
+		else
+			X_Motion = 4;
+	end
+	
+	always_ff @ (posedge frame_Clk or posedge Reset)
+	begin
+		if (Reset)
 		begin
-			start <= start + 2;
-			if (start == horizon + 2400)
-				start <= horizon;
+			PosX <= 0;
+			PosY <= 400;
 			frame_count <= 1;
+			start <= horizon;
 		end
 		else
-			frame_count <= frame_count + 1;
+		begin
+			if (frame_count == 1)
+			begin
+				start <= start + X_Motion;
+				if (start == horizon + 2400)
+					start <= horizon;
+				frame_count <= 1;
+			end
+			else
+				frame_count <= frame_count + 1;
+		end
 	end
 	
 //	always_ff @ (posedge Clk50)

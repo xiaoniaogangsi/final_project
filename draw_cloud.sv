@@ -1,4 +1,4 @@
-module draw_cloud (	input Clk50, pixel_Clk, frame_Clk,
+module draw_cloud (	input Clk50, pixel_Clk, frame_Clk, Reset,
 							input [9:0] WriteX, WriteY,
 							input [9:0] DrawX, DrawY,
 							output logic cloud_on_wr,
@@ -46,19 +46,27 @@ module draw_cloud (	input Clk50, pixel_Clk, frame_Clk,
 		DistY = WriteY - PosY;
 	end
 	
-	always_ff @ (posedge frame_Clk)
+	always_ff @ (posedge frame_Clk or posedge Reset)
 	begin
-		if (frame_count == 1)
+		if (Reset)
 		begin
-//			if ((~PosX)+1  == cloud_X)
-			if (PosX == -cloud_X)
-				PosX <= 640;
-			else
-				PosX <= PosX - 1;
 			frame_count <= 1;
+			PosX <= 640;
 		end
 		else
-			frame_count <= frame_count + 1;
+		begin
+			if (frame_count == 1)
+			begin
+	//			if ((~PosX)+1  == cloud_X)
+				if (PosX <= -cloud_X)
+					PosX <= 640;
+				else
+					PosX <= PosX - 1;
+				frame_count <= 1;
+			end
+			else
+				frame_count <= frame_count + 1;
+		end
 	end
 	
 //	always_ff @ (posedge Clk50)

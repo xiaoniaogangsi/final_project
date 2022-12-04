@@ -1,6 +1,7 @@
 module draw_score (	input Clk50, pixel_Clk, frame_Clk, Reset,
 							input [9:0] WriteX, WriteY,
 							input [9:0] DrawX, DrawY,
+							input Dead,
 							output logic [2:0] score_on_dr,
 							output logic [2:0] score_on_wr,
 							output logic [17:0] address,
@@ -52,11 +53,13 @@ module draw_score (	input Clk50, pixel_Clk, frame_Clk, Reset,
 	int DistX, DistY, SizeX, SizeY;
 	int frame_count;
 	int score;
+	int score_add;
 	
 	initial
 	begin
 		frame_count = 1;
 		score = 0;
+		score_add = 1;
 	end
 	
 	always_comb
@@ -97,6 +100,14 @@ module draw_score (	input Clk50, pixel_Clk, frame_Clk, Reset,
 		end
 	end
 	
+	always_comb
+	begin
+		if (Dead)
+			score_add = 0;
+		else
+			score_add = 1;
+	end
+	
 	always_ff @ (posedge frame_Clk or posedge Reset)
 	begin
 		if (Reset)
@@ -108,7 +119,7 @@ module draw_score (	input Clk50, pixel_Clk, frame_Clk, Reset,
 		begin
 			if (frame_count == 10)
 			begin
-				score <= score + 1;
+				score <= score + score_add;
 				if (score == 100000)
 					score <= 0;
 				frame_count <= 1;

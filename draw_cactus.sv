@@ -2,6 +2,7 @@ module draw_cactus (	input Clk50, pixel_Clk, frame_Clk, Reset,
 							input [9:0] WriteX, WriteY,
 							input [9:0] DrawX, DrawY,
 							input int Ptero_PosX, Ptero_PosY,
+							input Dead,
 							output logic cactus_on_wr,
 							output logic cactus_on_dr,
 							output logic [17:0] address,
@@ -40,6 +41,8 @@ module draw_cactus (	input Clk50, pixel_Clk, frame_Clk, Reset,
 	logic [17:0] cactus_addr;
 	int cactus_X, cactus_Y;
 	logic change_type;
+	
+	int X_Motion;
 	
 	enum logic [2:0] {Large1, Large2, Large3, Small1, Small2, Small3, None} cactus_type, Next_cactus_type;
 
@@ -119,6 +122,7 @@ module draw_cactus (	input Clk50, pixel_Clk, frame_Clk, Reset,
 		PosX = 640;
 		frame_count = 1;
 		change_type = 0;
+		X_Motion = -4;
 	end
 	
 	logic Load_Seed, Done;
@@ -179,23 +183,40 @@ module draw_cactus (	input Clk50, pixel_Clk, frame_Clk, Reset,
 		DistY = WriteY - PosY;
 	end
 	
-	always_ff @ (posedge frame_Clk)
+	always_comb
 	begin
-		if (frame_count == 1)
+		if (Dead)
+			X_Motion = 0;
+		else
+			X_Motion = -4;
+	end
+	
+	always_ff @ (posedge frame_Clk or posedge Reset)
+	begin
+		if (Reset)
 		begin
-			if (PosX == 640)
-				change_type <= 0;
-			if (PosX  == -cactus_X)
-			begin
-				PosX <= 640;
-				change_type <= 1;
-			end
-			else
-				PosX <= PosX - 2;
 			frame_count <= 1;
+			PosX <= 640;
+			change_type <= 0;
 		end
 		else
-			frame_count <= frame_count + 1;
+		begin
+			if (frame_count == 1)
+			begin
+				if (PosX <= 640 && PosX > 0)
+					change_type <= 0;
+				if (PosX <= -160)	//Need a multiple of X_Motion.
+				begin
+					PosX <= 640;
+					change_type <= 1;
+				end
+				else
+					PosX <= PosX + X_Motion;
+				frame_count <= 1;
+			end
+			else
+				frame_count <= frame_count + 1;
+		end
 	end
 	
 //	always_ff @ (posedge Clk50)
