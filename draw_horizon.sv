@@ -1,6 +1,7 @@
 module draw_horizon (input Clk50, pixel_Clk, frame_Clk, Reset,
-								input Dead,
 								input [9:0] WriteX, WriteY,
+								input Dead,
+								input [1:0] Game_State,
 								output logic horizon_on_wr,
 								output logic [17:0] address);
 
@@ -36,7 +37,7 @@ module draw_horizon (input Clk50, pixel_Clk, frame_Clk, Reset,
 	
 	always_comb
 	begin
-		if (Dead)
+		if ((Game_State == 2'b00) || Dead)
 			X_Motion = 0;
 		else
 			X_Motion = 4;

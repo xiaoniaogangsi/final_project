@@ -48,19 +48,25 @@ module  gamelogic ( 	  input 					 Clk50, pixel_Clk, frame_Clk, Reset, blank, ro
 	
 	logic[9:0] WriteX, WriteY;
   
-	draw_runner runner0(.*, .address(address_runner));
-	draw_cloud cloud0(.*, .address(address_cloud));
-	draw_score score0(.*, .address(address_score), .score_out(score));
-	draw_horizon horizon0(.*, .address(address_horizon));
-	draw_cactus cactus0(.*, .address(address_cactus));
-	draw_pterosaur pterosaur0(.*, .address(address_pterosaur));
+	draw_runner runner0(.*, .Reset(Restart), .address(address_runner));
+	draw_cloud cloud0(.*, .Reset(Restart), .address(address_cloud));
+	draw_score score0(.*, .Reset(Restart), .address(address_score), .score_out(score));
+	draw_horizon horizon0(.*, .Reset(Restart), .address(address_horizon));
+	draw_cactus cactus0(.*, .Reset(Restart), .address(address_cactus));
+	draw_pterosaur pterosaur0(.*, .Reset(Restart), .address(address_pterosaur));
 	
 	logic Dead, Enter;
+	logic [1:0] Game_State;
+	logic Restart;
+	always_comb
+	begin
+		Restart = Reset | (Game_State == 2'b00);
+	end
 	
 	control control0(.*,
 					 .keycode(keycode),
 					 .Dino_PosX(PosX), .Dino_PosY(PosY),
-					 .Dead(Dead));
+					 .Dead(Dead), .Game_State(Game_State));
 	
 	
 	logic score_on_1bit;

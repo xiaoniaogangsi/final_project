@@ -2,6 +2,7 @@ module draw_cactus (	input Clk50, pixel_Clk, frame_Clk, Reset,
 							input [9:0] WriteX, WriteY,
 							input int Ptero_PosX, Ptero_PosY,
 							input Dead,
+							input [1:0] Game_State,
 							output logic cactus_on_wr,
 							output logic [17:0] address,
 							output int Cactus_PosX, Cactus_PosY,
@@ -154,10 +155,10 @@ module draw_cactus (	input Clk50, pixel_Clk, frame_Clk, Reset,
 	always_comb
 	begin:Choose_draw_type
 		Next_cactus_type = cactus_type;
-		if (Ptero_PosX + pterosaur_X > 320 || Ptero_PosX < 0)
-			Next_cactus_type = None;
-		else
-		begin
+//		if (Ptero_PosX + pterosaur_X > 320 || Ptero_PosX < 0)
+//			Next_cactus_type = None;
+//		else
+//		begin
 			if (rand_num >= 6'd0 && rand_num < 6'd16)			//Possibility = 1/4
 				Next_cactus_type = Large1;
 			else if (rand_num >= 6'd16 && rand_num < 6'd24) //Possibility = 1/8
@@ -170,7 +171,7 @@ module draw_cactus (	input Clk50, pixel_Clk, frame_Clk, Reset,
 				Next_cactus_type = Small2;
 			else 															//Possibility = 1/8
 				Next_cactus_type = Small3;
-		end
+//		end
 	end
 
 	always_comb
@@ -183,7 +184,7 @@ module draw_cactus (	input Clk50, pixel_Clk, frame_Clk, Reset,
 	
 	always_comb
 	begin
-		if (Dead)
+		if ((Game_State == 2'b00) || Dead)
 			X_Motion = 0;
 		else
 		begin
