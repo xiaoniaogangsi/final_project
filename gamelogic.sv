@@ -25,12 +25,12 @@ module  gamelogic ( 	  input 					 Clk50, pixel_Clk, frame_Clk, Reset, blank, ro
 	logic [7:0] Red_p, Green_p, Blue_p;
 	logic [9:0] PosX, PosY;		//The position of the dinosaur (up-left corner)
 	
-   logic runner_on_dr, runner_on_wr;	
-	logic cloud_on_dr,cloud_on_wr;
-	logic [2:0] score_on_dr,score_on_wr;	//000 means off, 001~101 means on1~on5.
-	logic horizon_on_dr, horizon_on_wr;
-	logic cactus_on_dr, cactus_on_wr;
-	logic pterosaur_on_dr, pterosaur_on_wr;
+   logic runner_on_wr;	
+	logic cloud_on_wr;
+	logic [2:0] score_on_wr;	//000 means off, 001~101 means on1~on5.
+	logic horizon_on_wr;
+	logic cactus_on_wr;
+	logic pterosaur_on_wr;
 	
 	logic isnight;
   

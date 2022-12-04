@@ -1,12 +1,10 @@
 module draw_pterosaur(  input Clk50, pixel_Clk, frame_Clk, Reset,
-							//input Dead,
+							input Dead,
 							//input Speed_up,
 							//input Game_Mode,
-							input [9:0] WriteX, WriteY,
-							input [9:0] DrawX, DrawY,	
+							input [9:0] WriteX, WriteY,	
 							input int Cactus_PosX, Cactus_PosY,
 							input int Cactus_SizeX, Cactus_SizeY,
-							output logic pterosaur_on_dr,
 							output logic pterosaur_on_wr,
 							output int Ptero_PosX, Ptero_PosY,
 							output logic [17:0] address,
@@ -19,8 +17,8 @@ module draw_pterosaur(  input Clk50, pixel_Clk, frame_Clk, Reset,
 	int pterosaur_X = 92;
 	int pterosaur_Y = 80;
 	int PosX, PosY;
-	//int X_Motion = -2;
-	//int Y_Motion = 0;
+	int X_Motion = -4;
+//	int Y_Motion = 0;
 	//int reference = 0;
 	int frame_count1, frame_count2;
 	logic draw_pt1;
@@ -53,13 +51,13 @@ module draw_pterosaur(  input Clk50, pixel_Clk, frame_Clk, Reset,
 		unique case (draw_type)
 			Height1 : 
 				begin
-					PosY = 120;
+					PosY = 210;
 					pt_off = 1'b0;
 					//reference = 120;
 				end
 			Height2 :
 				begin
-					PosY = 210;
+					PosY = 270;
 					pt_off = 1'b0;
 					//reference = 210;
 				end
@@ -86,47 +84,58 @@ module draw_pterosaur(  input Clk50, pixel_Clk, frame_Clk, Reset,
 		DistY = WriteY - PosY;
 	end
 	
-//	always_comb 
-//	begin
-//		if (Dead)
-//		begin
+	always_comb 
+	begin
+		if (Dead)
+		begin
 //			Y_Motion = 0;
-//			X_Motion = 0;
-//		end
+			X_Motion = 0;
+		end
 //		else if (Speed_up)
 //			X_Motion = X_Motion*2;
-//		else
-//			X_Motion = X_Motion;
-//	end
-	always_ff @ (posedge frame_Clk)
+		else
+			X_Motion = -4;
+	end
+	always_ff @ (posedge frame_Clk or posedge Reset)
 	begin
-		if (frame_count1 == 10)
+		if (Reset)
 		begin
-			draw_pt1 <= ~(draw_pt1);
+			PosX <= 1000;
 			frame_count1 <= 1;
+			frame_count2 <= 1;
+			draw_pt1 <= 1'b1;
+			change_height <= 1'b0;
 		end
 		else
-			frame_count1 <= frame_count1 + 1;
-		if (frame_count2 == 1)
 		begin
-			if (PosX == 640)
-				change_height <= 0;
-			if (PosX == -pterosaur_X)
+			if (frame_count1 == 10)
 			begin
-				change_height <= 1;
-				PosX <= 1000;
+				draw_pt1 <= ~(draw_pt1);
+				frame_count1 <= 1;
 			end
 			else
+				frame_count1 <= frame_count1 + 1;
+			if (frame_count2 == 1)
 			begin
-//				Y_Motion <= $5cos(PosY-reference);
-//				PosY <= PosY + Y_Motion;
-//				PosX <= PosX + X_Motion;
-				PosX <= PosX - 2;
+				if (PosX <= 640 && PosX > 0)
+					change_height <= 0;
+				if (PosX <= -pterosaur_X)
+				begin
+					change_height <= 1;
+					PosX <= 1000;
+				end
+				else
+				begin
+	//				Y_Motion <= $cos(PosY-reference);
+	//				PosY <= PosY + Y_Motion;
+					PosX <= PosX + X_Motion;
+	//				PosX <= PosX - 4;
+				end
+				frame_count2 <= 1;
 			end
-			frame_count2 <= 1;
+			else
+				frame_count2 <= frame_count2 + 1;
 		end
-		else
-			frame_count2 <= frame_count2 + 1;
 	end
 	//Random number
 	logic Load_Seed, Done;
@@ -195,18 +204,6 @@ module draw_pterosaur(  input Clk50, pixel_Clk, frame_Clk, Reset,
       pterosaur_on_wr = 1'b1;
     else 
 		pterosaur_on_wr = 1'b0;
-   end
-	
-	always_comb
-   begin:Pterosaur_on_proc
-	 if ((DrawX >= PosX || PosX < 0) &&
-       (DrawX < PosX + pterosaur_X) &&
-       (DrawY >= PosY) &&
-       (DrawY < PosY + pterosaur_Y) &&
-		 (~pt_off))
-      pterosaur_on_dr = 1'b1;
-    else 
-		pterosaur_on_dr = 1'b0;
    end
 	
 	assign Ptero_PosX = PosX;

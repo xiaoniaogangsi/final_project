@@ -1,9 +1,8 @@
 module draw_cactus (	input Clk50, pixel_Clk, frame_Clk, Reset,
 							input [9:0] WriteX, WriteY,
-							input [9:0] DrawX, DrawY,
 							input int Ptero_PosX, Ptero_PosY,
+							input Dead,
 							output logic cactus_on_wr,
-							output logic cactus_on_dr,
 							output logic [17:0] address,
 							output int Cactus_PosX, Cactus_PosY,
 							output int Cactus_SizeX, Cactus_SizeY,
@@ -40,6 +39,8 @@ module draw_cactus (	input Clk50, pixel_Clk, frame_Clk, Reset,
 	logic [17:0] cactus_addr;
 	int cactus_X, cactus_Y;
 	logic change_type;
+	
+	int X_Motion;
 	
 	enum logic [2:0] {Large1, Large2, Large3, Small1, Small2, Small3, None} cactus_type, Next_cactus_type;
 
@@ -119,6 +120,7 @@ module draw_cactus (	input Clk50, pixel_Clk, frame_Clk, Reset,
 		PosX = 640;
 		frame_count = 1;
 		change_type = 0;
+		X_Motion = -4;
 	end
 	
 	logic Load_Seed, Done;
@@ -179,23 +181,45 @@ module draw_cactus (	input Clk50, pixel_Clk, frame_Clk, Reset,
 		DistY = WriteY - PosY;
 	end
 	
-	always_ff @ (posedge frame_Clk)
+	always_comb
 	begin
-		if (frame_count == 1)
+		if (Dead)
+			X_Motion = 0;
+		else
 		begin
-			if (PosX == 640)
-				change_type <= 0;
-			if (PosX  == -cactus_X)
-			begin
-				PosX <= 640;
-				change_type <= 1;
-			end
+			if (PosX <= 4-cactus_X)
+				X_Motion = -2;
 			else
-				PosX <= PosX - 2;
+				X_Motion = -4;
+		end
+	end
+	
+	always_ff @ (posedge frame_Clk or posedge Reset)
+	begin
+		if (Reset)
+		begin
 			frame_count <= 1;
+			PosX <= 640;
+			change_type <= 0;
 		end
 		else
-			frame_count <= frame_count + 1;
+		begin
+			if (frame_count == 1)
+			begin
+				if (PosX <= 640 && PosX > 0)
+					change_type <= 0;
+				if (PosX <= -cactus_X)
+				begin
+					PosX <= 640;
+					change_type <= 1;
+				end
+				else
+					PosX <= PosX + X_Motion;
+				frame_count <= 1;
+			end
+			else
+				frame_count <= frame_count + 1;
+		end
 	end
 	
 //	always_ff @ (posedge Clk50)
@@ -205,30 +229,18 @@ module draw_cactus (	input Clk50, pixel_Clk, frame_Clk, Reset,
 		offset = DistY*SizeX + DistX;
 	end
 	assign address = start + offset;
-
-	 always_comb
-    begin:Cloud_on_proc
-		 if ((DrawX >= PosX || PosX < 0) &&
-			 (DrawX < PosX + cactus_X) &&
-			 (DrawY >= PosY) &&
-			 (DrawY < PosY + cactus_Y) &&
-			 (~ca_off))
-			cactus_on_dr = 1'b1;
-		 else 
-			cactus_on_dr = 1'b0;
-    end 	 
 	 
-	 always_comb
-    begin:Cloud_on_wr_proc
-		 if ((WriteX >= PosX || PosX < 0) &&
+	always_comb
+   begin:Cloud_on_wr_proc
+		if ((WriteX >= PosX || PosX < 0) &&
 			 (WriteX < PosX + cactus_X) &&
 			 (WriteY >= PosY) &&
 			 (WriteY < PosY + cactus_Y) &&
 			 (~ca_off))
 			cactus_on_wr = 1'b1;
-		 else 
+		else 
 			cactus_on_wr = 1'b0;
-    end 
+   end 
 	 
 	assign Cactus_PosX = PosX;
 	assign Cactus_PosY = PosY;

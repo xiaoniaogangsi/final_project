@@ -37,7 +37,7 @@ begin
 	//Duck: Need 3540 16-bit address, 2^12=4096
 	 $readmemh("sprite/duck1_118x60.txt", mem, 62056, 69135);
 	 $readmemh("sprite/duck2_118x60.txt", mem, 69136, 76215);
-	//Game Over: Need 
+	 
 	 $readmemh("sprite/gameover_381x21.txt", mem, 76216, 84216);
 	 
 	 $readmemh("sprite/HI_38x21.txt", mem, 84217, 85014);
