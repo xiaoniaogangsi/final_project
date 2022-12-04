@@ -1,8 +1,6 @@
 module draw_score (	input Clk50, pixel_Clk, frame_Clk, Reset,
 							input [9:0] WriteX, WriteY,
-							input [9:0] DrawX, DrawY,
 							input Dead,
-							output logic [2:0] score_on_dr,
 							output logic [2:0] score_on_wr,
 							output logic [17:0] address,
 							output int score_out);
@@ -185,32 +183,6 @@ module draw_score (	input Clk50, pixel_Clk, frame_Clk, Reset,
 		else
 			score_on_wr = 3'b000;
 	end
-	end 
-	
-	always_comb
-	begin:Score_on_proc
-	if ((blink_count % 50 >= 25) && (blink_count % 50 <= 50))
-		 score_on_dr = 3'b000;
-	else
-	begin
-		if ((DrawY >= score_locY) && (DrawY < score_locY + num_Y))
-		begin
-			if ((DrawX >= score1_locX) && (DrawX < score1_locX + num_X))
-				score_on_dr = 3'b001;
-			else if ((DrawX >= score2_locX) && (DrawX < score2_locX + num_X))
-				score_on_dr = 3'b010;
-			else if ((DrawX >= score3_locX) && (DrawX < score3_locX + num_X))
-				score_on_dr = 3'b011;
-			else if ((DrawX >= score4_locX) && (DrawX < score4_locX + num_X))
-				score_on_dr = 3'b100;
-			else if ((DrawX >= score5_locX) && (DrawX < score5_locX + num_X))
-				score_on_dr = 3'b101;
-			else 
-				score_on_dr = 3'b000;
-		end
-		else
-			score_on_dr = 3'b000;
-	end 
 	end
 	
 	assign score_out = score;

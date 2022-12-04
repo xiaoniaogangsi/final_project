@@ -1,10 +1,8 @@
 module draw_cactus (	input Clk50, pixel_Clk, frame_Clk, Reset,
 							input [9:0] WriteX, WriteY,
-							input [9:0] DrawX, DrawY,
 							input int Ptero_PosX, Ptero_PosY,
 							input Dead,
 							output logic cactus_on_wr,
-							output logic cactus_on_dr,
 							output logic [17:0] address,
 							output int Cactus_PosX, Cactus_PosY,
 							output int Cactus_SizeX, Cactus_SizeY,
@@ -188,7 +186,12 @@ module draw_cactus (	input Clk50, pixel_Clk, frame_Clk, Reset,
 		if (Dead)
 			X_Motion = 0;
 		else
-			X_Motion = -4;
+		begin
+			if (PosX <= 4-cactus_X)
+				X_Motion = -2;
+			else
+				X_Motion = -4;
+		end
 	end
 	
 	always_ff @ (posedge frame_Clk or posedge Reset)
@@ -205,7 +208,7 @@ module draw_cactus (	input Clk50, pixel_Clk, frame_Clk, Reset,
 			begin
 				if (PosX <= 640 && PosX > 0)
 					change_type <= 0;
-				if (PosX <= -160)	//Need a multiple of X_Motion.
+				if (PosX <= -cactus_X)
 				begin
 					PosX <= 640;
 					change_type <= 1;
@@ -226,30 +229,18 @@ module draw_cactus (	input Clk50, pixel_Clk, frame_Clk, Reset,
 		offset = DistY*SizeX + DistX;
 	end
 	assign address = start + offset;
-
-	 always_comb
-    begin:Cloud_on_proc
-		 if ((DrawX >= PosX || PosX < 0) &&
-			 (DrawX < PosX + cactus_X) &&
-			 (DrawY >= PosY) &&
-			 (DrawY < PosY + cactus_Y) &&
-			 (~ca_off))
-			cactus_on_dr = 1'b1;
-		 else 
-			cactus_on_dr = 1'b0;
-    end 	 
 	 
-	 always_comb
-    begin:Cloud_on_wr_proc
-		 if ((WriteX >= PosX || PosX < 0) &&
+	always_comb
+   begin:Cloud_on_wr_proc
+		if ((WriteX >= PosX || PosX < 0) &&
 			 (WriteX < PosX + cactus_X) &&
 			 (WriteY >= PosY) &&
 			 (WriteY < PosY + cactus_Y) &&
 			 (~ca_off))
 			cactus_on_wr = 1'b1;
-		 else 
+		else 
 			cactus_on_wr = 1'b0;
-    end 
+   end 
 	 
 	assign Cactus_PosX = PosX;
 	assign Cactus_PosY = PosY;

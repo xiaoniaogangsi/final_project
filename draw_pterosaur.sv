@@ -2,11 +2,9 @@ module draw_pterosaur(  input Clk50, pixel_Clk, frame_Clk, Reset,
 							input Dead,
 							//input Speed_up,
 							//input Game_Mode,
-							input [9:0] WriteX, WriteY,
-							input [9:0] DrawX, DrawY,	
+							input [9:0] WriteX, WriteY,	
 							input int Cactus_PosX, Cactus_PosY,
 							input int Cactus_SizeX, Cactus_SizeY,
-							output logic pterosaur_on_dr,
 							output logic pterosaur_on_wr,
 							output int Ptero_PosX, Ptero_PosY,
 							output logic [17:0] address,
@@ -59,7 +57,7 @@ module draw_pterosaur(  input Clk50, pixel_Clk, frame_Clk, Reset,
 				end
 			Height2 :
 				begin
-					PosY = 260;
+					PosY = 270;
 					pt_off = 1'b0;
 					//reference = 210;
 				end
@@ -206,18 +204,6 @@ module draw_pterosaur(  input Clk50, pixel_Clk, frame_Clk, Reset,
       pterosaur_on_wr = 1'b1;
     else 
 		pterosaur_on_wr = 1'b0;
-   end
-	
-	always_comb
-   begin:Pterosaur_on_proc
-	 if ((DrawX >= PosX || PosX < 0) &&
-       (DrawX < PosX + pterosaur_X) &&
-       (DrawY >= PosY) &&
-       (DrawY < PosY + pterosaur_Y) &&
-		 (~pt_off))
-      pterosaur_on_dr = 1'b1;
-    else 
-		pterosaur_on_dr = 1'b0;
    end
 	
 	assign Ptero_PosX = PosX;

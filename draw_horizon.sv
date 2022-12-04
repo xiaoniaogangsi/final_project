@@ -1,9 +1,7 @@
 module draw_horizon (input Clk50, pixel_Clk, frame_Clk, Reset,
 								input Dead,
 								input [9:0] WriteX, WriteY,
-								input [9:0] DrawX, DrawY,
 								output logic horizon_on_wr,
-								output logic horizon_on_dr,
 								output logic [17:0] address);
 
 	//$readmemh("sprite/horizon_2400x24.txt", mem, 85015, 142614);
@@ -79,24 +77,10 @@ module draw_horizon (input Clk50, pixel_Clk, frame_Clk, Reset,
 	 if ((WriteX >= PosX) &&
        (WriteX < PosX + window_X) &&
        (WriteY >= PosY) &&
-       (WriteY < PosY + horizon_Y)
-//		 && (istransparent == 1'b0)
-		 )
+       (WriteY < PosY + horizon_Y))
       horizon_on_wr = 1'b1;
     else 
 		horizon_on_wr = 1'b0;
    end
-	
-		always_comb
-   begin:Horizon_on_proc
-	 if ((DrawX >= PosX) &&
-       (DrawX < PosX + window_X) &&
-       (DrawY >= PosY) &&
-       (DrawY < PosY + horizon_Y)
-//		 && (istransparent == 1'b0)
-		 )
-      horizon_on_dr = 1'b1;
-    else 
-		horizon_on_dr = 1'b0;
-   end
+
 endmodule
