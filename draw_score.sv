@@ -1,6 +1,7 @@
 module draw_score (	input Clk50, pixel_Clk, frame_Clk, Reset,
 							input [9:0] WriteX, WriteY,
 							input Dead,
+							input [1:0] Game_State,
 							output logic [2:0] score_on_wr,
 							output logic [17:0] address,
 							output int score_out);
@@ -100,7 +101,7 @@ module draw_score (	input Clk50, pixel_Clk, frame_Clk, Reset,
 	
 	always_comb
 	begin
-		if (Dead)
+		if ((Game_State == 2'b00) || Dead)
 			score_add = 0;
 		else
 			score_add = 1;

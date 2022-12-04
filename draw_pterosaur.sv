@@ -1,7 +1,7 @@
 module draw_pterosaur(  input Clk50, pixel_Clk, frame_Clk, Reset,
 							input Dead,
 							//input Speed_up,
-							//input Game_Mode,
+							input [1:0] Game_State,
 							input [9:0] WriteX, WriteY,	
 							input int Cactus_PosX, Cactus_PosY,
 							input int Cactus_SizeX, Cactus_SizeY,
@@ -86,7 +86,7 @@ module draw_pterosaur(  input Clk50, pixel_Clk, frame_Clk, Reset,
 	
 	always_comb 
 	begin
-		if (Dead)
+		if ((Game_State == 2'b00) || Dead)
 		begin
 //			Y_Motion = 0;
 			X_Motion = 0;
@@ -100,7 +100,7 @@ module draw_pterosaur(  input Clk50, pixel_Clk, frame_Clk, Reset,
 	begin
 		if (Reset)
 		begin
-			PosX <= 1000;
+			PosX <= 800;
 			frame_count1 <= 1;
 			frame_count2 <= 1;
 			draw_pt1 <= 1'b1;
@@ -122,7 +122,7 @@ module draw_pterosaur(  input Clk50, pixel_Clk, frame_Clk, Reset,
 				if (PosX <= -pterosaur_X)
 				begin
 					change_height <= 1;
-					PosX <= 1000;
+					PosX <= 800;
 				end
 				else
 				begin
@@ -170,7 +170,7 @@ module draw_pterosaur(  input Clk50, pixel_Clk, frame_Clk, Reset,
 	always_comb
 	begin:Choose_height
 		Next_draw_type = draw_type;
-		if (Cactus_PosX + Cactus_SizeX > 320 || Cactus_PosX < 0)
+		if (Cactus_PosX + Cactus_SizeX < 320 || Cactus_PosX < 0)
 			Next_draw_type = None;
 		else
 		begin
