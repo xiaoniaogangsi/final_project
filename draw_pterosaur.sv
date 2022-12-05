@@ -100,7 +100,7 @@ module draw_pterosaur(  input Clk50, pixel_Clk, frame_Clk, Reset,
 	begin
 		if (Reset)
 		begin
-			PosX <= 800;
+			PosX <= 980;
 			frame_count1 <= 1;
 			frame_count2 <= 1;
 			draw_pt1 <= 1'b1;
@@ -122,7 +122,7 @@ module draw_pterosaur(  input Clk50, pixel_Clk, frame_Clk, Reset,
 				if (PosX <= -pterosaur_X)
 				begin
 					change_height <= 1;
-					PosX <= 800;
+					PosX <= 980;
 				end
 				else
 				begin
@@ -149,14 +149,9 @@ module draw_pterosaur(  input Clk50, pixel_Clk, frame_Clk, Reset,
 		Load_Seed = 1;
 		pulse_counter = 0;
 	end
-	always_ff @ (posedge frame_Clk or posedge Reset)
+	always_ff @ (posedge frame_Clk)
 	begin
-		if (Reset)
-		begin
-			Load_Seed <= 1;
-			pulse_counter <= 0;
-		end
-		else if (pulse_counter >= 2)
+		if (pulse_counter >= 2)
 		begin
 			Load_Seed <= 0;
 			pulse_counter <= 2;
@@ -170,7 +165,7 @@ module draw_pterosaur(  input Clk50, pixel_Clk, frame_Clk, Reset,
 	always_comb
 	begin:Choose_height
 		Next_draw_type = draw_type;
-		if (Cactus_PosX + Cactus_SizeX < 320 || Cactus_PosX < 0)
+		if (Cactus_PosX + Cactus_SizeX > 320 || Cactus_PosX < 0)
 			Next_draw_type = None;
 		else
 		begin
