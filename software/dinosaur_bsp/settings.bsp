@@ -2,8 +2,8 @@
 <sch:Settings xmlns:sch="http://www.altera.com/embeddedsw/bsp/schema">
         <BspType>hal</BspType>
         <BspVersion>default</BspVersion>
-        <BspGeneratedTimeStamp>2022-12-4 16:50:59</BspGeneratedTimeStamp>
-        <BspGeneratedUnixTimeStamp>1670194259483</BspGeneratedUnixTimeStamp>
+        <BspGeneratedTimeStamp>2022-12-4 22:06:16</BspGeneratedTimeStamp>
+        <BspGeneratedUnixTimeStamp>1670213176543</BspGeneratedUnixTimeStamp>
         <BspGeneratedLocation>D:\Quartus\lizhuang.20\Documents\ece385\final_project\software\dinosaur_bsp</BspGeneratedLocation>
         <BspSettingsFile>settings.bsp</BspSettingsFile>
         <SopcDesignFile>..\..\lab62_soc.sopcinfo</SopcDesignFile>

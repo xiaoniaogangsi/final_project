@@ -18,7 +18,7 @@ module  gamelogic ( 	  input 					 Clk50, pixel_Clk, frame_Clk, Reset, blank, ro
 							  input 			[7:0]	 keycode,
                        output logic [7:0]  Red, Green, Blue );
 	 
-	logic [17:0] address_runner, address_cloud, address_score, address_horizon, address_cactus, address_pterosaur;
+	logic [17:0] address_runner, address_cloud, address_score, address_horizon, address_cactus, address_pterosaur, address_over;
 	logic [17:0] draw_address;	//current Address for the picture we want to draw (start+offset)
 	logic [3:0] color_index;		//color index we get from the ROM
 	logic [3:0] color_index_buffer; //color index from frame_buffer
@@ -31,6 +31,7 @@ module  gamelogic ( 	  input 					 Clk50, pixel_Clk, frame_Clk, Reset, blank, ro
 	logic horizon_on_wr;
 	logic cactus_on_wr;
 	logic pterosaur_on_wr;
+	logic [2:0] over_on_wr;
 	
 	logic isnight;
   
@@ -54,6 +55,7 @@ module  gamelogic ( 	  input 					 Clk50, pixel_Clk, frame_Clk, Reset, blank, ro
 	draw_horizon horizon0(.*, .Reset(Restart), .address(address_horizon));
 	draw_cactus cactus0(.*, .Reset(Restart), .address(address_cactus));
 	draw_pterosaur pterosaur0(.*, .Reset(Restart), .address(address_pterosaur));
+	draw_over over0(.*, .Reset(Restart), .address(address_over));
 	
 	logic Dead, Enter;
 	logic [1:0] Game_State;
@@ -69,20 +71,21 @@ module  gamelogic ( 	  input 					 Clk50, pixel_Clk, frame_Clk, Reset, blank, ro
 					 .Dead(Dead), .Game_State(Game_State));
 	
 	
-	logic score_on_1bit;
+	logic score_on_1bit, over_on_1bit;
 	assign score_on_1bit = (score_on_wr == 3'b000)? 1'b0 : 1'b1;
+	assign over_on_1bit = (over_on_wr == 3'b000)? 1'b0 : 1'b1;
 	logic [2:0] write_which_layer;	//Indicate we are writing which layer, 000 means no writing.
 	
 	Draw_Engine draw(.*, 
 						  .Draw_Back(~horizon_on_wr), .Draw_Ground(horizon_on_wr),   //layer_1
 						  .Draw_Cloud(cloud_on_wr),  //layer_2
 						  .Draw_Cactus(cactus_on_wr), .Draw_Buff(1'b0), .Draw_Rock(1'b0), .Draw_Pterosaur(pterosaur_on_wr), //layer_3
-						  .Draw_Score(score_on_1bit), .Draw_Fire(1'b0), .Draw_Runner(runner_on_wr), .Draw_Start(1'b0), .Draw_Over(1'b0), //layer_4						   
+						  .Draw_Score(score_on_1bit), .Draw_Fire(1'b0), .Draw_Runner(runner_on_wr), .Draw_Start(1'b0), .Draw_Over(over_on_1bit), //layer_4						   
 						  
 						  .address_Back(18'd20), .address_Ground(address_horizon), 
 						  .address_Cloud(address_cloud),  
 						  .address_Cactus(address_cactus), .address_Buff(18'd0), .address_Rock(18'd0), .address_Pterosaur(address_pterosaur),
-						  .address_Score(address_score), .address_Fire(18'd0), .address_Runner(address_runner), .address_Start(18'd0), .address_Over(18'd0),
+						  .address_Score(address_score), .address_Fire(18'd0), .address_Runner(address_runner), .address_Start(18'd0), .address_Over(address_over),
 						  .DrawX(DrawX), .DrawY(DrawY),
 						  .draw_address(draw_address),
 						  .write_X(WriteX), .write_Y(WriteY),

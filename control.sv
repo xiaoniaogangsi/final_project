@@ -66,7 +66,7 @@ module control (input Reset, frame_Clk,
 			unique case (State)
 				Start:
 				begin
-					if (keycode == 8'h2C)	//Press Space to start
+					if (keycode == 8'h2C || keycode == 8'h52)	//Press Space or Up to start
 						Next_State = Game;
 				end
 				Game :
@@ -146,12 +146,12 @@ module control (input Reset, frame_Clk,
 				begin
 					//keycode processing
 					case (keycode)
-						8'h2C : //SPACE
+						8'h2C, 8'h52 : //SPACE or UP
 						begin
-						if (Jump_counter < 60)
+						if (Jump_counter < 30)
 							Jump_counter <= Jump_counter+1;
 						else
-							Jump_counter <= 60;
+							Jump_counter <= 30;
 						end
 									
 						8'h51 : //DOWN
@@ -170,7 +170,7 @@ module control (input Reset, frame_Clk,
 					
 					if (keycode == 8'h00)
 					begin
-						if (Jump_counter > 0 && Jump_counter <= 30)
+						if (Jump_counter > 0 && Jump_counter <= 15)
 						begin
 							if (Bottom == Ground_Level)
 								mydragon.Dragon_Y_Motion <= -10;
@@ -178,7 +178,7 @@ module control (input Reset, frame_Clk,
 							else
 								mydragon.Dragon_Y_Motion <= mydragon.Dragon_Y_Motion;
 						end
-						else if (Jump_counter > 30)
+						else if (Jump_counter > 15)
 						begin
 							if (Bottom == Ground_Level)
 								mydragon.Dragon_Y_Motion <= -11;
@@ -187,7 +187,7 @@ module control (input Reset, frame_Clk,
 								mydragon.Dragon_Y_Motion <= mydragon.Dragon_Y_Motion;
 						end
 					end
-					else if (keycode == 8'h2C && Jump_counter == 60)
+					else if ((keycode == 8'h2C || keycode == 8'h52) && Jump_counter == 30)
 					begin
 						if (Bottom == Ground_Level)
 							mydragon.Dragon_Y_Motion <= -11;
