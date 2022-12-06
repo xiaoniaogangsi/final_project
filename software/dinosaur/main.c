@@ -138,32 +138,38 @@ void setKeycode(WORD keycode)
 	IOWR_ALTERA_AVALON_PIO_DATA(KEYCODE_BASE, keycode);
 }
 
-BYTE easter_egg(WORD keycode, BYTE flag)
+int easter_egg(WORD keycode, int flag)
 {
 	WORD pio_val = IORD_ALTERA_AVALON_PIO_DATA(EASTER_EGG_BASE);
-	if (keycode == 12 && flag == 0){	//keycode gets "I"
-		flag = 1;
-		printf(flag);
-	}else if (keycode != 0){flag = 0;}
-	if (keycode == 14 && flag == 1){	//keycode gets "K"
-		flag = 2;
-		printf(flag);
-	}else if (keycode != 0){flag = 0;}
-	if (keycode == 24 && flag == 2){	//keycode gets "U"
-		flag = 3;
-		printf(flag);
-	}else if (keycode != 0){flag = 0;}
-	if (keycode == 17 && flag == 3){	//keycode gets "N"
-		flag = 4;
-		printf(flag);
-	}else if (keycode != 0){flag = 0;}
-	if (flag == 4){
-		pio_val = 1;
-		if (keycode == 41){		//keycode gets "Esc"
-			flag = 0;
-			pio_val = 0;
+	switch (flag){
+	case 0:
+		if (keycode == 0x0c){		//keycode gets "I" (12)
+			flag = 1;
 		}
-	}else {pio_val = 0;}
+		break;
+	case 1:
+		if (keycode == 0x0e){		//keycode gets "K" (14)
+			flag = 2;
+		}else if (keycode != 0x00){flag = 0;}
+		break;
+	case 2:
+		if (keycode == 0x18){		//keycode gets "U" (24)
+			flag = 3;
+		}else if (keycode != 0x00){flag = 0;}
+		break;
+	case 3:
+		if (keycode == 0x11){		//keycode gets "N" (17)
+			flag = 4;
+		}else if (keycode != 0x00){flag = 0;}
+		break;
+	case 4:
+		pio_val = 0x01;
+		if (keycode == 0x29 || keycode == 0x28){		//keycode gets "Esc" (41) or "Enter" (40)
+			flag = 0;
+			pio_val = 0x00;
+		}
+		break;
+	}
 
 	IOWR_ALTERA_AVALON_PIO_DATA(EASTER_EGG_BASE, pio_val);
 	return flag;
@@ -177,9 +183,9 @@ int main() {
 	BYTE runningdebugflag = 0;//flag to dump out a bunch of information when we first get to USB_STATE_RUNNING
 	BYTE errorflag = 0; //flag once we get an error device so we don't keep dumping out state info
 	BYTE device;
-	WORD keycode;
+	WORD keycode = IORD_ALTERA_AVALON_PIO_DATA(KEYCODE_BASE);
 
-	BYTE eggflag = 0;
+	int eggflag = 0;
 
 	printf("initializing MAX3421E...\n");
 	MAX3421E_init();
@@ -213,6 +219,35 @@ int main() {
 				printSignedHex0(kbdbuf.keycode[0]);
 				printSignedHex1(kbdbuf.keycode[1]);
 				printf("\n");
+
+				eggflag = easter_egg(kbdbuf.keycode[0], eggflag);
+				switch (eggflag){
+				case 0: //000
+					clearLED(3);
+					clearLED(4);
+					clearLED(5);
+					break;
+				case 1: //001
+					setLED(3);
+					clearLED(4);
+					clearLED(5);
+					break;
+				case 2: //010
+					clearLED(3);
+					setLED(4);
+					clearLED(5);
+					break;
+				case 3:	//011
+					setLED(3);
+					setLED(4);
+					clearLED(5);
+					break;
+				case 4:	//100
+					clearLED(3);
+					clearLED(4);
+					setLED(5);
+					break;
+				}
 			}
 
 			else if (device == 2) {
@@ -266,7 +301,6 @@ int main() {
 			errorflag = 0;
 			clearLED(9);
 		}
-		eggflag = easter_egg(kbdbuf.keycode[0], eggflag);
 	}
 	return 0;
 }
