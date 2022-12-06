@@ -16,9 +16,10 @@
 module  gamelogic ( 	  input 					 Clk50, pixel_Clk, frame_Clk, Reset, blank, row_Clk,
 							  input        [9:0]  DrawX, DrawY,
 							  input 			[7:0]	 keycode,
+							  input 			[7:0]  easter_egg,
                        output logic [7:0]  Red, Green, Blue );
 	 
-	logic [17:0] address_runner, address_cloud, address_score, address_horizon, address_cactus, address_pterosaur, address_over;
+	logic [17:0] address_runner, address_cloud, address_score, address_horizon, address_cactus, address_pterosaur, address_over, address_hscore;
 	logic [17:0] draw_address;	//current Address for the picture we want to draw (start+offset)
 	logic [3:0] color_index;		//color index we get from the ROM
 	logic [3:0] color_index_buffer; //color index from frame_buffer
@@ -32,6 +33,7 @@ module  gamelogic ( 	  input 					 Clk50, pixel_Clk, frame_Clk, Reset, blank, ro
 	logic cactus_on_wr;
 	logic pterosaur_on_wr;
 	logic [2:0] over_on_wr;
+	logic [2:0] hscore_on_wr;
 	
 	logic isnight;
   
@@ -56,6 +58,7 @@ module  gamelogic ( 	  input 					 Clk50, pixel_Clk, frame_Clk, Reset, blank, ro
 	draw_cactus cactus0(.*, .Reset(Restart), .address(address_cactus));
 	draw_pterosaur pterosaur0(.*, .Reset(Restart), .address(address_pterosaur));
 	draw_over over0(.*, .Reset(Restart), .address(address_over));
+	draw_hscore highscore0(.*, .address(address_hscore));
 	
 	logic Dead, Enter;
 	logic [1:0] Game_State;
@@ -71,21 +74,22 @@ module  gamelogic ( 	  input 					 Clk50, pixel_Clk, frame_Clk, Reset, blank, ro
 					 .Dead(Dead), .Game_State(Game_State));
 	
 	
-	logic score_on_1bit, over_on_1bit;
+	logic score_on_1bit, over_on_1bit, hscore_on_1bit;
 	assign score_on_1bit = (score_on_wr == 3'b000)? 1'b0 : 1'b1;
 	assign over_on_1bit = (over_on_wr == 3'b000)? 1'b0 : 1'b1;
+	assign hscore_on_1bit = (hscore_on_wr == 3'b000)? 1'b0 : 1'b1;
 	logic [2:0] write_which_layer;	//Indicate we are writing which layer, 000 means no writing.
 	
 	Draw_Engine draw(.*, 
 						  .Draw_Back(~horizon_on_wr), .Draw_Ground(horizon_on_wr),   //layer_1
 						  .Draw_Cloud(cloud_on_wr),  //layer_2
 						  .Draw_Cactus(cactus_on_wr), .Draw_Buff(1'b0), .Draw_Rock(1'b0), .Draw_Pterosaur(pterosaur_on_wr), //layer_3
-						  .Draw_Score(score_on_1bit), .Draw_Fire(1'b0), .Draw_Runner(runner_on_wr), .Draw_Start(1'b0), .Draw_Over(over_on_1bit), //layer_4						   
+						  .Draw_Score(score_on_1bit), .Draw_Fire(1'b0), .Draw_Runner(runner_on_wr), .Draw_Highscore(hscore_on_1bit), .Draw_Over(over_on_1bit), //layer_4						   
 						  
 						  .address_Back(18'd20), .address_Ground(address_horizon), 
 						  .address_Cloud(address_cloud),  
 						  .address_Cactus(address_cactus), .address_Buff(18'd0), .address_Rock(18'd0), .address_Pterosaur(address_pterosaur),
-						  .address_Score(address_score), .address_Fire(18'd0), .address_Runner(address_runner), .address_Start(18'd0), .address_Over(address_over),
+						  .address_Score(address_score), .address_Fire(18'd0), .address_Runner(address_runner), .address_Highscore(address_hscore), .address_Over(address_over),
 						  .DrawX(DrawX), .DrawY(DrawY),
 						  .draw_address(draw_address),
 						  .write_X(WriteX), .write_Y(WriteY),
@@ -156,11 +160,30 @@ module  gamelogic ( 	  input 					 Clk50, pixel_Clk, frame_Clk, Reset, blank, ro
 			write_en = ~transparent;
 	end
 	
-	frame_buffer frame_buffer0(.Clk50(~Clk50), .pixel_Clk(~pixel_Clk), .Reset(Reset), .write_en(write_en),
-										.write_data(color_index_in),
-										.write_X(WriteX), .read_X(DrawX),
-										.write_Y(WriteY), .read_Y(DrawY),
-										.select(buffer_select),
+	logic write_en_sync, buffer_select_sync;
+	logic [9:0] WriteX_sync, WriteY_sync, DrawX_sync, DrawY_sync;
+	logic [3:0] color_index_sync, color_index_buffer_sync;
+	always_ff @ (posedge Clk50)
+	begin:Sync_50
+		write_en_sync <= write_en;
+		color_index_sync <= color_index_in;
+		buffer_select_sync <= buffer_select;
+		WriteX_sync <= WriteX;
+		WriteY_sync <= WriteY;
+	end
+	
+	always_ff @ (posedge pixel_Clk)
+	begin:Sync_25
+		DrawX_sync <= DrawX;
+		DrawY_sync <= DrawY;
+		color_index_buffer_sync <= color_index_buffer;
+	end
+	
+	frame_buffer frame_buffer0(.Clk50(~Clk50), .pixel_Clk(~pixel_Clk), .Reset(Reset), .write_en(write_en_sync),
+										.write_data(color_index_sync),
+										.write_X(WriteX_sync), .read_X(DrawX_sync),
+										.write_Y(WriteY_sync), .read_Y(DrawY_sync),
+										.select(buffer_select_sync),
 										.read_data(color_index_buffer));
 	
 	always_comb
@@ -171,7 +194,7 @@ module  gamelogic ( 	  input 					 Clk50, pixel_Clk, frame_Clk, Reset, blank, ro
 			isnight = 1'b0;
 	end
 	
-	palette palette0(.*, .color(color_index_buffer),
+	palette palette0(.*, .color(color_index_buffer_sync),
 				.Red(Red_p),
 				.Green(Green_p),
 				.Blue(Blue_p));

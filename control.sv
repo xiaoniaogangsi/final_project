@@ -137,7 +137,7 @@ module control (input Reset, frame_Clk,
 			end
 			else
 			begin
-				if (Dead)
+				if (State == Over || Dead)
 				begin
 					Action <= DEAD;
 					mydragon.Dragon_Y_Motion <= 0;
