@@ -71,7 +71,8 @@ logic Reset_h, vssig, blank, sync, VGA_Clk;
 	logic [9:0] drawxsig, drawysig, runnerxsig, runnerysig, ballsizesig;
 	logic [7:0] Red, Blue, Green;
 	logic [7:0] keycode;
-
+	logic [7:0] easter_egg;
+	
 //=======================================================
 //  Structural coding
 //=======================================================
@@ -154,8 +155,10 @@ logic Reset_h, vssig, blank, sync, VGA_Clk;
 		//LEDs and HEX
 		.hex_digits_export({hex_num_4, hex_num_3, hex_num_1, hex_num_0}),
 		.leds_export({hundreds, signs, LEDR}),
-		.keycode_export(keycode)
+		.keycode_export(keycode),
 		
+		//Easter Egg PIO
+		.easter_egg_export(easter_egg)
 	 );
 
 
@@ -185,6 +188,7 @@ gamelogic game(
 					.blank(blank),					//modified here
 					.row_Clk(VGA_HS),				//modified here
 					.keycode(keycode),			//modified here
+					.easter_egg(easter_egg),	//modified here
 					.DrawX(drawxsig), 
 					.DrawY(drawysig), 
                .Red(Red), 

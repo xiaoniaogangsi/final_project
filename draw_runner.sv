@@ -4,6 +4,7 @@ module draw_runner(  input Clk50, pixel_Clk, frame_Clk, Reset,
 							input Dead,
 							input [1:0] Game_State,
 							input int score,
+							input [7:0] easter_egg,
 							output logic runner_on_wr,
 							output logic [17:0] address);
 	//$readmemh("sprite/run1_88x94.txt", mem, 191323, 199594);
@@ -70,7 +71,7 @@ module draw_runner(  input Clk50, pixel_Clk, frame_Clk, Reset,
 			start = runner1;
 		else
 		begin
-			if (score % 1000 >= 250 && score % 1000 <= 500)
+			if (easter_egg == 8'b00000001)
 			begin
 				if (Game_State == 2'b10 || Dead)
 					start = XKdie;

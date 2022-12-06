@@ -2,8 +2,8 @@
 <sch:Settings xmlns:sch="http://www.altera.com/embeddedsw/bsp/schema">
         <BspType>hal</BspType>
         <BspVersion>default</BspVersion>
-        <BspGeneratedTimeStamp>2022-12-5 21:38:12</BspGeneratedTimeStamp>
-        <BspGeneratedUnixTimeStamp>1670297892121</BspGeneratedUnixTimeStamp>
+        <BspGeneratedTimeStamp>2022-12-6 3:26:59</BspGeneratedTimeStamp>
+        <BspGeneratedUnixTimeStamp>1670318819359</BspGeneratedUnixTimeStamp>
         <BspGeneratedLocation>D:\Quartus\lizhuang.20\Documents\ece385\final_project\software\dinosaur_bsp</BspGeneratedLocation>
         <BspSettingsFile>settings.bsp</BspSettingsFile>
         <SopcDesignFile>..\..\lab62_soc.sopcinfo</SopcDesignFile>
@@ -913,6 +913,12 @@
         <MemoryMap>
                 <slaveDescriptor>sdram_pll</slaveDescriptor>
                 <addressRange>0x00000030 - 0x0000003F</addressRange>
+                <addressSpan>16</addressSpan>
+                <attributes/>
+        </MemoryMap>
+        <MemoryMap>
+                <slaveDescriptor>easter_egg</slaveDescriptor>
+                <addressRange>0x00000040 - 0x0000004F</addressRange>
                 <addressSpan>16</addressSpan>
                 <attributes/>
         </MemoryMap>

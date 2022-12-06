@@ -4,7 +4,7 @@
  * Machine generated for CPU 'nios2_gen2_0' in SOPC Builder design 'lab62_soc'
  * SOPC Builder design path: ../../lab62_soc.sopcinfo
  *
- * Generated: Sat Dec 03 20:57:01 CST 2022
+ * Generated: Tue Dec 06 00:33:49 CST 2022
  */
 
 /*
@@ -178,6 +178,33 @@
 #define ALT_STDOUT_PRESENT
 #define ALT_STDOUT_TYPE "altera_avalon_jtag_uart"
 #define ALT_SYSTEM_NAME "lab62_soc"
+
+
+/*
+ * easter_egg configuration
+ *
+ */
+
+#define ALT_MODULE_CLASS_easter_egg altera_avalon_pio
+#define EASTER_EGG_BASE 0x40
+#define EASTER_EGG_BIT_CLEARING_EDGE_REGISTER 0
+#define EASTER_EGG_BIT_MODIFYING_OUTPUT_REGISTER 0
+#define EASTER_EGG_CAPTURE 0
+#define EASTER_EGG_DATA_WIDTH 8
+#define EASTER_EGG_DO_TEST_BENCH_WIRING 0
+#define EASTER_EGG_DRIVEN_SIM_VALUE 0
+#define EASTER_EGG_EDGE_TYPE "NONE"
+#define EASTER_EGG_FREQ 50000000
+#define EASTER_EGG_HAS_IN 0
+#define EASTER_EGG_HAS_OUT 1
+#define EASTER_EGG_HAS_TRI 0
+#define EASTER_EGG_IRQ -1
+#define EASTER_EGG_IRQ_INTERRUPT_CONTROLLER_ID -1
+#define EASTER_EGG_IRQ_TYPE "NONE"
+#define EASTER_EGG_NAME "/dev/easter_egg"
+#define EASTER_EGG_RESET_VALUE 0
+#define EASTER_EGG_SPAN 16
+#define EASTER_EGG_TYPE "altera_avalon_pio"
 
 
 /*
@@ -442,7 +469,7 @@
 #define SYSID_QSYS_0_IRQ_INTERRUPT_CONTROLLER_ID -1
 #define SYSID_QSYS_0_NAME "/dev/sysid_qsys_0"
 #define SYSID_QSYS_0_SPAN 8
-#define SYSID_QSYS_0_TIMESTAMP 1669082090
+#define SYSID_QSYS_0_TIMESTAMP 1670308244
 #define SYSID_QSYS_0_TYPE "altera_avalon_sysid_qsys"
 
 

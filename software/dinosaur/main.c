@@ -26,6 +26,7 @@ const char* const devclasses[] = { " Uninitialized", " HID Keyboard", " HID Mous
 #define LEDS_PIO_BASE 			0x170
 #define HEX_DIGITS_PIO_BASE		0x180
 #define KEYCODE_BASE			0x1c0
+#define EASTER_EGG_BASE 		0x40
 
 
 BYTE GetDriverandReport() {
@@ -136,6 +137,44 @@ void setKeycode(WORD keycode)
 	//IOWR_ALTERA_AVALON_PIO_DATA(0x8002000, keycode);
 	IOWR_ALTERA_AVALON_PIO_DATA(KEYCODE_BASE, keycode);
 }
+
+int easter_egg(WORD keycode, int flag)
+{
+	WORD pio_val = IORD_ALTERA_AVALON_PIO_DATA(EASTER_EGG_BASE);
+	switch (flag){
+	case 0:
+		if (keycode == 0x0c){		//keycode gets "I" (12)
+			flag = 1;
+		}
+		break;
+	case 1:
+		if (keycode == 0x0e){		//keycode gets "K" (14)
+			flag = 2;
+		}else if (keycode != 0x00){flag = 0;}
+		break;
+	case 2:
+		if (keycode == 0x18){		//keycode gets "U" (24)
+			flag = 3;
+		}else if (keycode != 0x00){flag = 0;}
+		break;
+	case 3:
+		if (keycode == 0x11){		//keycode gets "N" (17)
+			flag = 4;
+		}else if (keycode != 0x00){flag = 0;}
+		break;
+	case 4:
+		pio_val = 0x01;
+		if (keycode == 0x29 || keycode == 0x28){		//keycode gets "Esc" (41) or "Enter" (40)
+			flag = 0;
+			pio_val = 0x00;
+		}
+		break;
+	}
+
+	IOWR_ALTERA_AVALON_PIO_DATA(EASTER_EGG_BASE, pio_val);
+	return flag;
+}
+
 int main() {
 	BYTE rcode;
 	BOOT_MOUSE_REPORT buf;		//USB mouse report
@@ -144,7 +183,9 @@ int main() {
 	BYTE runningdebugflag = 0;//flag to dump out a bunch of information when we first get to USB_STATE_RUNNING
 	BYTE errorflag = 0; //flag once we get an error device so we don't keep dumping out state info
 	BYTE device;
-	WORD keycode;
+	WORD keycode = IORD_ALTERA_AVALON_PIO_DATA(KEYCODE_BASE);
+
+	int eggflag = 0;
 
 	printf("initializing MAX3421E...\n");
 	MAX3421E_init();
@@ -178,6 +219,35 @@ int main() {
 				printSignedHex0(kbdbuf.keycode[0]);
 				printSignedHex1(kbdbuf.keycode[1]);
 				printf("\n");
+
+				eggflag = easter_egg(kbdbuf.keycode[0], eggflag);
+				switch (eggflag){
+				case 0: //000
+					clearLED(3);
+					clearLED(4);
+					clearLED(5);
+					break;
+				case 1: //001
+					setLED(3);
+					clearLED(4);
+					clearLED(5);
+					break;
+				case 2: //010
+					clearLED(3);
+					setLED(4);
+					clearLED(5);
+					break;
+				case 3:	//011
+					setLED(3);
+					setLED(4);
+					clearLED(5);
+					break;
+				case 4:	//100
+					clearLED(3);
+					clearLED(4);
+					setLED(5);
+					break;
+				}
 			}
 
 			else if (device == 2) {
@@ -231,7 +301,6 @@ int main() {
 			errorflag = 0;
 			clearLED(9);
 		}
-
 	}
 	return 0;
 }

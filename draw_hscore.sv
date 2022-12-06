@@ -1,8 +1,8 @@
-module draw_hscore (	input Clk50, pixel_Clk, frame_Clk, Reset,
+module draw_hscore (	input Clk50, pixel_Clk, frame_Clk, Reset, Restart,
 							input [9:0] WriteX, WriteY,
 							input Dead,
 							input [1:0] Game_State,
-							input score,
+							input int score,
 							output logic [2:0] hscore_on_wr,
 							output logic [17:0] address);
 	//For score_on, 000 means off, 001~101 means hscore_on1~hscore_on5, 011 means HI_on.
@@ -59,6 +59,15 @@ module draw_hscore (	input Clk50, pixel_Clk, frame_Clk, Reset,
 	int frame_count;
 	int hscore_add;
 	int hscore;
+	int hscore_store;
+	logic Load;
+	always_comb
+	begin
+		if (hscore > score && Game_State == 2'b10)
+			Load = 1'b1;
+		else
+			Load = 1'b0;
+	end
 	
 	initial
 	begin
@@ -101,7 +110,7 @@ module draw_hscore (	input Clk50, pixel_Clk, frame_Clk, Reset,
 	
 	always_comb
 	begin
-		if ((Game_State == 2'b00) || Dead ||
+		if ((Game_State == 2'b00) || (Game_State == 2'b10) || Dead ||
 			(Game_State == 2'b01 && hscore >= score))
 			hscore_add = 0;
 		else
@@ -113,11 +122,10 @@ module draw_hscore (	input Clk50, pixel_Clk, frame_Clk, Reset,
 		if (Reset)
 		begin
 			frame_count <= 1;
+			hscore <= 0;
 		end
 		else
 		begin
-			if (hscore < score)
-				hscore <= score;
 			if (frame_count == 10)
 			begin
 				hscore <= hscore + hscore_add;
@@ -143,12 +151,12 @@ module draw_hscore (	input Clk50, pixel_Clk, frame_Clk, Reset,
 	always_comb
 	begin
 		case (hscore_on_wr)
-			4'b0110: start = num[hscore1];
-			4'b0111: start = num[hscore2];
-			4'b1000: start = num[hscore3];
-			4'b1001: start = num[hscore4];
-			4'b1010: start = num[hscore5];
-			4'b1011: start = HI;
+			3'b001: start = num[hscore1];
+			3'b010: start = num[hscore2];
+			3'b011: start = num[hscore3];
+			3'b100: start = num[hscore4];
+			3'b101: start = num[hscore5];
+			3'b110: start = HI;
 			default: start = 0;
 		endcase
 		offset = DistY*SizeX + DistX;
@@ -177,5 +185,15 @@ module draw_hscore (	input Clk50, pixel_Clk, frame_Clk, Reset,
 		else
 			hscore_on_wr = 3'b000;
 	end
+	
+//	always_ff @ (posedge frame_Clk or posedge Reset)
+//		begin
+//			if(Reset)
+//			begin
+//				hscore_store <= 0;
+//			end
+//			else if(Load)
+//				hscore_store <= hscore;
+//		end
 	
 endmodule
