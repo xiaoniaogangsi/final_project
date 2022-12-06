@@ -159,7 +159,7 @@ module draw_pterosaur(  input Clk50, pixel_Clk, frame_Clk, Reset,
 		else
 			pulse_counter <= pulse_counter + 1;
 	end
-	LFSR #(6) gen_rand (.*, .Clk(frame_Clk), .Enable(1'b1), .Out(rand_num));
+	LFSR #(6) gen_rand (.*, .Clk(~frame_Clk), .Enable(1'b1), .Out(rand_num));
 	
 	//Change height according to the random number
 	always_comb
