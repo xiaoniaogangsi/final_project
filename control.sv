@@ -15,9 +15,12 @@ module control (input Reset, frame_Clk,
 					 input int Buff_PosX, Buff_PosY,
 					 input int Cactus_PosX, Cactus_PosY,
 					 input int Cactus_SizeX, Cactus_SizeY,
+					 //input int heart_PosX, heart_PosY,
+					 //input logic heart_off,
 					 input [7:0] keycode,
 					 output logic [9:0] Dino_PosX, Dino_PosY,
 					 output logic Dead,
+					 //output logic contact,
 					 output logic [1:0] Game_State);
 		int Ground_Level = 412; //take the middle of the gound sprite: 400 + 12.
 		int Dragon_X_Pos = 94;
@@ -279,13 +282,17 @@ module control (input Reset, frame_Clk,
 			else 
 				Dead_cactus <=0;
 		end
-//		always_comb  //Produce Enter
-//		begin
-//		if (keycode == 8'h0c)
-//			Enter = 1;
-//		else
-//			Enter = 0;
-//		end
+		//collision judgement between heart and dragon.
+		always_ff @ (posedge frame_Clk)
+		begin
+			if (heart_off == 0)
+			begin
+				if ((heart_PosX >= Left_Edge && heart_PosX <Right_Edge && heart_PosY >= Top && heart_PosY < Bottom)
+					contact <= 1;
+					mydragon.Life <= mydragon.Life + 1;
+			end
+		end
+
 		always_comb
 		begin
 			Dead = Dead_ptero | Dead_cactus;
