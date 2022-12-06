@@ -26,6 +26,7 @@ const char* const devclasses[] = { " Uninitialized", " HID Keyboard", " HID Mous
 #define LEDS_PIO_BASE 			0x170
 #define HEX_DIGITS_PIO_BASE		0x180
 #define KEYCODE_BASE			0x1c0
+#define EASTER_EGG_BASE 		0x40
 
 
 BYTE GetDriverandReport() {
@@ -136,6 +137,38 @@ void setKeycode(WORD keycode)
 	//IOWR_ALTERA_AVALON_PIO_DATA(0x8002000, keycode);
 	IOWR_ALTERA_AVALON_PIO_DATA(KEYCODE_BASE, keycode);
 }
+
+BYTE easter_egg(WORD keycode, BYTE flag)
+{
+	WORD pio_val = IORD_ALTERA_AVALON_PIO_DATA(EASTER_EGG_BASE);
+	if (keycode == 12 && flag == 0){	//keycode gets "I"
+		flag = 1;
+		printf(flag);
+	}else if (keycode != 0){flag = 0;}
+	if (keycode == 14 && flag == 1){	//keycode gets "K"
+		flag = 2;
+		printf(flag);
+	}else if (keycode != 0){flag = 0;}
+	if (keycode == 24 && flag == 2){	//keycode gets "U"
+		flag = 3;
+		printf(flag);
+	}else if (keycode != 0){flag = 0;}
+	if (keycode == 17 && flag == 3){	//keycode gets "N"
+		flag = 4;
+		printf(flag);
+	}else if (keycode != 0){flag = 0;}
+	if (flag == 4){
+		pio_val = 1;
+		if (keycode == 41){		//keycode gets "Esc"
+			flag = 0;
+			pio_val = 0;
+		}
+	}else {pio_val = 0;}
+
+	IOWR_ALTERA_AVALON_PIO_DATA(EASTER_EGG_BASE, pio_val);
+	return flag;
+}
+
 int main() {
 	BYTE rcode;
 	BOOT_MOUSE_REPORT buf;		//USB mouse report
@@ -145,6 +178,8 @@ int main() {
 	BYTE errorflag = 0; //flag once we get an error device so we don't keep dumping out state info
 	BYTE device;
 	WORD keycode;
+
+	BYTE eggflag = 0;
 
 	printf("initializing MAX3421E...\n");
 	MAX3421E_init();
@@ -231,7 +266,7 @@ int main() {
 			errorflag = 0;
 			clearLED(9);
 		}
-
+		eggflag = easter_egg(kbdbuf.keycode[0], eggflag);
 	}
 	return 0;
 }

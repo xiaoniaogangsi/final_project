@@ -5,13 +5,13 @@ module Draw_Engine (input Clk50, row_Clk, Reset,
 						  input Draw_Back, Draw_Ground,   //layer_1
 						  input Draw_Cloud,  //layer_2
 						  input Draw_Cactus, Draw_Buff, Draw_Rock, Draw_Pterosaur, //layer_3
-						  input Draw_Score, Draw_Fire,Draw_Runner, Draw_Start, Draw_Over, //layer_4
+						  input Draw_Score, Draw_Fire,Draw_Runner, Draw_Highscore, Draw_Over, //layer_4
 						   
 						  
 						  input [17:0] address_Back, address_Ground, 
 						  input [17:0] address_Cloud,  
 						  input [17:0] address_Cactus, address_Buff, address_Rock, address_Pterosaur,
-						  input [17:0] address_Score, address_Fire, address_Runner, address_Start, address_Over,
+						  input [17:0] address_Score, address_Fire, address_Runner, address_Highscore, address_Over,
 						  input [9:0] DrawX, DrawY,
 						  output [17:0] draw_address,
 						  output [9:0] write_X, write_Y,
@@ -74,11 +74,11 @@ module Draw_Engine (input Clk50, row_Clk, Reset,
 	assign Layer_1_on = Draw_Back | Draw_Ground;
 	assign Layer_2_on = Draw_Cloud;
 	assign Layer_3_on = Draw_Cactus | Draw_Buff | Draw_Rock | Draw_Pterosaur;
-	assign Layer_4_on = Draw_Score | Draw_Fire | Draw_Runner | Draw_Start | Draw_Over;
+	assign Layer_4_on = Draw_Score | Draw_Fire | Draw_Runner | Draw_Highscore | Draw_Over;
 	
 	assign Layer_1_type = {Draw_Back, Draw_Ground};
 	assign Layer_3_type = {Draw_Cactus, Draw_Buff, Draw_Rock, Draw_Pterosaur};
-	assign Layer_4_type = {Draw_Score, Draw_Fire,Draw_Runner, Draw_Start, Draw_Over};
+	assign Layer_4_type = {Draw_Score, Draw_Fire,Draw_Runner, Draw_Highscore, Draw_Over};
 	
 	logic Smaller;		//Indicate whether WriteX is smaller than 640 (still inside the screen)
 	always_comb //produce smaller
@@ -174,7 +174,7 @@ module Draw_Engine (input Clk50, row_Clk, Reset,
 //			address_Back, address_Ground,  
 //			address_Cloud,  
 //			address_Cactus, address_Buff, address_Rock, address_Pterosaur,
-//			address_Score，address_Fire,address_Runner, address_Start, address_Over,
+//			address_Score，address_Fire,address_Runner, address_Highscore, address_Over,
 			case (State)
 				REST:	
 				begin
@@ -230,7 +230,7 @@ module Draw_Engine (input Clk50, row_Clk, Reset,
 						5'b00100:
 							draw_address = address_Runner;
 						5'b00010:	
-							draw_address = address_Start;
+							draw_address = address_Highscore;
 						5'b00001:
 							draw_address = address_Over;
 						default: 
