@@ -86,6 +86,24 @@ module palette(input logic [3:0] color,
 				Green = 8'hDA;
 				Blue = 8'hDA;
 			end
+			4'hB:
+			begin
+				Red = 8'hFF;
+				Green = 8'h90;
+				Blue = 8'h00;
+			end
+			4'hC:
+			begin
+				Red = 8'h60;
+				Green = 8'h00;
+				Blue = 8'h00;
+			end
+			4'hD:
+			begin
+				Red = 8'h00;
+				Green = 8'h00;
+				Blue = 8'h00;
+			end
 			default:		//Give black
 			begin
 				Red = 8'h00;
@@ -162,6 +180,24 @@ module palette(input logic [3:0] color,
 				Red = 8'hDA;
 				Green = 8'hDA;
 				Blue = 8'hDA;
+			end
+			4'hB:
+			begin
+				Red = 8'hFF;
+				Green = 8'h90;
+				Blue = 8'h00;
+			end
+			4'hC:
+			begin
+				Red = 8'h60;
+				Green = 8'h00;
+				Blue = 8'h00;
+			end
+			4'hD:
+			begin
+				Red = 8'hFF;
+				Green = 8'hFF;
+				Blue = 8'hFF;
 			end
 			default:		//Give black
 			begin

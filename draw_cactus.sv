@@ -179,7 +179,7 @@ module draw_cactus (	input Clk50, pixel_Clk, frame_Clk, Reset,
 	
 	always_comb
 	begin
-		if ((Game_State == 2'b00) || Dead)
+		if ((Game_State == 2'b00) || (Game_State == 2'b10) || Dead)
 			X_Motion = 0;
 		else
 		begin
