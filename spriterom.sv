@@ -16,7 +16,7 @@ module  spriteROM
 
 // mem has width of 4 bits and a total of 233303 addresses
 //2^18=262144, so we need 18 bits for address
-logic [3:0] mem [0:233302];
+logic [3:0] mem [0:258118];
 
 //Sprite location info: 
 
@@ -78,6 +78,10 @@ begin
 	 $readmemh("sprite/star3_18x18.txt", mem, 225059, 225382);
 	 
 	 $readmemh("sprite/Trex_88x90.txt", mem, 225383, 233302);
+	 
+	 $readmemh("sprite/XK3_88x94.txt", mem, 233303, 241574);
+	 $readmemh("sprite/XK4_88x94.txt", mem, 241575, 249846);
+	 $readmemh("sprite/XKdie_88x94.txt", mem, 249847, 258118);
 end
 
 always_ff @ (posedge Clk) begin
