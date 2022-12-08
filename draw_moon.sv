@@ -32,13 +32,13 @@ module draw_moon(input Clk50, pixel_Clk, frame_Clk, Reset,
 		star[2] = 18'd225059;
 	end
 	
-	int moon_locX1 = 0;
+	int moon_locX1 = 10;
 	int moon_locX2 = 40;
-	int moon_locY = 80;
+	int moon_locY = 10;
 	int star_locX1 = 100;
 	int star_locY1 = 20;
 	int star_locX2 = 200;
-	int star_locY2 = 60;`
+	int star_locY2 = 60;
 	
 	logic [17:0] start, offset;
 	int DistX, DistY, SizeX, SizeY;
@@ -68,15 +68,15 @@ module draw_moon(input Clk50, pixel_Clk, frame_Clk, Reset,
 				end
 			2'b10:
 				begin
-					SizeX = star_X;
-					SizeY = star_Y;
+					SizeX = star_SizeX;
+					SizeY = star_SizeY;
 					DistX = WriteX - star_locX1;
 					DistY = WriteY - star_locY1;
 				end
 			2'b11:
 				begin
-					SizeX = star_X;
-					SizeY = star_Y;
+					SizeX = star_SizeX;
+					SizeY = star_SizeY;
 					DistX = WriteX - star_locX2;
 					DistY = WriteY - star_locY2;
 				end	
@@ -159,14 +159,14 @@ module draw_moon(input Clk50, pixel_Clk, frame_Clk, Reset,
 				star_SizeX = star_X;
 				star_SizeY = star1_Y;
 			end
-		end
+		endcase
 	end
 	
 	enum logic [2:0] {Moon_Full, Moon_Left1, Moon_Left2, Moon_Left3, Moon_Right1, Moon_Right2, Moon_Right3} moon_type, Next_moon_type;
 	always_ff @ (posedge isnight or posedge Reset)
 	begin
 		if (Reset)
-			moon_type <= None;
+			moon_type <= Moon_Full;
 		else 
 			moon_type <= Next_moon_type;
 	end

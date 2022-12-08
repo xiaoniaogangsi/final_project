@@ -40,18 +40,32 @@ module draw_heart ( input Clk50, pixel_Clk, frame_Clk, Reset,
 		PosY = 256;
 		frame_count = 1;
 		draw_heart1 = 1'b1;
+		contact_flag = 1'b0;
 	end
 	
+	logic contact_flag;
 	//control part
-	always_ff @ (posedge contact)
+	always_ff @ (posedge frame_Clk or posedge Reset)
 	begin
-		heart_off <= 1;
-	end
-	
-	always_ff @ (posedge frame_Clk)
-	begin
-		if (PosX < 0 || PosX >= 640)
+		if (Reset)
+		begin
+			contact_flag <= 0;
 			heart_off <= 0;
+		end
+		else
+		begin
+			if (contact)
+			begin
+				contact_flag <= 1;
+			end
+			if (contact_flag)
+				heart_off <= 1;
+			if (PosX < 0 || PosX >= 640)
+			begin
+				heart_off <= 0;
+				contact_flag <= 0;
+			end
+		end
 	end
 	
 	always_comb
@@ -81,12 +95,12 @@ module draw_heart ( input Clk50, pixel_Clk, frame_Clk, Reset,
 		end
 		else
 		begin
-			if (PosX + X_Motion == -heart_X)
+			if (PosX + X_Motion <= -heart_X)
 			begin
 				flag<=0;
 				PosX<=640;
 			end
-			else if (score%1000>300 && score%1000 < 350 && Cactus_PosX <320 && (Ptero_PosX<320||Ptero_PosX>670))
+			else if (score%500 > 100 && score%500 < 250 && Cactus_PosX < 320 && (Ptero_PosX<320||Ptero_PosX>670))
 				flag<=1;
 			else
 				flag<=0;

@@ -45,7 +45,7 @@ module draw_runner(  input Clk50, pixel_Clk, frame_Clk, Reset,
 		DistY = WriteY - PosY;
 	end
 	
-	always_ff @ (posedge frame_Clk or posedge Reset)
+	always_ff @ (negedge frame_Clk or posedge Reset)
 	begin
 		if (Reset)
 		begin
