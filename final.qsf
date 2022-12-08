@@ -484,21 +484,18 @@ set_global_assignment -name SYSTEMVERILOG_FILE draw_score.sv
 set_global_assignment -name SYSTEMVERILOG_FILE draw_runner.sv
 set_global_assignment -name SYSTEMVERILOG_FILE draw_cloud.sv
 set_global_assignment -name SYSTEMVERILOG_FILE frame_buffer.sv
-set_global_assignment -name SYSTEMVERILOG_FILE mux_16.sv
 set_global_assignment -name SYSTEMVERILOG_FILE struct_declaration.sv
 set_global_assignment -name SYSTEMVERILOG_FILE spriterom.sv
 set_global_assignment -name QIP_FILE lab62_soc/synthesis/lab62_soc.qip
 set_global_assignment -name SYSTEMVERILOG_FILE VGA_controller.sv
 set_global_assignment -name SYSTEMVERILOG_FILE lab62.sv
 set_global_assignment -name SYSTEMVERILOG_FILE HexDriver.sv
-set_global_assignment -name SYSTEMVERILOG_FILE ball.sv
 set_global_assignment -name SDC_FILE lab62.sdc
 set_global_assignment -name SYSTEMVERILOG_FILE palette.sv
 set_global_assignment -name QIP_FILE buffer.qip
 set_global_assignment -name SYSTEMVERILOG_FILE LFSR.sv
 set_global_assignment -name SIGNALTAP_FILE stp1.stp
 set_global_assignment -name QIP_FILE spriterom16.qip
-set_global_assignment -name SYSTEMVERILOG_FILE control_speed_motion.sv
 set_global_assignment -name SYSTEMVERILOG_FILE draw_over.sv
 
 set_global_assignment -name SYSTEMVERILOG_FILE draw_moon.sv
