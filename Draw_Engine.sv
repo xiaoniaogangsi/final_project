@@ -5,7 +5,7 @@ module Draw_Engine (input Clk50, row_Clk, Reset,
 						  input Draw_Back, Draw_Ground,   //layer_1
 						  input Draw_Cloud,  //layer_2
 						  input Draw_Cactus, Draw_Buff, Draw_Rock, Draw_Pterosaur, //layer_3
-						  input Draw_Score, Draw_Fire,Draw_Runner, Draw_Highscore, Draw_Over, //layer_4
+						  input Draw_Score, Draw_Fire, Draw_Runner, Draw_Highscore, Draw_Over, //layer_4
 						   
 						  
 						  input [17:0] address_Back, address_Ground, 

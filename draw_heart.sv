@@ -1,5 +1,5 @@
 module draw_heart ( input Clk50, pixel_Clk, frame_Clk, Reset,
-							input contact,
+							input Dead, contact,
 							input int score,
 							//input Speed_up,
 							input [1:0] Game_State,
@@ -37,18 +37,34 @@ module draw_heart ( input Clk50, pixel_Clk, frame_Clk, Reset,
 	initial
 	begin
 		PosX = 1000;
-		PosY = 392;
+		PosY = 256;
 		frame_count = 1;
 		draw_heart1 = 1'b1;
 	end
 	
 	//control part
+	always_ff @ (posedge contact)
+	begin
+		heart_off <= 1;
+	end
+	
+	always_ff @ (posedge frame_Clk)
+	begin
+		if (PosX < 0 || PosX >= 640)
+			heart_off <= 0;
+	end
+	
 	always_comb
 	begin
-	if (contact)
-		heart_off=1;
-	else
-		heart_off=0;
+		if ((Game_State == 2'b00) || (Game_State == 2'b10) || Dead)
+			X_Motion = 0;
+		else
+		begin
+			if (PosX <= 4-heart_X)
+				X_Motion = -1;
+			else
+				X_Motion = -4;
+		end
 	end
 	
 //	always_ff @ (posedge frame_clk)
@@ -65,7 +81,7 @@ module draw_heart ( input Clk50, pixel_Clk, frame_Clk, Reset,
 		end
 		else
 		begin
-			if (PosX<0)
+			if (PosX <= -heart_X)
 			begin
 				flag<=0;
 				PosX<=640;
@@ -138,7 +154,7 @@ module draw_heart ( input Clk50, pixel_Clk, frame_Clk, Reset,
 	assign address = start + offset;
 	
 	always_comb
-   begin:Pterosaur_on_wr_proc
+   begin:Heart_on_wr_proc
 	 if ((WriteX >= PosX || PosX < 0) &&
        (WriteX < PosX + heart_X) &&
        (WriteY >= PosY) &&

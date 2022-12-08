@@ -1,6 +1,6 @@
 module draw_hscore (	input Clk50, pixel_Clk, frame_Clk, Reset, Restart,
 							input [9:0] WriteX, WriteY,
-							input Dead,
+							input Dead, gift,
 							input [1:0] Game_State,
 							input int score,
 							output logic [2:0] hscore_on_wr,
@@ -59,21 +59,23 @@ module draw_hscore (	input Clk50, pixel_Clk, frame_Clk, Reset, Restart,
 	int frame_count;
 	int hscore_add;
 	int hscore;
-	int hscore_store;
-	logic Load;
-	always_comb
-	begin
-		if (hscore > score && Game_State == 2'b10)
-			Load = 1'b1;
-		else
-			Load = 1'b0;
-	end
+//	int hscore_store;
+//	logic Load;
+//	always_comb
+//	begin
+//		if (hscore > score && Game_State == 2'b10)
+//			Load = 1'b1;
+//		else
+//			Load = 1'b0;
+//	end
+	logic gift_finish;
 	
 	initial
 	begin
 		frame_count = 1;
 		hscore_add = 1;
 		hscore = 0;
+		gift_finish = 1'b0;
 	end
 	
 	always_comb
@@ -113,8 +115,18 @@ module draw_hscore (	input Clk50, pixel_Clk, frame_Clk, Reset, Restart,
 		if ((Game_State == 2'b00) || (Game_State == 2'b10) || Dead ||
 			(Game_State == 2'b01 && hscore >= score))
 			hscore_add = 0;
+		else if (gift == 1'b1 && gift_finish == 1'b1)
+			hscore_add = 100;
 		else
 			hscore_add = 1;
+	end
+	
+	always_ff @ (posedge frame_Clk or posedge gift)
+	begin
+		if (gift)
+			gift_finish <= 1'b1;
+		else
+			gift_finish <= 1'b0;
 	end
 	
 	always_ff @ (posedge frame_Clk or posedge Reset)
@@ -135,6 +147,8 @@ module draw_hscore (	input Clk50, pixel_Clk, frame_Clk, Reset, Restart,
 			end
 			else
 				frame_count <= frame_count + 1;
+			if (Game_State == 2'b10 && hscore < score)
+				hscore <= score;		
 		end
 	end
 	
