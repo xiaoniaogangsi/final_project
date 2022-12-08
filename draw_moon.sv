@@ -42,7 +42,6 @@ module draw_moon(input Clk50, pixel_Clk, frame_Clk, Reset,
 	
 	logic [17:0] start, offset;
 	int DistX, DistY, SizeX, SizeY;
-	logic [17:0] moon_addr, star_addr;
 	int moon_X = 40;
 	int moon_full_X = 80;
 	int moon_Y = 80;
@@ -112,7 +111,7 @@ module draw_moon(input Clk50, pixel_Clk, frame_Clk, Reset,
 			end
 			else if (frame_count == 20)
 			begin
-				draw_which_star <= 3'b11;
+				draw_which_star <= 2'b10;
 				frame_count <= frame_count + 1;
 			end
 			else if (frame_count == 30)
@@ -137,6 +136,153 @@ module draw_moon(input Clk50, pixel_Clk, frame_Clk, Reset,
 	end
 	assign address = start + offset;
 	
-	enum logic [2:0] {}
+	always_comb
+	begin
+		case (draw_which_star)
+			2'b00:
+			begin
+				star_SizeX = star_X;
+				star_SizeY = star1_Y;
+			end
+			2'b01:
+			begin
+				star_SizeX = star_X;
+				star_SizeY = star2_Y;
+			end
+			2'b10:
+			begin
+				star_SizeX = star_X;
+				star_SizeY = star3_Y;
+			end
+			default:
+			begin
+				star_SizeX = star_X;
+				star_SizeY = star1_Y;
+			end
+		end
+	end
+	
+	enum logic [2:0] {Moon_Full, Moon_Left1, Moon_Left2, Moon_Left3, Moon_Right1, Moon_Right2, Moon_Right3} moon_type, Next_moon_type;
+	always_ff @ (posedge isnight or posedge Reset)
+	begin
+		if (Reset)
+			moon_type <= None;
+		else 
+			moon_type <= Next_moon_type;
+	end
+	
+	always_comb
+	begin
+	unique case (moon_type)
+			Moon_Full: 
+				begin
+					draw_which_moon = 3'b000;
+					moon_SizeX = moon_full_X;
+					moon_SizeY = moon_Y;
+					moon_locX = moon_locX1;
+				end
+			Moon_Left1: 
+				begin
+					draw_which_moon = 3'b001;
+					moon_SizeX = moon_X;
+					moon_SizeY = moon_Y;
+					moon_locX = moon_locX1;
+				end
+			Moon_Left2: 
+				begin
+					draw_which_moon = 3'b010;
+					moon_SizeX = moon_X;
+					moon_SizeY = moon_Y;
+					moon_locX = moon_locX1;
+				end
+			Moon_Left3: 
+				begin
+					draw_which_moon = 3'b011;
+					moon_SizeX = moon_X;
+					moon_SizeY = moon_Y;
+					moon_locX = moon_locX1;
+				end
+			Moon_Right1: 
+				begin
+					draw_which_moon = 3'b100;
+					moon_SizeX = moon_X;
+					moon_SizeY = moon_Y;
+					moon_locX = moon_locX2;
+				end
+			Moon_Right2: 
+				begin
+					draw_which_moon = 3'b101;
+					moon_SizeX = moon_X;
+					moon_SizeY = moon_Y;
+					moon_locX = moon_locX2;
+				end
+			Moon_Right3: 
+				begin
+					draw_which_moon = 3'b110;
+					moon_SizeX = moon_X;
+					moon_SizeY = moon_Y;
+					moon_locX = moon_locX2;
+				end
+		endcase
+	end
+	
+	logic Load_Seed, Done;
+	logic [5:0] Seed;
+	logic [5:0] rand_num;
+	int pulse_counter;
+	assign Seed = 6'b010101;
+	
+	initial
+	begin
+		Load_Seed = 1;
+		pulse_counter = 0;
+	end
+	always_ff @ (posedge frame_Clk)
+	begin
+		if (pulse_counter >= 2)
+		begin
+			Load_Seed <= 0;
+			pulse_counter <= 2;
+		end
+		else
+			pulse_counter <= pulse_counter + 1;
+	end
+	LFSR #(6) gen_rand (.*, .Clk(~frame_Clk), .Enable(1'b1), .Out(rand_num));
+	
+	always_comb
+	begin:Choose_moon_type
+		Next_moon_type = moon_type;
+			if (rand_num >= 6'd0 && rand_num < 6'd16)			//Possibility = 1/4
+				Next_moon_type = Moon_Full;
+			else if (rand_num >= 6'd16 && rand_num < 6'd24) //Possibility = 1/8
+				Next_moon_type = Moon_Left1;
+			else if (rand_num >= 6'd24 && rand_num < 6'd32)	//Possibility = 1/8
+				Next_moon_type = Moon_Left2;
+			else if (rand_num >= 6'd32 && rand_num < 6'd40) //Possibility = 1/8
+				Next_moon_type = Moon_Left3;
+			else if (rand_num >= 6'd40 && rand_num < 6'd48) //Possibility = 1/8
+				Next_moon_type = Moon_Right1;
+			else if (rand_num >= 6'd48 && rand_num < 6'd56) //Possibility = 1/8
+				Next_moon_type = Moon_Right2;
+			else 															//Possibility = 1/8
+				Next_moon_type = Moon_Right3;
+	end
+	 
+	always_comb
+   begin:Moon_on_wr_proc
+		if (isnight)
+		begin
+			if ((WriteX >= moon_locX) && (WriteX < moon_locX + moon_SizeX) && (WriteY >= moon_locY) && (WriteY < moon_locY + moon_SizeY))
+				moon_on_wr = 2'b01;
+			else if ((WriteX >= star_locX1) && (WriteX < star_locX1 + star_SizeX) && (WriteY >= star_locY1) && (WriteY < star_locY1 + star_SizeY))
+				moon_on_wr = 2'b10;
+			else if ((WriteX >= star_locX2) && (WriteX < star_locX2 + star_SizeX) && (WriteY >= star_locY2) && (WriteY < star_locY2 + star_SizeY))
+				moon_on_wr = 2'b11;
+			else
+				moon_on_wr = 2'b00;
+		end
+		else
+			moon_on_wr = 2'b00;
+   end 
 
 endmodule
