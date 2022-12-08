@@ -95,7 +95,7 @@ module  gamelogic ( 	  input 					 Clk50, pixel_Clk, frame_Clk, Reset, blank, ro
 						  .Draw_Score(score_on_1bit), .Draw_Fire(1'b0), .Draw_Runner(runner_on_wr), .Draw_Highscore(hscore_on_1bit), .Draw_Over(over_on_1bit), //layer_4						   
 						  
 						  .address_Back(18'd20), .address_Ground(address_horizon), 
-						  .address_Cloud(address_cloud),  .Draw_Moon(address_moon),
+						  .address_Cloud(address_cloud),  .address_Moon(address_moon),
 						  .address_Cactus(address_cactus), .address_Buff(address_heart), .address_Rock(18'd0), .address_Pterosaur(address_pterosaur),
 						  .address_Score(address_score), .address_Fire(18'd0), .address_Runner(address_runner), .address_Highscore(address_hscore), .address_Over(address_over),
 						  .DrawX(DrawX), .DrawY(DrawY),
@@ -196,7 +196,7 @@ module  gamelogic ( 	  input 					 Clk50, pixel_Clk, frame_Clk, Reset, blank, ro
 	
 	always_comb
 	begin
-		if ((score > 200) && (score % 700 >= 0) && (score % 700 <= 200))
+		if ((score > 200) && (score % 400 >= 0) && (score % 400 <= 200))
 			isnight = 1'b1;
 		else
 			isnight = 1'b0;

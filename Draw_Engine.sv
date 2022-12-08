@@ -78,6 +78,7 @@ module Draw_Engine (input Clk50, row_Clk, Reset,
 	assign Layer_4_on = Draw_Score | Draw_Fire | Draw_Runner | Draw_Highscore | Draw_Over;
 	
 	assign Layer_1_type = {Draw_Back, Draw_Ground};
+	assign Layer_2_type = {Draw_Cloud, Draw_Moon};
 	assign Layer_3_type = {Draw_Cactus, Draw_Buff, Draw_Rock, Draw_Pterosaur};
 	assign Layer_4_type = {Draw_Score, Draw_Fire,Draw_Runner, Draw_Highscore, Draw_Over};
 	
