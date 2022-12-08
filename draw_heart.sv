@@ -81,7 +81,7 @@ module draw_heart ( input Clk50, pixel_Clk, frame_Clk, Reset,
 		end
 		else
 		begin
-			if (PosX <= -heart_X)
+			if (PosX + X_Motion == -heart_X)
 			begin
 				flag<=0;
 				PosX<=640;
@@ -100,7 +100,7 @@ module draw_heart ( input Clk50, pixel_Clk, frame_Clk, Reset,
 		end
 	end
 	
-	always_ff @ (posedge frame_Clk or posedge Reset)
+	always_ff @ (negedge frame_Clk or posedge Reset)
 	begin
 		if (Reset)
 		begin
