@@ -3,13 +3,13 @@ module Draw_Engine (input Clk50, row_Clk, Reset,
 					     input Dead, Enter,
 						  
 						  input Draw_Back, Draw_Ground,   //layer_1
-						  input Draw_Cloud,  //layer_2
+						  input Draw_Cloud,  Draw_Moon,	//layer_2
 						  input Draw_Cactus, Draw_Buff, Draw_Rock, Draw_Pterosaur, //layer_3
 						  input Draw_Score, Draw_Fire, Draw_Runner, Draw_Highscore, Draw_Over, //layer_4
 						   
 						  
 						  input [17:0] address_Back, address_Ground, 
-						  input [17:0] address_Cloud,  
+						  input [17:0] address_Cloud,  address_Moon,
 						  input [17:0] address_Cactus, address_Buff, address_Rock, address_Pterosaur,
 						  input [17:0] address_Score, address_Fire, address_Runner, address_Highscore, address_Over,
 						  input [9:0] DrawX, DrawY,
@@ -48,6 +48,7 @@ module Draw_Engine (input Clk50, row_Clk, Reset,
 	logic [9:0] WriteX, WriteY;
 	logic Layer_1_on, Layer_2_on, Layer_3_on, Layer_4_on;
 	logic [1:0] Layer_1_type;
+	logic [1:0] Layer_2_type;
 	logic [3:0] Layer_3_type;
 	logic [4:0] Layer_4_type;
 
@@ -72,7 +73,7 @@ module Draw_Engine (input Clk50, row_Clk, Reset,
 			WriteY = DrawY + 1;
 	end
 	assign Layer_1_on = Draw_Back | Draw_Ground;
-	assign Layer_2_on = Draw_Cloud;
+	assign Layer_2_on = Draw_Cloud | Draw_Moon;
 	assign Layer_3_on = Draw_Cactus | Draw_Buff | Draw_Rock | Draw_Pterosaur;
 	assign Layer_4_on = Draw_Score | Draw_Fire | Draw_Runner | Draw_Highscore | Draw_Over;
 	
@@ -196,9 +197,11 @@ module Draw_Engine (input Clk50, row_Clk, Reset,
 				LAYER_2 :
 				begin
 					write_which_layer = 3'b010;
-					case (Draw_Cloud)
-						1'b1: 
+					case (Layer_2_type)
+						2'b10: 
 							draw_address = address_Cloud;
+						2'b01:
+							draw_address = address_Moon;
 						default: 
 							draw_address = 18'd20;
 					endcase
