@@ -1,6 +1,6 @@
 module draw_score (	input Clk50, pixel_Clk, frame_Clk, Reset,
 							input [9:0] WriteX, WriteY,
-							input Dead,
+							input Dead, gift,
 							input [1:0] Game_State,
 							output logic [2:0] score_on_wr,
 							output logic [17:0] address,
@@ -53,12 +53,14 @@ module draw_score (	input Clk50, pixel_Clk, frame_Clk, Reset,
 	int frame_count;
 	int score;
 	int score_add;
+	logic gift_finish;
 	
 	initial
 	begin
 		frame_count = 1;
 		score = 0;
 		score_add = 1;
+		gift_finish = 1'b0;
 	end
 	
 	always_comb
@@ -103,8 +105,18 @@ module draw_score (	input Clk50, pixel_Clk, frame_Clk, Reset,
 	begin
 		if ((Game_State == 2'b00) || (Game_State == 2'b10) || Dead)
 			score_add = 0;
+		else if (gift == 1'b1 && gift_finish == 1'b1)
+			score_add = 100;
 		else
 			score_add = 1;
+	end
+	
+	always_ff @ (posedge frame_Clk or posedge gift)
+	begin
+		if (gift)
+			gift_finish <= 1'b1;
+		else
+			gift_finish <= 1'b0;
 	end
 	
 	always_ff @ (posedge frame_Clk or posedge Reset)

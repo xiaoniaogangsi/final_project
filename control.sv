@@ -15,12 +15,13 @@ module control (input Reset, frame_Clk,
 					 input int Buff_PosX, Buff_PosY,
 					 input int Cactus_PosX, Cactus_PosY,
 					 input int Cactus_SizeX, Cactus_SizeY,
-					 //input int heart_PosX, heart_PosY,
-					 //input logic heart_off,
+					 input int heart_PosX, heart_PosY,
+					 input logic heart_off,
 					 input [7:0] keycode,
 					 output logic [9:0] Dino_PosX, Dino_PosY,
 					 output logic Dead,
-					 //output logic contact,
+					 output logic contact,
+					 output logic gift,
 					 output logic [1:0] Game_State);
 		int Ground_Level = 412; //take the middle of the gound sprite: 400 + 12.
 		int Dragon_X_Pos = 94;
@@ -49,9 +50,9 @@ module control (input Reset, frame_Clk,
 		
 
 		initial begin
-		
 		//initial_X_POS, initial_Y_POS, Y_MOTION, X_SIZE, Y_SIZE, LIFE, STATE
 			mydragon = '{94, 367, 0, 88, 94, 1, 0};
+			gift = 1'b0;
 		end
 		
 		//state machine that controls the user interface.
@@ -285,12 +286,24 @@ module control (input Reset, frame_Clk,
 		//collision judgement between heart and dragon.
 		always_ff @ (posedge frame_Clk)
 		begin
-			if (heart_off == 0)
-			begin
-				if ((heart_PosX >= Left_Edge && heart_PosX <Right_Edge && heart_PosY >= Top && heart_PosY < Bottom)
+//			if (heart_off == 0)
+//			begin
+				if (heart_PosX >= Left_Edge && heart_PosX <Right_Edge && heart_PosY >= Top && heart_PosY < Bottom)
+				begin
 					contact <= 1;
-					mydragon.Life <= mydragon.Life + 1;
-			end
+					gift <= 1;
+				end
+				else
+				begin
+					contact <= 0;
+					gift <= 0;
+				end
+//			end
+//			else
+//			begin
+//				contact <= 0;
+//				gift <= 0;
+//			end
 		end
 
 		always_comb

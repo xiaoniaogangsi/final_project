@@ -3,7 +3,8 @@
  * Author: Rishi Thakkar
  *
  */
-
+//This module is no longer included in the project,
+//just put here as a reference of the pixel address.
 module  spriteROM
 (
 		input [17:0] read_address,
