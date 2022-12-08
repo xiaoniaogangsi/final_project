@@ -68,18 +68,10 @@ module draw_heart ( input Clk50, pixel_Clk, frame_Clk, Reset,
 		end
 	end
 	
-	always_comb
-	begin
-		if ((Game_State == 2'b00) || (Game_State == 2'b10) || Dead)
-			X_Motion = 0;
-		else
-		begin
-			if (PosX <= 4-heart_X)
-				X_Motion = -1;
-			else
-				X_Motion = -4;
-		end
-	end
+//	always_ff @ (posedge frame_Clk)
+//	begin
+//		
+//	end
 	
 //	always_ff @ (posedge frame_clk)
 //	begin
@@ -95,22 +87,40 @@ module draw_heart ( input Clk50, pixel_Clk, frame_Clk, Reset,
 		end
 		else
 		begin
-			if (PosX + X_Motion <= -heart_X)
-			begin
-				flag<=0;
-				PosX<=640;
-			end
-			else if (score%500 > 100 && score%500 < 250 && Cactus_PosX < 320 && (Ptero_PosX<320||Ptero_PosX>670))
-				flag<=1;
+			if ((Game_State == 2'b00) || (Game_State == 2'b10) || Dead)
+				X_Motion <= 0;
 			else
-				flag<=0;
-				
-			if (flag)
 			begin
-				PosX<=PosX+X_Motion;
+//				if (PosX <= 4-heart_X)
+//					X_Motion <= -1;
+//				else
+//					X_Motion <= -4;
+//			end
+
+				if (PosX + X_Motion <= -heart_X)
+				begin
+					flag<=0;
+					PosX<=640;
+					X_Motion <= 0;
+				end
+				else 
+				begin
+					if (score%500 > 100 && score%500 < 150 && Cactus_PosX < 320 && (Ptero_PosX<320||Ptero_PosX>670))
+					begin
+						flag<=1;
+						X_Motion <= -4;
+					end
+					else
+						flag<=0;
+						
+					if (flag)
+					begin
+						PosX<=PosX+X_Motion;
+					end
+					if (PosX<640)
+						PosX<=PosX+X_Motion;
+				end
 			end
-			if (PosX<640)
-				PosX<=PosX+X_Motion;
 		end
 	end
 	
