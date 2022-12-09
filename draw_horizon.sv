@@ -17,11 +17,13 @@ module draw_horizon (input Clk50, pixel_Clk, frame_Clk, Reset,
 	int SizeX, SizeY, DistX, DistY;
 	
 	int X_Motion;
+	int frame_PosX;	//The X Position of the first pixel in the screen, ranges from 0 to 2399.
 	
 	initial
 	begin
 		PosX = 0;
 		PosY = 400;
+		frame_PosX = 0;
 		frame_count = 1;
 		start = horizon;
 		X_Motion = 4;
@@ -51,14 +53,22 @@ module draw_horizon (input Clk50, pixel_Clk, frame_Clk, Reset,
 			PosY <= 400;
 			frame_count <= 1;
 			start <= horizon;
+			frame_PosX <= 0;
 		end
 		else
 		begin
 			if (frame_count == 1)
 			begin
-				start <= start + X_Motion;
-				if (start == horizon + 2400)
+				if (start + X_Motion >= horizon + 2399)
+				begin
 					start <= horizon;
+					frame_PosX <= 0;
+				end
+				else
+				begin
+					start <= start + X_Motion;
+					frame_PosX <= frame_PosX + X_Motion;
+				end
 				frame_count <= 1;
 			end
 			else
@@ -70,8 +80,11 @@ module draw_horizon (input Clk50, pixel_Clk, frame_Clk, Reset,
 	always_comb
 	begin
 		offset = DistY*SizeX + DistX;
+		if (frame_PosX + DistX >= 2400)
+			address = start + offset - 2400;
+		else 
+			address = start + offset;
 	end
-	assign address = start + offset;
 	
 	always_comb
    begin:Horizon_on_wr_proc
