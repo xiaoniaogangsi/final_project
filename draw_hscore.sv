@@ -1,6 +1,6 @@
 module draw_hscore (	input Clk50, pixel_Clk, frame_Clk, Reset, Restart,
 							input [9:0] WriteX, WriteY,
-							input Dead, gift,
+							input Dead,
 							input [1:0] Game_State,
 							input int score,
 							output logic [2:0] hscore_on_wr,
@@ -57,25 +57,12 @@ module draw_hscore (	input Clk50, pixel_Clk, frame_Clk, Reset, Restart,
 	logic [17:0] start, offset;
 	int DistX, DistY, SizeX, SizeY;
 	int frame_count;
-	int hscore_add;
 	int hscore;
-//	int hscore_store;
-//	logic Load;
-//	always_comb
-//	begin
-//		if (hscore > score && Game_State == 2'b10)
-//			Load = 1'b1;
-//		else
-//			Load = 1'b0;
-//	end
-	logic gift_finish;
 	
 	initial
 	begin
 		frame_count = 1;
-		hscore_add = 1;
 		hscore = 0;
-		gift_finish = 1'b0;
 	end
 	
 	always_comb
@@ -110,25 +97,6 @@ module draw_hscore (	input Clk50, pixel_Clk, frame_Clk, Reset, Restart,
 		DistY = WriteY - score_locY;
 	end
 	
-	always_comb
-	begin
-		if ((Game_State == 2'b00) || (Game_State == 2'b10) || Dead ||
-			(Game_State == 2'b01 && hscore >= score))
-			hscore_add = 0;
-		else if (gift == 1'b1 && gift_finish == 1'b1)
-			hscore_add = 100;
-		else
-			hscore_add = 1;
-	end
-	
-	always_ff @ (posedge frame_Clk or posedge gift)
-	begin
-		if (gift)
-			gift_finish <= 1'b1;
-		else
-			gift_finish <= 1'b0;
-	end
-	
 	always_ff @ (posedge frame_Clk or posedge Reset)
 	begin
 		if (Reset)
@@ -140,15 +108,14 @@ module draw_hscore (	input Clk50, pixel_Clk, frame_Clk, Reset, Restart,
 		begin
 			if (frame_count == 10)
 			begin
-				hscore <= hscore + hscore_add;
 				if (hscore == 100000)
 					hscore <= 0;
+				else if (hscore < score)
+					hscore <= score;
 				frame_count <= 1;
 			end
 			else
-				frame_count <= frame_count + 1;
-			if (Game_State == 2'b10 && hscore < score)
-				hscore <= score;		
+				frame_count <= frame_count + 1;		
 		end
 	end
 	
@@ -199,15 +166,5 @@ module draw_hscore (	input Clk50, pixel_Clk, frame_Clk, Reset, Restart,
 		else
 			hscore_on_wr = 3'b000;
 	end
-	
-//	always_ff @ (posedge frame_Clk or posedge Reset)
-//		begin
-//			if(Reset)
-//			begin
-//				hscore_store <= 0;
-//			end
-//			else if(Load)
-//				hscore_store <= hscore;
-//		end
-	
+
 endmodule
