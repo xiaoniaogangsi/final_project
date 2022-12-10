@@ -10,3 +10,7 @@ To start the game, press Space. Then you can press Space or Up ($\uparrow$) to c
 Sometimes there will be a star flying towards the dinosaur, if you touched it, it will add 100 points to your score.  
 At some point of time, the scene will be go into the night for a period of time.  
 There is also an easter egg: During the game, press "IKUN" in order, your dinosaur will become a rapper star with middle part haircut, black shirts, white suspender trousers, playing with a basketball. We call it "IKUN" mode. You can press "Esc" or "Enter" to exit "IKUN" mode.  
+
+There is a bug that we have no time to fix: sometimes the pictures of the cactus will be distorted, in a low possibility. This maybe because the metastability when changing the cactus types according to the random number. We suppose this can be fixed by turning "cactus_off=1" when we find the current cuctus type is not matched with the current cactus width.
+
+To launch the game, you should first connect the FPGA DE10-Lite to the computer, VGA monitor, and the USB keyboard, after that you should compile the project, program to the FPGA, then go to the Eclipse, Run Configuration of the project "dino". 
