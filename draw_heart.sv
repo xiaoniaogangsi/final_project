@@ -1,4 +1,4 @@
-module draw_heart ( input Clk50, pixel_Clk, frame_Clk, Reset,
+module draw_heart ( input frame_Clk, Reset,
 							input Dead, contact,
 							input int score,
 							//input Speed_up,
@@ -11,22 +11,16 @@ module draw_heart ( input Clk50, pixel_Clk, frame_Clk, Reset,
 							output int heart_PosX, heart_PosY,
 							output logic [17:0] address,
 							output logic heart_off);
-//							
-//	 $readmemh("sprite/star1_18x17.txt", mem, 224411, 224716);
-//	 $readmemh("sprite/star2_18x19.txt", mem, 224717, 225058);
-//	 $readmemh("sprite/star3_18x18.txt", mem, 225059, 225382);
-	parameter [17:0] heart1 = 18'd224411;
-	parameter [17:0] heart2 = 18'd224717;
-//	parameter [17:0] heart3 = 18'd225059;
+
+//	 $readmemh("memfiles/your_heart1_20x20.txt", mem, 258119, 258518);
+//	 $readmemh("memfiles/your_heart2_20x20.txt", mem, 258519, 258918);
+	parameter [17:0] heart1 = 18'd258119;
+	parameter [17:0] heart2 = 18'd258519;
 
 	int PosX, PosY;
 	int X_Motion = -4;
-	int heart1_X = 18;
-	int heart1_Y = 17;
-	int heart2_X = 18;
-	int heart2_Y = 19;
-	int heart_X;
-	int heart_Y;
+	int heart_X = 20;
+	int heart_Y = 20;
 	
 	int frame_count;
 	logic draw_heart1;
@@ -60,7 +54,7 @@ module draw_heart ( input Clk50, pixel_Clk, frame_Clk, Reset,
 			end
 			if (contact_flag)
 				heart_off <= 1;
-			if (PosX < 0 || PosX >= 640)
+			if (PosX + heart_X < 0 || PosX >= 640)
 			begin
 				heart_off <= 0;
 				contact_flag <= 0;
@@ -68,16 +62,6 @@ module draw_heart ( input Clk50, pixel_Clk, frame_Clk, Reset,
 		end
 	end
 	
-//	always_ff @ (posedge frame_Clk)
-//	begin
-//		
-//	end
-	
-//	always_ff @ (posedge frame_clk)
-//	begin
-//	if (heart_off)
-//		flag
-//	end
 	always_ff @ (posedge frame_Clk or posedge Reset)
 	begin
 		if (Reset)
@@ -91,12 +75,6 @@ module draw_heart ( input Clk50, pixel_Clk, frame_Clk, Reset,
 				X_Motion <= 0;
 			else
 			begin
-//				if (PosX <= 4-heart_X)
-//					X_Motion <= -1;
-//				else
-//					X_Motion <= -4;
-//			end
-
 				if (PosX + X_Motion <= -heart_X)
 				begin
 					flag<=0;
@@ -140,22 +118,6 @@ module draw_heart ( input Clk50, pixel_Clk, frame_Clk, Reset,
 			end
 			else
 				frame_count <= frame_count + 1;
-		end
-	end
-	
-	
-	
-	always_comb //decode heart_X and heart_Y from draw_heart1.
-	begin
-		if (draw_heart1)
-		begin
-			heart_X = heart1_X;
-			heart_Y = heart1_Y;
-		end
-		else
-		begin
-			heart_X = heart2_X;
-			heart_Y = heart2_Y;
 		end
 	end
 	

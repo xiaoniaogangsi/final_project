@@ -4,7 +4,7 @@ filedir = os.getcwd()+"\\memfiles"
 filenames = os.listdir(filedir)
 
 f = open('mem_content.mif', 'w')
-head = '''DEPTH = 64530;
+head = '''DEPTH = 64730;
 WIDTH = 16;
 ADDRESS_RADIX = HEX;
 DATA_RADIX = HEX;

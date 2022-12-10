@@ -1,4 +1,4 @@
-module draw_pterosaur(  input Clk50, pixel_Clk, frame_Clk, Reset,
+module draw_pterosaur(  input frame_Clk, Reset,
 							input Dead,
 							//input Speed_up,
 							input [1:0] Game_State,
@@ -178,7 +178,6 @@ module draw_pterosaur(  input Clk50, pixel_Clk, frame_Clk, Reset,
 		end
 	end
 	
-//	always_ff @ (posedge Clk50)
 	always_comb
 	begin
 		if (draw_pt1)

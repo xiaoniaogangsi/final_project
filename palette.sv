@@ -13,8 +13,12 @@ module palette(input logic [3:0] color,
 //7:	'0xFFFFFF', 
 //8:	'0x535353', 
 //9:	'0xB9B9B9', 
-//a:	'0xDADADA'				
-//	always_ff @ (posedge clk)
+//a:	'0xDADADA',
+//b:	'0xFF9000',
+//c:	'0x600000',
+//d:	'0x000000',
+//e:	'0xFF0000'.		
+
 	always_comb
 	begin
 		if (~isnight)
@@ -104,6 +108,12 @@ module palette(input logic [3:0] color,
 				Green = 8'h00;
 				Blue = 8'h00;
 			end
+			4'hE:			//Red
+			begin
+				Red = 8'hFF;
+				Green = 8'h00;
+				Blue = 8'h00;
+			end
 			default:		//Give black
 			begin
 				Red = 8'h00;
@@ -171,9 +181,9 @@ module palette(input logic [3:0] color,
 			end
 			4'h9:
 			begin
-				Red = 8'hB9;
-				Green = 8'hB9;
-				Blue = 8'hB9;
+				Red = 8'h49;
+				Green = 8'h49;
+				Blue = 8'h49;
 			end
 			4'hA:
 			begin
@@ -198,6 +208,12 @@ module palette(input logic [3:0] color,
 				Red = 8'hFF;
 				Green = 8'hFF;
 				Blue = 8'hFF;
+			end
+			4'hE:		//Red
+			begin
+				Red = 8'hFF;
+				Green = 8'h00;
+				Blue = 8'h00;
 			end
 			default:		//Give black
 			begin

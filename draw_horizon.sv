@@ -1,4 +1,4 @@
-module draw_horizon (input Clk50, pixel_Clk, frame_Clk, Reset,
+module draw_horizon (input frame_Clk, Reset,
 								input [9:0] WriteX, WriteY,
 								input Dead,
 								input [1:0] Game_State,
@@ -59,7 +59,7 @@ module draw_horizon (input Clk50, pixel_Clk, frame_Clk, Reset,
 		begin
 			if (frame_count == 1)
 			begin
-				if (start + X_Motion >= horizon + 2399)
+				if (start + X_Motion >= horizon + 2400)
 				begin
 					start <= horizon;
 					frame_PosX <= 0;
@@ -76,11 +76,10 @@ module draw_horizon (input Clk50, pixel_Clk, frame_Clk, Reset,
 		end
 	end
 	
-//	always_ff @ (posedge Clk50)
 	always_comb
 	begin
 		offset = DistY*SizeX + DistX;
-		if (frame_PosX + DistX >= 2400)
+		if (frame_PosX + DistX >= 2400)		//Circularly pick pixels
 			address = start + offset - 2400;
 		else 
 			address = start + offset;

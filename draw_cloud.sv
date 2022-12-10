@@ -1,4 +1,4 @@
-module draw_cloud (	input Clk50, pixel_Clk, frame_Clk, Reset,
+module draw_cloud (	input frame_Clk, Reset,
 							input [9:0] WriteX, WriteY,
 							output logic cloud_on_wr,
 							output logic [17:0] address);
@@ -50,36 +50,12 @@ module draw_cloud (	input Clk50, pixel_Clk, frame_Clk, Reset,
 		end
 	end
 	
-//	always_ff @ (posedge Clk50)
 	always_comb
 	begin
 		start = cloud;
 		offset = DistY*SizeX + DistX;
 	end
 	assign address = start + offset;
-
-//	logic [9:0] left_bound;
-//	always_comb
-//	begin
-//		if (PosX > 10'd1023-cloud_X)
-//			left_bound = 10'b0;
-//		else
-//			left_bound = PosX;
-//	end 
-//	 
-//	 always_comb
-//    begin:Cloud_on_wr_proc
-//		 if ((WriteX_new >= left_bound) &&
-//			 (WriteX_new < PosX + cloud_X) &&
-//			 (WriteY >= PosY) &&
-//			 (WriteY < PosY + cloud_Y)
-//	//		 && (istransparent == 1'b0)
-//	//		 && (ball_on == 1'b0)
-//			 )
-//			cloud_on_wr = 1'b1;
-//		 else 
-//			cloud_on_wr = 1'b0;
-//    end 
 	 
 	 always_comb
     begin:Cloud_on_wr_proc

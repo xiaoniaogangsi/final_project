@@ -13,7 +13,7 @@
 //-------------------------------------------------------------------------
 
 
-module  gamelogic ( 	  input 					 Clk50, pixel_Clk, frame_Clk, Reset, blank, row_Clk,
+module  gamelogic ( 	  input 					 Clk50, pixel_Clk, frame_Clk, Reset, blank,
 							  input        [9:0]  DrawX, DrawY,
 							  input 			[7:0]	 keycode,
 							  input 			[7:0]  easter_egg,
@@ -33,7 +33,7 @@ module  gamelogic ( 	  input 					 Clk50, pixel_Clk, frame_Clk, Reset, blank, ro
 	logic horizon_on_wr;
 	logic cactus_on_wr;
 	logic pterosaur_on_wr;
-	logic [2:0] over_on_wr;
+	logic [3:0] over_on_wr;
 	logic [2:0] hscore_on_wr;
 	logic heart_on_wr;
 	logic [1:0] moon_on_wr;
@@ -63,11 +63,11 @@ module  gamelogic ( 	  input 					 Clk50, pixel_Clk, frame_Clk, Reset, blank, ro
 	draw_cactus cactus0(.*, .Reset(Restart), .address(address_cactus));
 	draw_pterosaur pterosaur0(.*, .Reset(Restart), .address(address_pterosaur));
 	draw_over over0(.*, .Reset(Restart), .address(address_over));
-	draw_hscore highscore0(.*, .address(address_hscore));
+	draw_hscore highscore0(.*, .address(address_hscore));	//Notice here we use Reset but not Restart to reset, because high score shouldn't be reset unless you press reset.
 	draw_heart heart0(.*, .Reset(Restart),	.address(address_heart));
 	draw_moon moon0(.*, .Reset(Restart), .address(address_moon));
 	
-	logic Dead, Enter;
+	logic Dead;
 	logic [1:0] Game_State;
 	logic Restart;
 	always_comb
@@ -83,7 +83,7 @@ module  gamelogic ( 	  input 					 Clk50, pixel_Clk, frame_Clk, Reset, blank, ro
 	
 	logic score_on_1bit, over_on_1bit, hscore_on_1bit, moon_on_1bit;
 	assign score_on_1bit = (score_on_wr == 3'b000)? 1'b0 : 1'b1;
-	assign over_on_1bit = (over_on_wr == 3'b000)? 1'b0 : 1'b1;
+	assign over_on_1bit = (over_on_wr == 4'b0000)? 1'b0 : 1'b1;
 	assign hscore_on_1bit = (hscore_on_wr == 3'b000)? 1'b0 : 1'b1;
 	assign moon_on_1bit = (moon_on_wr == 2'b00)? 1'b0 : 1'b1;
 	logic [2:0] write_which_layer;	//Indicate we are writing which layer, 000 means no writing.
@@ -134,7 +134,7 @@ module  gamelogic ( 	  input 					 Clk50, pixel_Clk, frame_Clk, Reset, blank, ro
 	logic transparent;
 	
 	always_comb
-	begin
+	begin:Judge_transparent
 		if (color_index == 4'h0)	//Color index 0 means transparent color.
 			transparent = 1;
 		else
@@ -143,7 +143,7 @@ module  gamelogic ( 	  input 					 Clk50, pixel_Clk, frame_Clk, Reset, blank, ro
 	
 	logic [3:0] color_index_in;
 	always_comb
-	begin
+	begin:Judge_background
 		if (write_which_layer == 3'b001)		//When writing Layer 1 (Background)
 		begin
 			//In Layer 1, if this area is the horizon, but is transparent, still fill in the background color.
@@ -160,14 +160,14 @@ module  gamelogic ( 	  input 					 Clk50, pixel_Clk, frame_Clk, Reset, blank, ro
 	
 	logic write_en;
 	always_comb
-	begin
+	begin:Judge_write_en
 		if (write_which_layer == 3'b001)		//When writing Layer 1 (Background)
 			write_en = 1'b1;
 		else	//In other layers, if it is transparent, we do not allow write, else you can write.
-			//write_en = ~transparent_in;
 			write_en = ~transparent;
 	end
 	
+	//Do synchronization before and after the frame buffer
 	logic write_en_sync, buffer_select_sync;
 	logic [9:0] WriteX_sync, WriteY_sync, DrawX_sync, DrawY_sync;
 	logic [3:0] color_index_sync, color_index_buffer_sync;
@@ -187,7 +187,7 @@ module  gamelogic ( 	  input 					 Clk50, pixel_Clk, frame_Clk, Reset, blank, ro
 		color_index_buffer_sync <= color_index_buffer;
 	end
 	
-	frame_buffer frame_buffer0(.Clk50(~Clk50), .pixel_Clk(~pixel_Clk), .Reset(Reset), .write_en(write_en_sync),
+	frame_buffer frame_buffer0(.Clk50(~Clk50), .Reset(Reset), .write_en(write_en_sync),
 										.write_data(color_index_sync),
 										.write_X(WriteX_sync), .read_X(DrawX_sync),
 										.write_Y(WriteY_sync), .read_Y(DrawY_sync),
@@ -206,13 +206,6 @@ module  gamelogic ( 	  input 					 Clk50, pixel_Clk, frame_Clk, Reset, blank, ro
 				.Red(Red_p),
 				.Green(Green_p),
 				.Blue(Blue_p));
-	  
-	 
-//	logic horizon_on_wr_delay;
-//	always_ff @ (posedge Clk50)
-//	begin
-//		horizon_on_wr_delay <= horizon_on_wr;
-//	end
 
 	always_ff @ (posedge pixel_Clk)
    begin:RGB_Display

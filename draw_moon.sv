@@ -1,4 +1,4 @@
-module draw_moon(input Clk50, pixel_Clk, frame_Clk, Reset,
+module draw_moon(input frame_Clk, Reset,
 					input [9:0] WriteX, WriteY,
 					input isnight,
 					output logic [1:0] moon_on_wr,

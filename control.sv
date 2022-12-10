@@ -283,27 +283,20 @@ module control (input Reset, frame_Clk,
 			else 
 				Dead_cactus <=0;
 		end
+		
 		//collision judgement between heart and dragon.
 		always_ff @ (posedge frame_Clk)
 		begin
-//			if (heart_off == 0)
-//			begin
-				if (heart_PosX >= Left_Edge && heart_PosX <Right_Edge && heart_PosY >= Top && heart_PosY < Bottom)
-				begin
-					contact <= 1;
-					gift <= 1;
-				end
-				else
-				begin
-					contact <= 0;
-					gift <= 0;
-				end
-//			end
-//			else
-//			begin
-//				contact <= 0;
-//				gift <= 0;
-//			end
+			if (heart_PosX >= Left_Edge && heart_PosX <Right_Edge && heart_PosY >= Top && heart_PosY < Bottom)
+			begin
+				contact <= 1;
+				gift <= 1;
+			end
+			else
+			begin
+				contact <= 0;
+				gift <= 0;
+			end
 		end
 
 		always_comb

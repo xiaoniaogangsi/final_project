@@ -1,4 +1,4 @@
-module draw_cactus (	input Clk50, pixel_Clk, frame_Clk, Reset,
+module draw_cactus (	input frame_Clk, Reset,
 							input [9:0] WriteX, WriteY,
 							input int Ptero_PosX, Ptero_PosY,
 							input Dead,
@@ -115,7 +115,6 @@ module draw_cactus (	input Clk50, pixel_Clk, frame_Clk, Reset,
 		endcase
 	end
 	
-	
 	initial
 	begin
 		PosX = 640;
@@ -218,7 +217,6 @@ module draw_cactus (	input Clk50, pixel_Clk, frame_Clk, Reset,
 		end
 	end
 	
-//	always_ff @ (posedge Clk50)
 	always_comb
 	begin
 		start = cactus_addr;
