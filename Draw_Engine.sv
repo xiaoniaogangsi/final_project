@@ -1,12 +1,9 @@
-module Draw_Engine (input Clk50, row_Clk, Reset,
-
-					     input Dead, Enter,
+module Draw_Engine (input Clk50, Reset,
 						  
 						  input Draw_Back, Draw_Ground,   //layer_1
 						  input Draw_Cloud,  Draw_Moon,	//layer_2
 						  input Draw_Cactus, Draw_Buff, Draw_Rock, Draw_Pterosaur, //layer_3
-						  input Draw_Score, Draw_Fire, Draw_Runner, Draw_Highscore, Draw_Over, //layer_4
-						   
+						  input Draw_Score, Draw_Fire, Draw_Runner, Draw_Highscore, Draw_Over, //layer_4						   
 						  
 						  input [17:0] address_Back, address_Ground, 
 						  input [17:0] address_Cloud,  address_Moon,
@@ -17,26 +14,6 @@ module Draw_Engine (input Clk50, row_Clk, Reset,
 						  output [9:0] write_X, write_Y,
 						  output [2:0] write_which_layer
 						  );
-//	enum logic [1:0] {	WAIT, ADD} Counter_State, Counter_Next_State;
-	
-//	always_ff @ (posedge Clk50 or posedge Reset)
-//	begin
-//		if (Reset)
-//		begin
-//			Counter_State <= WAIT;
-//			WriteX <= 10'b0000000000;
-//			WriteY <= 10'b0000000000;
-//		else
-//			State <= Next_State;
-//	end
-//	
-//	always_comb
-//	begin
-//		Counter_Next_State = Counter_State;
-//		unique case (Counter_State)
-//			WAIT: 
-//				if (
-//	end
 	
 	enum logic [3:0] {LAYER_1,
 							LAYER_2,
@@ -55,12 +32,7 @@ module Draw_Engine (input Clk50, row_Clk, Reset,
 	always_ff @ (posedge Clk50 or posedge Reset)
 	begin
 		if (Reset)
-		begin
 			State <= PIXEL_FINISH;
-			//State <= LAYER_1;
-			//WriteX <= 10'b0000000000;
-			//WriteY <= 10'b0000000000;
-		end
 		else
 			State <= Next_State;
 	end
@@ -173,10 +145,6 @@ module Draw_Engine (input Clk50, row_Clk, Reset,
 	
 	always_comb
 		begin
-//			address_Back, address_Ground,  
-//			address_Cloud,  
-//			address_Cactus, address_Buff, address_Rock, address_Pterosaur,
-//			address_Score，address_Fire,address_Runner, address_Highscore, address_Over,
 			case (State)
 				REST:	
 				begin
@@ -250,7 +218,7 @@ module Draw_Engine (input Clk50, row_Clk, Reset,
 		end
 		
 		//produce WriteX
-		//In this way, DrawX and WriteX will be synchronized after one REST state. Excellent!
+		//In this way, DrawX and WriteX will be synchronized after one REST state.
 		always_ff @ (posedge Clk50 or posedge Reset)
 		begin
 			if (Reset)

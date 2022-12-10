@@ -1,4 +1,4 @@
-module draw_score (	input Clk50, pixel_Clk, frame_Clk, Reset,
+module draw_score (	input frame_Clk, Reset,
 							input [9:0] WriteX, WriteY,
 							input Dead, gift,
 							input [1:0] Game_State,
@@ -157,7 +157,6 @@ module draw_score (	input Clk50, pixel_Clk, frame_Clk, Reset,
 		end
 	end
 	
-//	always_ff @ (posedge Clk50)
 	always_comb
 	begin
 		case (score_on_wr)

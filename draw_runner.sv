@@ -1,4 +1,4 @@
-module draw_runner(  input Clk50, pixel_Clk, frame_Clk, Reset,
+module draw_runner(  input frame_Clk, Reset,
 							input [9:0] WriteX, WriteY,
 							input [9:0] PosX, PosY,
 							input Dead,
@@ -64,7 +64,6 @@ module draw_runner(  input Clk50, pixel_Clk, frame_Clk, Reset,
 		end
 	end
 	
-//	always_ff @ (posedge Clk50)
 	always_comb
 	begin
 		if (Game_State == 2'b00)

@@ -174,19 +174,13 @@ vga_controller vga0(
 												             //   but the video DAC on the DE2 board requires an input for it.
 							.DrawX(drawxsig),     		// horizontal coordinate
 							.DrawY(drawysig) );   		// vertical coordinate);
-//ball ball0(.Reset(Reset_h), 
-//			  .frame_clk(VGA_VS),
-//			  .keycode(keycode),
-//           .BallX(runnerxsig), 
-//			  .BallY(runnerysig), 
-//			  .BallS(ballsizesig) );
+
 gamelogic game(
 					.Clk50(MAX10_CLK1_50),		//modified here
 					.pixel_Clk(VGA_Clk),			//modified here
 					.frame_Clk(VGA_VS),			//modified here
 					.Reset(Reset_h),				//modified here
 					.blank(blank),					//modified here
-					.row_Clk(VGA_HS),				//modified here
 					.keycode(keycode),			//modified here
 					.easter_egg(easter_egg),	//modified here
 					.DrawX(drawxsig), 

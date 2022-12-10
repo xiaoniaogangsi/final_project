@@ -1,4 +1,4 @@
-module draw_hscore (	input Clk50, pixel_Clk, frame_Clk, Reset, Restart,
+module draw_hscore (	input frame_Clk, Reset,
 							input [9:0] WriteX, WriteY,
 							input Dead,
 							input [1:0] Game_State,
@@ -128,7 +128,6 @@ module draw_hscore (	input Clk50, pixel_Clk, frame_Clk, Reset, Restart,
 		hscore5 = hscore % 10;
 	end
 	
-//	always_ff @ (posedge Clk50)
 	always_comb
 	begin
 		case (hscore_on_wr)
