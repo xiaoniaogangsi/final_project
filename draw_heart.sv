@@ -27,6 +27,7 @@ module draw_heart ( input frame_Clk, Reset,
 	logic flag;
 	logic [17:0] start, offset;
 	int SizeX, SizeY, DistX, DistY;
+	logic contact_flag;
 	
 	initial
 	begin
@@ -36,8 +37,7 @@ module draw_heart ( input frame_Clk, Reset,
 		draw_heart1 = 1'b1;
 		contact_flag = 1'b0;
 	end
-	
-	logic contact_flag;
+
 	//control part
 	always_ff @ (posedge frame_Clk or posedge Reset)
 	begin
